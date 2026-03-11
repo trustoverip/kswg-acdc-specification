@@ -4573,7 +4573,7 @@ The ACDC's schema is as follows:
 
 <a id="W3C_DID">28</a><a id="ref28"></a>. W3C_DID, W3C Decentralized Identifiers (DIDs) v1.0, https://w3c-ccg.github.io/did-spec/
 
-<a id="did-webs">61</a><a id="ref71"></a>. ToIP did:webs Method Specification, https://trustoverip.github.io/tswg-did-method-webs-specification/
+<a id="did-webs">61</a><a id="ref71"></a>. ToIP did:webs Method Specification, https://trustoverip.github.io/kswg-did-method-webs-specification/
 
 <a id="RFC4627">9</a><a id="ref9"></a>. RFC4627, The application/json Media Type for JavaScript Object Notation (JSON), D. Crockford; 2006-07. Status: Informational.https://datatracker.ietf.org/doc/rfc4627/
 
