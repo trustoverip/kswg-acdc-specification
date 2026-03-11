@@ -11,7 +11,7 @@
     <meta name="generator" content="Spec-Up-T" />
     <title>Authentic Chained Data Containers (ACDC)</title>
 
-    
+
           <style>:root{--card-bg:#fff;--card-bg-dt:#fcfcfc;--toc-bg:#fff;--toc-text:#212529;--header-navbar-bg:#f8f9fa;--header-navbar-text:#212529;--card-text:#212529;--card-border:rgba(0, 0, 0, 0.125);--card-shadow:rgba(0, 0, 0, 0.075);--card-hover-bg:#f8f9fa}[data-bs-theme=dark]{--card-bg:#212529;--card-bg-dt:#24282d;--toc-bg:#212529;--toc-text:#f8f9fa;--header-navbar-bg:#343a40;--header-navbar-text:#f8f9fa;--card-text:#f8f9fa;--card-border:rgba(255, 255, 255, 0.125);--card-shadow:rgba(0, 0, 0, 0.2);--card-hover-bg:#343a40}
 @charset "UTF-8";/*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
@@ -46,7 +46,7 @@ article a[href^="https://"]:not(.btn)::after,article a[href^=http]:not(.btn)::af
 #toc ul.toc{counter-reset:toc-section}#toc ul.toc>li{counter-reset:toc-subsection}#toc ul.toc>li>ul>li{counter-reset:toc-subsubsection}#toc ul.toc>li>a::before{counter-increment:toc-section;content:counter(toc-section) ". ";font-weight:700;margin-right:.5em}#toc ul.toc>li>ul>li>a::before{counter-increment:toc-subsection;content:counter(toc-section) "." counter(toc-subsection) " ";font-weight:700;margin-right:.5em}#toc ul.toc>li>ul>li>ul>li>a::before{counter-increment:toc-subsubsection;content:counter(toc-section) "." counter(toc-subsection) "." counter(toc-subsubsection) " ";font-weight:700;margin-right:.5em}main article{counter-reset:main-section}main article h2{counter-reset:main-subsection}main article h3{counter-reset:main-subsubsection}main article h2 .toc-anchor::after{counter-increment:main-section;content:" " counter(main-section) ".";font-weight:700}main article h3 .toc-anchor::after{counter-increment:main-subsection;content:" " counter(main-section) "." counter(main-subsection);font-weight:700}main article h4 .toc-anchor::after{counter-increment:main-subsubsection;content:" " counter(main-section) "." counter(main-subsection) "." counter(main-subsubsection);font-weight:700}main article h5::before,main article h6::before{font-weight:700;margin-right:.5em}@media print{#toc ul.toc>li>a::before,#toc ul.toc>li>ul>li>a::before,#toc ul.toc>li>ul>li>ul>li>a::before,main article h2 .toc-anchor::after,main article h3 .toc-anchor::after,main article h4 .toc-anchor::after{color:#000!important}}
 
 :target{scroll-margin-top:calc(50vh)}body:not([hashscroll]) :target{animation:highlight-target 3.5s .25s ease}body:not([hashscroll]) dt:has(:target){animation:highlight-target-parent-dt 3.5s .25s ease}dl.terms-and-definitions-list>.highlight{background-color:#ff0!important;transition:background-color .3s ease-in-out}svg[icon]{width:1.25em;height:1.25em;vertical-align:text-top}@keyframes highlight-target{50%{background-color:#ff0}}@keyframes highlight-target-parent-dt{50%{background-color:#ff0;border:1px solid #00c8ff}}#svg{display:none}main *{overflow-wrap:anywhere;word-break:normal}.table-responsive{overflow-x:auto!important;-webkit-overflow-scrolling:touch;width:100%;max-width:100%}.table-responsive *{overflow-wrap:normal!important;word-break:normal!important;white-space:nowrap!important}dd td img{max-width:30px}.notice{margin:1em 0;padding:.5em .9em .55em .65em;border-left:.5em solid}.notice p{margin:.4em 0 0}.note{background:#e9fbe9;border-color:#52e052}.note .notice-link{display:block;color:#178217}.issue{background:#e9f0fb;border-color:#527fe0}.issue .notice-link:before{display:block;color:#1e4cae}.warning{background:#fbe9e9;border-color:#e05252}.warning .notice-link{display:block;color:#ae1e1e}.example{color:#cebe00;background:#1a1e23;border-left:.5em solid}.example .notice-link{display:block;color:inherit;font-size:1.1em;font-family:Heebo,sans-serif}.example pre[class*=language-]{padding:0;border-radius:0}.todo{background:#fbe4ff;border-color:#9700e2}.todo .notice-link{display:block;color:#6d00a2}.alert-primary{background-color:#f9fcff;border-color:#b2ebf2;color:#00838f}.alert-secondary{background-color:#f5f5f5;border-color:#e0e0e0;color:#616161}.alert-success{background-color:#e8f5e9;border-color:#c8e6c9;color:#388e3c}.alert-danger{background-color:#ffebee;border-color:#ef9a9a;color:#d32f2f}.alert-warning{background-color:#fffde7;border-color:#fff9c4;color:#f9a825}.alert-info{background-color:#e1f5fe;border-color:#b3e5fc;color:#0288d1}.alert-light{background-color:#f9f9f9;border-color:#eee;color:#424242}.alert-dark{background-color:#e0e0e0;border-color:#bdbdbd;color:#212121}.alert a{color:inherit;font-weight:700}.alert-primary a{color:#006064}.alert-success a{color:#2e7d32}.alert-danger a{color:#b71c1c}.alert-warning a{color:#f57f17}.alert-info a{color:#01579b}.alert-dark a{color:#000}[data-bs-theme=dark] .alert-primary{background-color:#004d40;border-color:#00695c;color:#b2dfdb}[data-bs-theme=dark] .alert-secondary{background-color:#424242;border-color:#616161;color:#e0e0e0}[data-bs-theme=dark] .alert-success{background-color:#1b5e20;border-color:#2e7d32;color:#a5d6a7}[data-bs-theme=dark] .alert-danger{background-color:#b71c1c;border-color:#c62828;color:#ef9a9a}[data-bs-theme=dark] .alert-warning{background-color:#f57f17;border-color:#ffb300;color:#ffe082}[data-bs-theme=dark] .alert-info{background-color:#01579b;border-color:#0277bd;color:#81d4fa}[data-bs-theme=dark] .alert-light{background-color:#303030;border-color:#424242;color:#e0e0e0}[data-bs-theme=dark] .alert-dark{background-color:#212121;border-color:#424242;color:#bdbdbd}[data-bs-theme=dark] .alert a{color:inherit;font-weight:700}[data-bs-theme=dark] .alert-primary a{color:#80cbc4}[data-bs-theme=dark] .alert-success a{color:#81c784}[data-bs-theme=dark] .alert-danger a{color:#ef5350}[data-bs-theme=dark] .alert-warning a{color:#ffca28}[data-bs-theme=dark] .alert-info a{color:#4fc3f7}[data-bs-theme=dark] .alert-dark a{color:#9e9e9e}#offcanvasSettings .btn-menu-item{border-radius:unset;width:100%;text-align:left;border:1px solid #dee2e6;background-color:var(--card-bg);color:var(--card-text);padding:10px 15px;margin-bottom:5px;transition:background-color .2s ease}#offcanvasSettings .btn-menu-item:hover{background-color:#e9ecef}</style>
-          
+
           <script>function delegateEvent(e,t,n,a={}){return(a.container||document).addEventListener(e,(e=>{let a=e.target.closest(t);a&&n(e,a)}),a)}const skipAnimationFrame=e=>requestAnimationFrame((()=>requestAnimationFrame(e))),domReady=new Promise((e=>{document.addEventListener("DOMContentLoaded",(t=>e()))}));
 customElements.define("slide-panels",class extends HTMLElement{static get observedAttributes(){return["open"]}constructor(){super(),this.addEventListener("pointerup",(e=>{e.target===this&&this.close()}))}get active(){return this.getAttribute("open")}toggle(e){this.active===e?this.close():this.open(e)}open(e){this.setAttribute("open",e)}close(){this.removeAttribute("open")}attributeChangedCallback(e,t,i){if("open"===e)for(let e of this.children)e.id===i?e.setAttribute("open",""):e.removeAttribute("open","")}}),customElements.define("detail-box",class extends HTMLElement{static get observedAttributes(){return["open"]}constructor(){super(),this.addEventListener("pointerup",(e=>{e.target.hasAttribute("detail-box-toggle")&&(e.stopPropagation(),this.toggle())})),this.addEventListener("transitionend",(e=>{let t=e.target;t.parentElement===this&&"SECTION"===t.tagName&&"height"===e.propertyName&&(t.style.height=this.hasAttribute("open")?"auto":null)}))}toggle(){this.toggleAttribute("open")}attributeChangedCallback(e,t,i){if("open"===e)for(let e of this.children)"SECTION"===e.tagName&&(null!==i?e.offsetHeight<e.scrollHeight&&(e.style.height=e.scrollHeight+"px"):e.offsetHeight>0&&(e.style.height=e.offsetHeight+"px",e.style.height=0))}}),customElements.define("tab-panels",class extends HTMLElement{constructor(){super(),delegateEvent("click","tab-panels > nav > *",((e,t)=>{let i=t.parentElement;i.parentElement===this&&this.setAttribute("selected-index",Array.prototype.indexOf.call(i.children,t))}),{container:this,passive:!0})}static get observedAttributes(){return["selected-index"]}attributeChangedCallback(e,t,i){domReady.then((()=>{if("selected-index"===e){let e=i||0,t=this.querySelector("nav");if(t.parentElement===this){let i=t.children,s=i[e];for(let e of i)e.removeAttribute("selected");s&&s.setAttribute("selected","");let r=Array.prototype.filter.call(this.children,(e=>{if("SECTION"===e.tagName)return e.removeAttribute("selected"),!0}))[e];r&&r.setAttribute("selected","")}}}))}});
 /*!
@@ -55,8 +55,8 @@ customElements.define("slide-panels",class extends HTMLElement{static get observ
  * Licensed under the Creative Commons Attribution 3.0 Unported License.
  */
 (()=>{"use strict";const e=()=>localStorage.getItem("theme"),t=()=>{const t=e();return t||(window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light")},a=e=>{"auto"===e?document.documentElement.setAttribute("data-bs-theme",window.matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):document.documentElement.setAttribute("data-bs-theme",e)};a(t());const r=(e,t=!1)=>{const a=document.querySelector("#bd-theme");if(!a)return;const r=document.querySelector("#bd-theme-text"),c=document.querySelector(".theme-icon-active use"),s=document.querySelector(`[data-bs-theme-value="${e}"]`),o=s.querySelector("svg use").getAttribute("href");document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.classList.remove("active"),e.setAttribute("aria-pressed","false")})),s.classList.add("active"),s.setAttribute("aria-pressed","true"),c.setAttribute("href",o);const d=`${r.textContent} (${s.dataset.bsThemeValue})`;a.setAttribute("aria-label",d),t&&a.focus()};window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",(()=>{const r=e();"light"!==r&&"dark"!==r&&a(t())})),window.addEventListener("DOMContentLoaded",(()=>{r(t()),document.querySelectorAll("[data-bs-theme-value]").forEach((e=>{e.addEventListener("click",(()=>{const t=e.getAttribute("data-bs-theme-value");(e=>{localStorage.setItem("theme",e)})(t),a(t),r(t,!0)}))}))}))})();</script>
-          
-        
+
+
     <script>const allXTrefs = {
   "xtrefs": [
     {
@@ -19617,7 +19617,7 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
 <p><a id="DID-KERI">5</a><a id="ref5"></a>. DIDK_ID, IETF DID-KERI Internet Draft, <a path-0="github.com" path-1="WebOfTrust" path-2="ietf-did-keri" href="https://github.com/WebOfTrust/ietf-did-keri"><span>https://github.com/WebOfTrust/ietf-did-keri</span></a></p>
 <p><a id="RFC8259">8</a><a id="ref8"></a>. RFC8259, JSON (JavaScript Object Notation), <a path-0="datatracker.ietf.org" path-1="doc" path-2="html" path-3="rfc8259" href="https://datatracker.ietf.org/doc/html/rfc8259"><span>https://datatracker.ietf.org/doc/html/rfc8259</span></a></p>
 <p><a id="W3C_DID">28</a><a id="ref28"></a>. W3C_DID, W3C Decentralized Identifiers (DIDs) v1.0, <a path-0="w3c-ccg.github.io" path-1="did-spec" path-2="" href="https://w3c-ccg.github.io/did-spec/"><span>https://w3c-ccg.github.io/did-spec/</span></a></p>
-<p><a id="did-webs">61</a><a id="ref71"></a>. ToIP did:webs Method Specification, <a path-0="trustoverip.github.io" path-1="tswg-did-method-webs-specification" path-2="" href="https://trustoverip.github.io/tswg-did-method-webs-specification/"><span>https://trustoverip.github.io/tswg-did-method-webs-specification/</span></a></p>
+<p><a id="did-webs">61</a><a id="ref71"></a>. ToIP did:webs Method Specification, <a path-0="trustoverip.github.io" path-1="kswg-did-method-webs-specification" path-2="" href="https://trustoverip.github.io/kswg-did-method-webs-specification/"><span>https://trustoverip.github.io/kswg-did-method-webs-specification/</span></a></p>
 <p><a id="RFC4627">9</a><a id="ref9"></a>. RFC4627, The application/json Media Type for JavaScript Object Notation (JSON), D. Crockford; 2006-07. Status: Informational.<a path-0="datatracker.ietf.org" path-1="doc" path-2="rfc4627" path-3="" href="https://datatracker.ietf.org/doc/rfc4627/"><span>https://datatracker.ietf.org/doc/rfc4627/</span></a></p>
 <h3 id="informative-section"><a class="toc-anchor d-print-none" href="#informative-section">§</a> Informative section</h3>
 <p><a id="RFC6901">6</a><a id="ref6"></a>. RFC6901, JavaScript Object Notation (JSON) Pointer, <a path-0="datatracker.ietf.org" path-1="doc" path-2="html" path-3="rfc6901" href="https://datatracker.ietf.org/doc/html/rfc6901"><span>https://datatracker.ietf.org/doc/html/rfc6901</span></a></p>
@@ -19756,7 +19756,7 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
           </a>
         </div>
       </li>
-    
+
       <li class="mb-2">
         <div class="d-flex align-items-center">
           <i class="bi bi-diagram-3 me-2"></i>
@@ -19766,7 +19766,7 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
           </a>
         </div>
       </li>
-    
+
       <li class="mb-2">
         <div class="d-flex align-items-center">
           <i class="bi bi-diagram-3 me-2"></i>
@@ -19776,7 +19776,7 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
           </a>
         </div>
       </li>
-    
+
       <li class="mb-2">
         <div class="d-flex align-items-center">
           <i class="bi bi-diagram-3 me-2"></i>
@@ -19794,7 +19794,7 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
     </div>
 
     <div style="display: none;">
-        
+
     </div>
 
     <script>window.specConfig = {"title":"Authentic Chained Data Containers (ACDC)","spec_directory":"./spec/","output_path":"./docs","markdown_paths":["spec-head.md","terms-and-definitions-intro.md","terms-definitions/attribute.md","terms-definitions/autonomic-identifier.md","terms-definitions/chain-link-confidential-disclosure.md","terms-definitions/compact-disclosure.md","terms-definitions/contractually-protected-disclosure.md","terms-definitions/controller.md","terms-definitions/disclosee.md","terms-definitions/discloser.md","terms-definitions/duplicity.md","terms-definitions/edge.md","terms-definitions/framing-code.md","terms-definitions/full-disclosure.md","terms-definitions/graduated-disclosure.md","terms-definitions/inception-event.md","terms-definitions/information-theoretic-security.md","terms-definitions/interaction-event.md","terms-definitions/issuee.md","terms-definitions/issuer.md","terms-definitions/key-state.md","terms-definitions/operator.md","terms-definitions/partial-disclosure.md","terms-definitions/percolated-discovery.md","terms-definitions/perfect-security.md","terms-definitions/primitive.md","terms-definitions/rotation-event.md","terms-definitions/rules.md","terms-definitions/schema.md","terms-definitions/selective-disclosure.md","terms-definitions/self-addressing-identifier-(said).md","terms-definitions/semver.md","terms-definitions/stream.md","terms-definitions/targeted-acdc.md","terms-definitions/unpermissioned-correlation.md","terms-definitions/untargeted-acdc.md","terms-definitions/validator.md","terms-definitions/verifiable-data-registry.md","terms-definitions/verifier.md","terms-definitions/weight.md","spec-body.md"],"logo":"https://raw.githubusercontent.com/trustoverip/logo-assets/master/logos/ToIP-Logo-Color-SolidDimensional-Horizontal-LightOnDark.svg","logo_link":"https://github.com/trustoverip/tswg-acdc-specification","katex":true,"source":{"host":"github","account":"trustoverip","repo":"tswg-acdc-specification"},"author":"Trust over IP Foundation","description":"Create technical specifications in markdown. Based on the original Spec-Up, extended with Terminology tooling","spec_terms_directory":"terms-definitions","external_specs":[{"external_spec":"kmg-1","gh_page":"https://trustoverip.github.io/kerisuite-glossary/","url":"https://github.com/trustoverip/kerisuite-glossary","terms_dir":"spec/terms-definitions"},{"external_spec":"toip1","gh_page":"https://trustoverip.github.io/ctwg-main-glossary/","url":"https://github.com/trustoverip/ctwg-main-glossary","terms_dir":"spec/terms-definitions"},{"external_spec":"vlei1","gh_page":"https://henkvancann.github.io/vlei-glossary/","url":"https://github.com/henkvancann/vlei-glossary","terms_dir":"spec/terms-definitions"},{"external_spec":"toip2","gh_page":"https://trustoverip.github.io/ctwg-general-glossary/","url":"https://github.com/trustoverip/ctwg-general-glossary","terms_dir":"spec/terms-definitions"}],"destination":"./docs/"}</script>
@@ -19938,14 +19938,14 @@ function getGithubRepoInfo(){try{const t=document.querySelector('meta[property="
  * @license MIT
  * @see https://example.com/more_info_about_horizontal_scroll for more information
  * @since 2022-01-01
- * 
+ *
  * @description
  * The horizontalScrollHint function improves user experience in specification documents
  * by providing a visual cue when content extends beyond the visible horizontal area.
  * It dynamically adds a hint element with a finger-pointing icon and text to elements
  * that require horizontal scrolling, particularly useful for wide tables, code blocks,
  * and other overflowing content in technical specifications.
- * 
+ *
  * Features:
  * - Automatically detects when content is wider than its container
  * - Shows a visual hint with a finger pointing icon and text
@@ -19953,27 +19953,27 @@ function getGithubRepoInfo(){try{const t=document.querySelector('meta[property="
  * - Adaptive to window resizing (shows/hides based on current overflow state)
  * - Can be applied to single elements, multiple elements, or CSS selectors
  * - Uses ResizeObserver to monitor for dynamic content changes
- * 
+ *
  * @param {(string|Element|Array<string|Element>)} [elements='.horizontalScroll'] - Target element(s) to apply the scroll hint to:
  *   - String: CSS selector for target elements
  *   - Element: Direct DOM element reference
  *   - Array: Multiple CSS selectors or DOM elements
  *   - If omitted, defaults to '.horizontalScroll'
- * 
+ *
  * @returns {void} This function doesn't return a value
- * 
+ *
  * @example
  * // Basic usage with default selector ('.horizontalScroll')
  * horizontalScrollHint();
- * 
+ *
  * @example
  * // Apply to a specific element by selector
  * horizontalScrollHint('#specification-table');
- * 
+ *
  * @example
  * // Apply to multiple different elements
  * horizontalScrollHint(['.table-responsive', '.code-block', document.querySelector('#algorithm-section')]);
- * 
+ *
  * @example
  * // In your main script, typically call on DOMContentLoaded
  * document.addEventListener("DOMContentLoaded", function() {

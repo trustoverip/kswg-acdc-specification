@@ -4707,6 +4707,6 @@ The ACDC's schema is as follows:
 
 [62]. did:webs Method Specification
 
-[62]: https://trustoverip.github.io/tswg-did-method-webs-specification/
+[62]: https://trustoverip.github.io/kswg-did-method-webs-specification/
 
 [[spec]]
