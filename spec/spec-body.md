@@ -522,7 +522,7 @@ Suppose that the subschema for the  Attribute section of an ACDC is as follows:
           "d",
           "u",
           "i",
-          "name"
+          "name",
           "gpa",
           "grades"
         ],
@@ -564,7 +564,7 @@ Suppose that the subschema for the  Attribute section of an ACDC is as follows:
                 [
                   "d",
                   "u",
-                  "history"
+                  "history",
                   "english",
                   "math"
                 ],
@@ -4055,11 +4055,11 @@ Amy uses this to issue a transcript ACDC to Bob as follows:
 ```python
 {
     "v": "ACDCCAACAAJSONAAXG.",
-    "d": "ENeNWgCCNcOf1JbgKxUzREKpyK5kABYFd2QYUzEfwz9H",
+    "d": "EFSzw0J4Qq15NafhAezvFHII-5TmDHbNzmIpT17-cHOa",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdk",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
+    "s": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
     "a":
     {
         "d": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
@@ -4132,11 +4132,11 @@ This ACDC can be compacted into its most compact form. This is as follows:
 ```python
 {
     "v": "ACDCCAACAAJSONAAGg.",
-    "d": "ENeNWgCCNcOf1JbgKxUzREKpyK5kABYFd2QYUzEfwz9H",
+    "d": "EFSzw0J4Qq15NafhAezvFHII-5TmDHbNzmIpT17-cHOa",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdk",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
+    "s": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
     "a": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
     "e": "ECpmTyIIc1duvCeIceK19Sbd0uymklmwNTtwtmfjQnX0",
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
@@ -4148,7 +4148,7 @@ The schema for this ACDC is as follows:
 
 ```json
 {
-        "$id": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
+        "$id": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "title": "Transcript Schema",
         "description": "Transcript JSON Schema for acm ACDC.",
@@ -4182,7 +4182,7 @@ The schema for this ACDC is as follows:
                     {
                       "description": "Attribute Section Detail",
                       "type": "object",
-                      "required": ["d", "u", "i", "name" "gpa", "grades"],
+                      "required": ["d", "u", "i", "name", "gpa", "grades"],
                       "properties":
                       {
                         "d": {"description": "Attribute Section SAID", "type": "string"},
@@ -4198,7 +4198,7 @@ The schema for this ACDC is as follows:
                             {
                               "description": "Block detail",
                               "type": "object",
-                              "required": ["d", "u", "history" "english", "math"],
+                              "required": ["d", "u", "history", "english", "math"],
                               "properties":
                               {
                                 "d": {"description": "Block SAID", "type": "string"},
@@ -4225,7 +4225,7 @@ The schema for this ACDC is as follows:
                   {
                     "description": "Edge Section Detail",
                     "type": "object",
-                    "required": ["d", "u", "accreditation" "reports"],
+                    "required": ["d", "u", "accreditation", "reports"],
                     "properties":
                     {
                       "d": {"description": "Edge Section SAID", "type": "string"},
@@ -4362,11 +4362,11 @@ The resulting ACDC is as follows:
 ```python
 {
     "v": "ACDCCAACAAJSONAAOD.",
-    "d": "EBaEMTKi6ZtHXmkhxHUoGEEtG8JKelw3b0gv6cFTg6BN",
+    "d": "EMR8CTHmJEwF2EF5Ylgyk6soUEXvGEB5KgJumJ86-nUX",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdl",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
+    "s": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
     "a":
     {
         "d": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
@@ -4408,11 +4408,11 @@ The most compact variant of this ACDC is as follows:
 ```python
 {
         "v": "ACDCCAACAAJSONAAGg.",
-        "d": "EBaEMTKi6ZtHXmkhxHUoGEEtG8JKelw3b0gv6cFTg6BN",
+        "d": "EMR8CTHmJEwF2EF5Ylgyk6soUEXvGEB5KgJumJ86-nUX",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXdl",
         "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
         "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-        "s": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
+        "s": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
         "a": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
         "e": "EEWx-E6Rexj3eORT-e2kLcAWVgviTqxwWvxS2LbNKuCh",
         "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
@@ -4423,7 +4423,7 @@ The ACDC's schema is as follows:
 
 ```json
 {
-    "$id": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
+    "$id": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Transcript Schema",
     "description": "Transcript JSON Schema for acm ACDC.",
@@ -4457,7 +4457,7 @@ The ACDC's schema is as follows:
                 {
                   "description": "Attribute Section Detail",
                   "type": "object",
-                  "required": ["d", "u", "i", "name" "gpa", "grades"],
+                  "required": ["d", "u", "i", "name", "gpa", "grades"],
                   "properties":
                   {
                     "d": {"description": "Attribute Section SAID", "type": "string"},
@@ -4473,7 +4473,7 @@ The ACDC's schema is as follows:
                         {
                           "description": "Block detail",
                           "type": "object",
-                          "required": ["d", "u", "history" "english", "math"],
+                          "required": ["d", "u", "history", "english", "math"],
                           "properties":
                           {
                             "d": {"description": "Block SAID", "type": "string"},
@@ -4500,7 +4500,7 @@ The ACDC's schema is as follows:
                 {
                     "description": "Edge Section Detail",
                     "type": "object",
-                    "required": ["d", "u", "accreditation" "reports"],
+                    "required": ["d", "u", "accreditation", "reports"],
                     "properties":
                     {
                         "d": {"description": "Edge Section SAID", "type": "string"},
