@@ -95,7 +95,7 @@ A UUID, `u` field, MAY optionally appear in any block (field map) at any level o
 Some fields, such as the `i`, Issuer identifier field, MUST each have an [[ref: AID]] as its value. An AID is a fully qualified Self-certifying Identifier (SCID) that follows the KERI protocol [[2](#KERI)].  An AID MUST be derived from one or more `(public, private)` key pairs using asymmetric or public-key cryptography to create verifiable digital signatures [[52](#DSig)]. Each AID SHOULD have set of one or more Controllers who each control a private key. By virtue of their private key(s), the Controllers MAY make statements on behalf of the associated AID backed by uniquely verifiable commitments via digital signatures on those statements. Any entity then MAY verify those signatures using the associated set of public keys. No shared or trusted relationship between the Controllers and Verifiers is REQUIRED. The verifiable key state for AIDs MUST be established with the KERI protocol [[2](#KERI)]. The use of AIDs enables ACDCs to be used in a portable but securely attributable, fully decentralized manner in an ecosystem that spans trust domains.
 
 ##### Datetime, `dt` Fields
-The datetime, `dt` field value, if any, MUST be the ISO-8601 datetime string with microseconds and UTC offset as per IETF [RFC-3339](#RFC3339). This datetime is relative to the clock of the issuer. Attributes typically include one or more date time fields. In a given field map (block) the primary datetime will use the label, `dt`. Typically, this is the datetime of the issuance of the ACDC. Other datetime fields MAY include an expiration datetime or the like.
+Datetime fields, such as the `dt` field, if any, MUST contain an [RFC-3339](#RFC3339) datetime string (the profile of ISO-8601 used by JSON Schema's `date-time` format). ACDC further constrains this value to include microsecond precision and an explicit UTC offset in numeric (not 'Z') notation. The offset is relative to the clock of the issuer. Attributes typically include one or more datetime fields. In a given field map (block) the primary datetime will use the label, `dt`. Typically, this is the datetime of the issuance of the ACDC. Other datetime fields MAY include an expiration datetime or the like.
 
  An example datetime string in this format is as follows:
 
@@ -2028,7 +2028,7 @@ The prior event SAID, `p` field value MUST be the SAID, `d` field value of the i
 
 ##### Datetime, `dt` field
 
-The datetime, `dt` field value MUST be the ISO-8601 datetime string with microseconds and UTC offset as per IETF [RFC-3339](#RFC3339). This MUST be the datetime of the issuance of the transaction event relative to the clock of the issuer. An example datetime string in this format is as follows:
+The datetime, `dt` field value MUST contain an [RFC-3339](#RFC3339) datetime string (the profile of ISO-8601 used by JSON Schema's `date-time` format). ACDC further constrains this value to include microsecond precision and an explicit UTC offset in numeric (not 'Z') notation. This MUST be the datetime of the issuance of the transaction event relative to the clock of the issuer. An example datetime string in this format is as follows:
 
 `2020-08-22T17:50:09.988921+00:00`
 
