@@ -1192,9 +1192,10 @@ The unary operators are defined in the table below:
 |`I2I`| Issuer-To-Issuee, The Issuer AID of this ACDC MUST be the Issuee AID of the node this Edge points to.  | Yes |
 |`NI2I`| Not-Issuer-To-Issuee, The Issuer AID of this ACDC MAY or MAY not be the Issuee AID of the node that this Edge points to. |  No |
 |`DI2I`| Delegated-Issuer-To-Issuee, The Issuer AID of this ACDC MUST be either the Issuee AID or a delegated AID of the Issuee AID of the node this Edge points to. | No |
+|`E1E`| IssueE-To-IssueE, The Issuee AID of this ACDC MUST be the Issuee AID of the node this Edge points to. This is an identity relation on the two ACDCs' Issuees and places no constraint on either ACDC's Issuer. | No |
 |`NOT`| Logical NOT. The validity of the node this Edge points to is inverted. If valid, then not valid. If invalid, then valid.  | No |
 
-When the Operator, `o`, field is missing or empty or is present but does not include any of the `I2I`, `NI2I` or `DI2I` Operators then:
+When the Operator, `o`, field is missing or empty or is present but does not include any of the `I2I`, `NI2I`, `DI2I`, or `E1E` Operators then:
 
 - If the node pointed to by the Edge is a targeted ACDC, i.e., has an Issuee, then the `I2I` Operator MUST be appended to the Operator, `o`, field's effective list value.
 
@@ -1207,6 +1208,8 @@ The `I2I` unary operator, when present, means that the Issuer AID of the current
 The `NI2I` unary Operator, when present, removes or nullifies any requirement expressed by the `I2I` Operator described above. In other words, any REQUIREMENT that the Issuer AID of the current ACDC in which the Edge resides MUST be the Issuee AID, if any, of the node the Edge points to is relaxed (not applicable). To clarify, when operative (present), the `NI2I` Operator means that both an Untargeted ACDC or Targeted ACDC, as the node pointed to by the Edge, MAY be valid even when Untargeted or if Targeted even when the Issuer of the ACDC in which the Edge appears is not the Issuee AID, of that node to which the Edge points.
 
 The `DI2I` unary Operator, when present, expands the class of allowed Issuer AIDs of the node the Edge resides in to include not only the Issuee AID but also any delegated AIDs of the Issuee of the node to which the Edge points.  Therefore, to be valid, the ACDC node pointed to by this Edge MUST be a Targeted ACDC.
+
+The `E1E` unary Operator, when present, means that the Issuee AID of the current ACDC in which the Edge resides MUST be the Issuee AID of the node to which the Edge points. Unlike `I2I` and `DI2I`, which are delegative Operators that constrain the Issuer AID of the current ACDC relative to the Issuee AID of the node the Edge points to, `E1E` is an identity relation between the two ACDCs' Issuee AIDs and places no constraint on either ACDC's Issuer AID. Therefore, to be valid, both the ACDC in which the Edge resides and the node to which the Edge points MUST be Targeted ACDCs (each MUST have an Issuee), and the Edge is valid when, and only when, those two Issuee AIDs are equal. This supports use cases in which two ACDCs describe the same subject (share an Issuee) but are issued by different Issuers, so the Issuer of neither ACDC is the Issuee of the other. An example is a core identity credential and a separate entitlement credential issued to the same Issuee by different Issuers: `E1E` binds them as being about the same subject, a relationship the delegative `I2I` Operator cannot express because `I2I` would instead require the entitlement ACDC's Issuer to be the core credential's Issuee.
 
 The `NOT` unary Operator, when present, inverts the validation truthiness of the node pointed to by this Edge. If this Edge's far node ACDC is invalid, then the presence of the `NOT` operator makes this Edge valid. Conversely, if this Edge's far node ACDC is valid, then the presence of the `NOT` Operator makes this Edge invalid.
 
