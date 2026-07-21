@@ -2190,7 +2190,7 @@ An unblinded attachment of this blinded attribute block would be prefixed with t
 
 ##### Blinded Attribute Block ACDC State Calculation Example
 
-For example, suppose the UUID, `u` field value is encoded as `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB` the transaction ACDC said, `td` field value is encoded as `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`, and the transaction state, `ts` field value is the string "issued" encoded as `0Missued`. The digest to be used to compute the BLID is the BLAKE3-256 digest, which when CESR encoded has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 140 characters.
+For example, suppose the UUID, `u` field value is encoded as `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, and the transaction state, `ts` field value is the string "issued" encoded as `0Missued`. The digest to be used to compute the BLID is the BLAKE3-256 digest, which when CESR encoded has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 140 characters.
 
 For the sake of clarity, the field values are shown in the table below:
 
@@ -2198,28 +2198,28 @@ For the sake of clarity, the field values are shown in the table below:
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
 | `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
 
  The 140-character dummied serialization is as follows:
 ```
-############################################aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0Missued
+############################################aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0Missued
 ```
 
-The CESR encoded Blake3 digest of this string is `EOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_t`.  This is substituted in the serialization above for the dummy characters to provide the final serialized expanded attribute block as follows:
+The CESR encoded Blake3 digest of this string is `EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N`.  This is substituted in the serialization above for the dummy characters to provide the final serialized expanded attribute block as follows:
 
 ```
-EOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_taLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0Missued
+EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8NaLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0Missued
 ```
 
 Broken out into fields, the values are provided in the table below:
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_t`| Dummied BLID (Blinding SAID) |
+| `d` | `EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N`| Dummied BLID (Blinding SAID) |
 | `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
 
@@ -2228,7 +2228,7 @@ In a presentation of the associated ACDC and/or TEL to a Disclosee, a discloser 
 An attachment of this blinded attribute block would be prefixed with the appropriate CESR count code, i.e.,  `BlindedStateQuadruples` with code format `-a##`, as follows:
 
 ```
--aAjEOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_taLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0Missued
+-aAjEItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8NaLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzBEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0Missued
 ```
 
 #### Blinded State Registry Example
@@ -2281,11 +2281,11 @@ At some later time, the issuer issues a new blindable update event, `bup`, with 
 
 To do this, the Issuer and Discloser/Issuee must first have exchanged a shared secret salt from which the value of the blind, UUID, `u` field was derived. The shared secret salt MUST have approximately 128 bits of cryptographic entropy. The UUID field value is calculated using a hierarchically deterministic algorithm from the salt and the sequence number of the transaction event as the deterministic path. To preserve cryptographic entropy during derivation, the value of the UUID `u` field must be twice as long as the shared secret salt.
 
-Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`. The Issuer creates a new BLID blinded attribute, `b` field value with the ACDC SAID value for its `td` field with `issued` as the ACDC state for the `ts` field.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of the new blinded attribute block.
+Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID blinded attribute, `b` field value with the ACDC SAID value for its `td` field with `issued` as the ACDC state for the `ts` field.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of the new blinded attribute block.
 
 The Discloser can then download the published blinded update `bup` transaction event to get the sequence number `n` field value. With that value and the shared secret salt, the Discloser can regenerate the blind UUID and the `u` field value. The Discloser also knows the real ACDC that will be used for this Registry. Consequently, it knows that the value of the ACDC, SAID, `td` field MUST be either the empty string placeholder or the real ACDC SAID given above.
 
-The Discloser can now compute the blinding SAID, BLID, `b` field value of the expanded Attribute block for all the combinations of the possible values for the `td` and `ts` fields. The `td` field possible values include either `1AAP` or `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`. The possible `ts` field values include one of `1AAP`, `0Missued`, or `Yrevoked`. These latter three values correspond to the CESR Text domain encodings of the strings "", "issued" and "revoked".  This gives a total of six combinations of possible field values. The Discloser tries each combination until it finds the one that matches the published transaction event blinded attribute, BLID, `b` field value. The Discloser can then verify if the published value is still a placeholder or the real initial state.
+The Discloser can now compute the blinding SAID, BLID, `b` field value of the expanded Attribute block for all the combinations of the possible values for the `td` and `ts` fields. The `td` field possible values include either `1AAP` or `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The possible `ts` field values include one of `1AAP`, `0Missued`, or `Yrevoked`. These latter three values correspond to the CESR Text domain encodings of the strings "", "issued" and "revoked".  This gives a total of six combinations of possible field values. The Discloser tries each combination until it finds the one that matches the published transaction event blinded attribute, BLID, `b` field value. The Discloser can then verify if the published value is still a placeholder or the real initial state.
 
 To elaborate, the value of the Issuer, `i` field of the corresponding issued ACDC will be the Issuer AID. When secure discovery is employed, the value of the registry SAID, `rd` field of that ACDC will be the registry SAID given by the value of the SAID, `d` field in the registry inception, `rip` event. The value of the top-level `d` field in the ACDC will be the same as the `td` field of the attribute block of the blindable update `bup` event that effectively "issues" the ACDC. These field values cryptographically bind the ACDC to the Registry and, in turn, bind the Registry to the ACDC.
 
@@ -2295,12 +2295,12 @@ Suppose the associated update event occurs at sequence number 2. The published b
 {
     "v": "ACDCCAACAAJSONAAEi.",
     "t": "bup",
-    "d": "EBdytzDC4dnatn-6mrCWLSGuM62LM0BgS31YnAg5NTeW",
+    "d": "EHdCoOs5P-xwHWjXuJOe8SWgTKVj_Vx_YbbDSYxJ6fK3",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
     "n": "2",
     "p": "EPNwyvHp2XJsz9pSpXtHtcCmzw6bKSFc-nhGKTbso0Yg",
     "dt": "2020-08-02T12:00:20.000000+00:00",
-    "b": "EOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_t"
+    "b": "EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N"
 }
 ```
 
@@ -2308,9 +2308,9 @@ The value of the blinded attribute block BLID, `b` field, is taken from the issu
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EOtWw6X_aoOJlkzNaLj23IC6MXHl7ZSYSWVulFW_Hr_t`| Dummied BLID (Blinding SAID) |
+| `d` | `EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N`| Dummied BLID (Blinding SAID) |
 | `u` |`aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
 
@@ -2331,12 +2331,12 @@ The published blindable update transaction event is as follows:
 {
     "v": "ACDCCAACAAJSONAAEi.",
     "t": "bup",
-    "d": "EM8B1uDhWaJLfpIiEqgp-3EurGUcbfe7u2k5AarDl2XD",
+    "d": "EAvy-pCxwjnBuNpU-1MasIL9WreuzpocGZ30wRlxj7tw",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
     "n": "3",
-    "p": "EBdytzDC4dnatn-6mrCWLSGuM62LM0BgS31YnAg5NTeW",
+    "p": "EHdCoOs5P-xwHWjXuJOe8SWgTKVj_Vx_YbbDSYxJ6fK3",
     "dt": "2020-08-03T12:00:20.000000+00:00",
-    "b": "EPj3sZj8OOWTkTgAN5vzVYdANeoj3zxgEn5APb8fCRRN"
+    "b": "EJakqLgla7ip4dygsRxRX3p3oYfAugvR6pm7zQByL0XO"
 }
 ```
 The value of the blinded attribute block BLID, `b` field, is the value of the SAID field in the associated blinded attribute block.
@@ -2344,22 +2344,22 @@ The value of the blinded attribute block BLID, `b` field, is the value of the SA
 The serialized expanded attribute block as follows:
 
 ```
-EPj3sZj8OOWTkTgAN5vzVYdANeoj3zxgEn5APb8fCRRNaGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZGEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4MYrevoked
+EJakqLgla7ip4dygsRxRX3p3oYfAugvR6pm7zQByL0XOaGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZGEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtvYrevoked
 ```
 
 Broken out into a table, the fields are as follows:
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EPj3sZj8OOWTkTgAN5vzVYdANeoj3zxgEn5APb8fCRRN`| Dummied BLID (Blinding SAID) |
+| `d` | `EJakqLgla7ip4dygsRxRX3p3oYfAugvR6pm7zQByL0XO`| Dummied BLID (Blinding SAID) |
 | `u` |`aGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZG`| UUID salty nonce blinding factor HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `Yrevoked` |Transaction state value string |
 
 To unblind the Discloser would compute the attribute black and then prefix the appropriate CESR group code an attach the encoded group given below:
 
 ```text
--aAjEPj3sZj8OOWTkTgAN5vzVYdANeoj3zxgEn5APb8fCRRNaGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZGEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4MYrevoked
+-aAjEJakqLgla7ip4dygsRxRX3p3oYfAugvR6pm7zQByL0XOaGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZGEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtvYrevoked
 ```
 
 #### Public Unblinded Blindable Example
@@ -2384,7 +2384,7 @@ Consider a unblindable state revocation Registry for ACDCs operated in an unblin
 ```
 With respect to the event above, given that the UUID, `u` field value has sufficient cryptographic entropy, the SAID, `d` field provides a universally unique identifier for the Registry that can be referenced elsewhere, typically as the value of the `rd` field in an ACDC or as an attached reference to the presentation of an ACDC.
 
-Sometime later, an ACDC is issued as indicated by its SAID, `d` field value, `EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5`. The value of the Issuer, `i` field of that ACDC will be the same as the Issuer AID for the registry inception event. This binds the Issuer to both the ACDC and the registry. The SAID of the ACDC will be provided as the `td` field value in an update event.  This binds the ACDC to the Registry.
+Sometime later, an ACDC is issued as indicated by its SAID, `d` field value, `ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt`. The value of the Issuer, `i` field of that ACDC will be the same as the Issuer AID for the registry inception event. This binds the Issuer to both the ACDC and the registry. The SAID of the ACDC will be provided as the `td` field value in an update event.  This binds the ACDC to the Registry.
 
 When secure discovery is employed, the value of the registry SAID, `rd` field of that ACDC will be the value given by the value of the SAID, `d` field in the registry inception, `rip` event.  This binds the Registry to the ACDC.
 
@@ -2394,12 +2394,12 @@ The state is initialized with the following (non-blindable) update event:
 {
         "v": "ACDCCAACAAJSONAAEx.",
         "t": "upd",
-        "d": "EJFxtbr9WioIkzTfVX4iC6Axxyg8jjKSX0ZrJgoNHiB-",
+        "d": "EH_7mAMBpQ21f3nHSy8B6yCD_jdMYiZ__Je1Hac-c-Kc",
         "rd": "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU",
         "n": "1",
         "p": "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU",
         "dt": "2020-08-03T12:00:20.000000+00:00",
-        "td": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
+        "td": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
         "ts": "issued"
 }
 ```
@@ -2412,12 +2412,12 @@ Sometime later, the ACDC is revoked with the publication by the Issuer of the fo
 {
         "v": "ACDCCAACAAJSONAAEy.",
         "t": "upd",
-        "d": "EJQ-ezS6h0Oa0BIN_w4KjstdapfOfrwmVluxn1DR5Gja",
+        "d": "ENwruIG38ayVNCQWRvQvmloSW4cK6k5eeHbI2cx23fz4",
         "rd": "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU",
         "n": "2",
-        "p": "EJFxtbr9WioIkzTfVX4iC6Axxyg8jjKSX0ZrJgoNHiB-",
+        "p": "EH_7mAMBpQ21f3nHSy8B6yCD_jdMYiZ__Je1Hac-c-Kc",
         "dt": "2020-08-04T12:00:20.000000+00:00",
-        "td": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
+        "td": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
         "ts": "revoked"
 }
 ```
@@ -2529,7 +2529,7 @@ An unblinded attachment of this blinded attribute block would be prefixed with t
 
 ##### Blinded Attribute Block ACDC State Calculation Example
 
-For example, suppose the UUID, `u` field value is encoded as `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO` the transaction ACDC said, `td` field value is encoded as `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`, the transaction state, `ts` field value is the string "issued" encoded as `0Missued`, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAB` for 1, and the bound Issuee key event SAID, `bd` field value is encoded as `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`. The digest to be used for computing the BLID is the BLAKE3-256 digest, which, when CESR-encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 188 characters.
+For example, suppose the UUID, `u` field value is encoded as `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, the transaction state, `ts` field value is the string "issued" encoded as `0Missued`, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAB` for 1, and the bound Issuee key event SAID, `bd` field value is encoded as `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`. The digest to be used for computing the BLID is the BLAKE3-256 digest, which, when CESR-encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 188 characters.
 
 For the sake of clarity, the field values are shown in the table below:
 
@@ -2537,29 +2537,29 @@ For the sake of clarity, the field values are shown in the table below:
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
 | `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
 | `bd` | `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`| Bound Issuee key event SAID field|
 
  The 188-character dummied serialization is as follows:
 ```
-############################################aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
+############################################aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
 ```
 
-The CESR encoded Blake3 digest of this string is `EJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4`.  This is substituted in the serialization above for the dummy characters to provide the final serialized expanded attribute block as follows:
+The CESR encoded Blake3 digest of this string is `EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57`.  This is substituted in the serialization above for the dummy characters to provide the final serialized expanded attribute block as follows:
 
 ```
-EJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
+EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
 ```
 
 Broken out into fields, the values are provided in the table below:
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4`| BLID (Blinding SAID) |
+| `d` | `EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57`| BLID (Blinding SAID) |
 | `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
 | `bd` | `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`| Bound Issuee key event SAID field|
@@ -2570,7 +2570,7 @@ In a presentation of the associated ACDC and/or TEL to a Disclosee, a discloser 
 An attachment of this blinded attribute block would be prefixed with the appropriate CESR count code, i.e.,  `BoundStateSextuples` with code format `-b##`, as follows:
 
 ```
--bAvEJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
+-bAvEOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkOEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv0MissuedMAABEJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv
 ```
 
 
@@ -2622,7 +2622,7 @@ Notice that the value of the BLID bound blinded attribute, `b` field in the tran
 
 At some later time, the issuer issues a new blindable update event, `bup`, with a new blind, UUID `u` field value in the associate attribute block, derived from the shared Salt and the sequence number of the `bup` event.  This makes the first use(s) of the registry uncorrelated with the eventual actual issuance of a real ACDC. In this case, the Issuer used a hierarchically deterministic algorithm to compute the UUID, `u` field in the blinded attribute block.
 
-Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`. The Issuer creates a new BLID, bound blinded attribute, `b` field value, with the ACDC SAID value for its `td` field, with `issued` as the ACDC state for the `ts` field, with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new bound blindable update event `bup` with its `b` field set to the SAID of the new bound blinded attribute block.
+Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID, bound blinded attribute, `b` field value, with the ACDC SAID value for its `td` field, with `issued` as the ACDC state for the `ts` field, with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new bound blindable update event `bup` with its `b` field set to the SAID of the new bound blinded attribute block.
 
 Suppose the associated update event occurs at sequence number 2 and the bound Issuee key event occurs at sequence number 1 in the Issuee's KEL. The published blindable update transaction event is as follows:
 
@@ -2630,12 +2630,12 @@ Suppose the associated update event occurs at sequence number 2 and the bound Is
 {
     "v": "ACDCCAACAAJSONAAEi.",
     "t": "bup",
-    "d": "EGu4B78s6G_GVrzaoBw2a1vkFpB5tVo-wZ1OGsC9D_pK",
+    "d": "EMVBaTa_rjBo6bbJ6eFppI-xnnC8nCuS174-RSc1CxLh",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
     "n": "2",
     "p": "EOBVdcIL2rVEzBDpQvmBpsp3R52DsoKhTAAdvHqAz9yc",
     "dt": "2020-08-02T12:00:20.000000+00:00",
-    "b": "EJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4"
+    "b": "EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57"
 }
 ```
 
@@ -2643,9 +2643,9 @@ The value of the bound blinded attribute block BLID, `b` field, is taken from th
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EJAeKLEtVtMtt28IdAKJShyZHodEIZTHJHzaP21A_ZU4`| BLID (Blinding SAID) |
+| `d` | `EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57`| BLID (Blinding SAID) |
 | `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
 | `bd` | `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`| Bound Issuee key event SAID field|
@@ -2661,12 +2661,12 @@ The published blindable update transaction event is as follows:
 {
     "v": "ACDCCAACAAJSONAAEi.",
     "t": "bup",
-    "d": "EDXGqM-V_sfj65Dk-lgMnpOZ9DYziqMaYkrju7NRKpFn",
+    "d": "EKks_zuYb8OU1pw7KeXn6w_13kavTbPCE9eXq1KYIHcI",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
     "n": "3",
-    "p": "EGu4B78s6G_GVrzaoBw2a1vkFpB5tVo-wZ1OGsC9D_pK",
+    "p": "EMVBaTa_rjBo6bbJ6eFppI-xnnC8nCuS174-RSc1CxLh",
     "dt": "2020-08-03T12:00:20.000000+00:00",
-    "b": "EIBNZ3t5rA_-PbBNmhtvtf0VgHBjVrE0fc-DO67f-wGv"
+    "b": "EMCLq-2IOahj__yMPEDZ5Fu7Uyvft66GYD4WYuMW8ztG"
 }
 ```
 The value of the blinded attribute block BLID, `b` field, is the value of the SAID field in the associated blinded attribute block.
@@ -2674,16 +2674,16 @@ The value of the blinded attribute block BLID, `b` field, is the value of the SA
 The serialized expanded attribute block is as follows:
 
 ```
-EIBNZ3t5rA_-PbBNmhtvtf0VgHBjVrE0fc-DO67f-wGvaFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVDEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4MYrevokedMAAIEDeCPBTHAt75Acgi9PfEciHFnc1r2DKAno3s9_QIYrXk
+EMCLq-2IOahj__yMPEDZ5Fu7Uyvft66GYD4WYuMW8ztGaFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVDEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtvYrevokedMAAIEDeCPBTHAt75Acgi9PfEciHFnc1r2DKAno3s9_QIYrXk
 ```
 
 Broken out into a table, the fields are as follows:
 
 |Virtual Label|Value|Description|
 |---|---|---|
-| `d` | `EIBNZ3t5rA_-PbBNmhtvtf0VgHBjVrE0fc-DO67f-wGv`| BLID (Blinding SAID) |
+| `d` | `EMCLq-2IOahj__yMPEDZ5Fu7Uyvft66GYD4WYuMW8ztG`| BLID (Blinding SAID) |
 | `u` | `aFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVD`| UUID salty nonce blinding factor, HD generated |
-| `td` | `EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M`| Transaction ACDC SAID field value, top-level `d`|
+| `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `Yrevoked` |Transaction state value string |
 | `bn` | `MAAI`| Bound Issuee key event sequence number field|
 | `bd` | `EDeCPBTHAt75Acgi9PfEciHFnc1r2DKAno3s9_QIYrXk`| Bound Issuee key event SAID field|
@@ -2691,7 +2691,7 @@ Broken out into a table, the fields are as follows:
 To unblind the Discloser would compute the attribute black and then prefix the appropriate CESR group code, i.e.,  `BoundStateSextuples` with code format `-b##`, and attach the encoded group given below:
 
 ```text
--bAvEIBNZ3t5rA_-PbBNmhtvtf0VgHBjVrE0fc-DO67f-wGvaFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVDEMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4MYrevokedMAAIEDeCPBTHAt75Acgi9PfEciHFnc1r2DKAno3s9_QIYrXk
+-bAvEMCLq-2IOahj__yMPEDZ5Fu7Uyvft66GYD4WYuMW8ztGaFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVDEP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtvYrevokedMAAIEDeCPBTHAt75Acgi9PfEciHFnc1r2DKAno3s9_QIYrXk
 ```
 
 ## Annex
@@ -3675,15 +3675,16 @@ regCal = "EPtolmh_NE2vC02oFc7FOiWkPcEiKUPWm5uu_Gv1JZDw"
 ```
 
 Cal uses this to issue an accreditation ACDC.  The full ACDC is as follows:
+<!-- example: accreditationExpanded -->
  ```python
  {
     "v": "ACDCCAACAAJSONAAKX.",
     "t": "acm",
-    "d": "EIF7egPvC8ITbGRdM9G0kd6aPELDg-azMkAqT-7cMuAi",
+    "d": "EPXbQWnLaNJ5oSu5JAoZXU5a1c5sicbNWgepjls1flG4",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdh",
     "i": "ECsGDKWAYtHBCkiDrzajkxs3Iw2g-dls3bLUsRP4yVdT",
     "rd": "EPtolmh_NE2vC02oFc7FOiWkPcEiKUPWm5uu_Gv1JZDw",
-    "s": "EK_iGlfdc7Q-qIGL-kqbDSD2z4fesT4dAQLEHGgH4lLG",
+    "s": "EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf",
     "a":
     {
         "d": "EK799owRYyk8UPFWUmfsm5AJfJmU7jZGtZXJFbg2I0KL",
@@ -3703,15 +3704,16 @@ Cal uses this to issue an accreditation ACDC.  The full ACDC is as follows:
 Note that the value of the `rd` field is the same as the value of regCal. This binds the issued ACDC to a specific issuance/revocation state registry. Note also that the top-level `i` field value is Cal's AID. Also note that nested inside the attribute block with label `a` is the issuee field `i` (not to be confused with the top-level issuer). The issuee field value is Amy's AID.  This binds Amy as the target of the ACDC.
 
 This ACDC can be compacted into its most compact form. This is as follows:
+<!-- example: accreditationCompact -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAF3.",
     "t": "acm",
-    "d": "EIF7egPvC8ITbGRdM9G0kd6aPELDg-azMkAqT-7cMuAi",
+    "d": "EPXbQWnLaNJ5oSu5JAoZXU5a1c5sicbNWgepjls1flG4",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdh",
     "i": "ECsGDKWAYtHBCkiDrzajkxs3Iw2g-dls3bLUsRP4yVdT",
     "rd": "EPtolmh_NE2vC02oFc7FOiWkPcEiKUPWm5uu_Gv1JZDw",
-    "s": "EK_iGlfdc7Q-qIGL-kqbDSD2z4fesT4dAQLEHGgH4lLG",
+    "s": "EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf",
     "a": "EK799owRYyk8UPFWUmfsm5AJfJmU7jZGtZXJFbg2I0KL",
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
 }
@@ -3721,9 +3723,10 @@ Note that the SAIDs of the sections are the same in both the uncompact and compa
 
 The schema for this ACDC is as follows:
 
+<!-- example: accreditationSchema -->
 ```json
 {
-        "$id": "EK_iGlfdc7Q-qIGL-kqbDSD2z4fesT4dAQLEHGgH4lLG",
+        "$id": "EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf",
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "title": "Accreditation Schema",
         "description": "Accreditation JSON Schema for acm ACDC.",
@@ -3757,7 +3760,7 @@ The schema for this ACDC is as follows:
                     {
                         "description": "Attribute Section Detail",
                         "type": "object",
-                        "required": ["d", "u", "i", "score", "name"],
+                        "required": ["d", "u", "i", "name", "level"],
                         "properties":
                         {
                             "d": {"description": "Attribute Section SAID", "type": "string"},
@@ -3828,21 +3831,22 @@ regDeb = "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU"
 
 Deb uses this to issue a report endorsement credential as follows:
 
+<!-- example: researchReportExpanded -->
 ```python
 {
-    "v": "ACDCCAACAAJSONAAK4.",
+    "v": "ACDCCAACAAJSONAAK6.",
     "t": "acm",
-    "d": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
+    "d": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdi",
     "i": "EEDGM_DvZ9qFEAPf_FX08J3HX49ycrVvYVXe9isaP5SW",
     "rd": "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU",
-    "s": "EKMXqyMQmOy0RuEj1VgOK9aD4GYR0D8Dcj0kssQtcY4-",
+    "s": "EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg",
     "a":
     {
-        "d": "EFTqnoiGSf-D76W3geNxEudBI_wz81FIkIXjzsjFztI-",
+        "d": "EPAZa0PO_Clywez4Qig0FtT40M6LI1H5Zn5lTG4u17FF",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXc4",
         "title": "Post Quantum Security",
-        "name": "Zoe Doe",
+        "author": "Zoe Doe",
         "report": "Imprementation should prioritize cryptographic agility over PQ."
     },
     "r":
@@ -3856,16 +3860,17 @@ Deb uses this to issue a report endorsement credential as follows:
 Note that the value of the `rd` field is the same as the value of regDeb. This binds the issued ACDC to a specific issuance/revocation state registry. Note also that the top-level `i` field value is Deb's AID. Also note there is no nested issuee field. This ACDC is therefore untargeted. The only association it to the student as named author via the `name` field.
 
 This ACDC can be compacted into its most compact form. This is as follows:
+<!-- example: researchReportCompact -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAF3.",
     "t": "acm",
-    "d": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
+    "d": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdi",
     "i": "EEDGM_DvZ9qFEAPf_FX08J3HX49ycrVvYVXe9isaP5SW",
     "rd": "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU",
-    "s": "EKMXqyMQmOy0RuEj1VgOK9aD4GYR0D8Dcj0kssQtcY4-",
-    "a": "EFTqnoiGSf-D76W3geNxEudBI_wz81FIkIXjzsjFztI-",
+    "s": "EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg",
+    "a": "EPAZa0PO_Clywez4Qig0FtT40M6LI1H5Zn5lTG4u17FF",
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
 }
 ```
@@ -3874,9 +3879,10 @@ Note that the SAIDs of the sections are the same in both the uncompact and compa
 
 The schema for this ACDC is as follows:
 
+<!-- example: reportSchema -->
 ```json
 {
-    "$id": "EKMXqyMQmOy0RuEj1VgOK9aD4GYR0D8Dcj0kssQtcY4-",
+    "$id": "EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Report Schema",
     "description": "Report JSON Schema for acm ACDC.",
@@ -3910,7 +3916,7 @@ The schema for this ACDC is as follows:
                 {
                     "description": "Attribute Section Detail",
                     "type": "object",
-                    "required": [ "d", "u", "i", "title", "author", "report"],
+                    "required": [ "d", "u", "title", "author", "report"],
                     "properties":
                     {
                       "d": {"description": "Attribute Section SAID", "type": "string"},
@@ -3919,7 +3925,7 @@ The schema for this ACDC is as follows:
                       "author": {"description": "Author Full Name", "type": "string"},
                       "report": { "description": "Report Body", "type": "string"}
                     },
-                    "additionalProperties": False
+                    "additionalProperties": false
                   }
             ]
         },
@@ -3947,12 +3953,12 @@ The schema for this ACDC is as follows:
                         "d": {"description": "Rule Section SAID", "type": "string"},
                         "l": {"description": "Legal Language", "type": "string"}
                     },
-                    "additionalProperties": False
+                    "additionalProperties": false
                 }
             ]
         }
     },
-    "additionalProperties": False
+    "additionalProperties": false
 }
 ```
 
@@ -3981,21 +3987,22 @@ regBob = "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ"
 
 Bob uses this to issue a report credential as follows:
 
+<!-- example: projectReportExpanded -->
 ```python
 {
-    "v": "ACDCCAACAAJSONAAKt.",
+    "v": "ACDCCAACAAJSONAAKv.",
     "t": "acm",
-    "d": "EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M",
+    "d": "EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdj",
     "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
-    "s": "EKMXqyMQmOy0RuEj1VgOK9aD4GYR0D8Dcj0kssQtcY4-",
+    "s": "EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg",
     "a":
     {
-        "d": "EIg1zAS3FfMMbQtLqARSwS3uGMttVbAPhKB71bjIPTs_",
+        "d": "EGApJO-Sts4BhAfpG21HoqVhRJSDLts00bz0doDOrBSD",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXc5",
         "title": "PQ Proof of Concept",
-        "name": "Zoe Doe",
+        "author": "Zoe Doe",
         "report": "Demonstration of recovery from surprise quantum attack"
     },
     "r":
@@ -4009,16 +4016,17 @@ Bob uses this to issue a report credential as follows:
 Note that the value of the `rd` field is the same as the value of regBob. This binds the issued ACDC to a specific issuance/revocation state registry. Note also that the top-level `i` field value is Bob's AID. Also note there is no nested issuee field. This ACDC is therefore untargeted. The only association is to the student as named author via the `name` field.
 
 This ACDC can be compacted into its most compact form. This is as follows:
+<!-- example: projectReportCompact -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAF3.",
     "t": "acm",
-    "d": "EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M",
+    "d": "EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdj",
     "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf",
     "rd": "ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ",
-    "s": "EKMXqyMQmOy0RuEj1VgOK9aD4GYR0D8Dcj0kssQtcY4-",
-    "a": "EIg1zAS3FfMMbQtLqARSwS3uGMttVbAPhKB71bjIPTs_",
+    "s": "EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg",
+    "a": "EGApJO-Sts4BhAfpG21HoqVhRJSDLts00bz0doDOrBSD",
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
 }
 ```
@@ -4052,23 +4060,22 @@ regAmy = "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX"
 
 Amy uses this to issue a transcript ACDC to Bob as follows:
 
+<!-- example: transcriptExpanded -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAXG.",
-    "d": "ENeNWgCCNcOf1JbgKxUzREKpyK5kABYFd2QYUzEfwz9H",
+    "d": "EAHU2Aby51UiUtAxthONvCXnYMwle2JxoOg9VUDWeYRq",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdk",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
-    "a":
-    {
+    "s": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
+    "a": {
         "d": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXcw",
         "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf",
         "name": "Zoe Doe",
         "gpa": 3.5,
-        "grades":
-        {
+        "grades": {
             "d": "EFQnBFeKAeS4DAWYoKDwWXOT4h2-XaGk7-w4-2N4ktXy",
             "u": "0ABhY2Rjc3BlY3dvcmtyYXcx",
             "history": 3.5,
@@ -4076,40 +4083,34 @@ Amy uses this to issue a transcript ACDC to Bob as follows:
             "math": 3.0
         }
     },
-    "e":
-    {
-        "d": "ECpmTyIIc1duvCeIceK19Sbd0uymklmwNTtwtmfjQnX0",
+    "e": {
+        "d": "EKlVDgiwF_LvLcc2OojJNkT4i1k8GgO1ILQk2raIoUzr",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXcy",
-        "accreditation":
-        {
-            "d": "EAFj8JaNEC3mdFNJKrXW8E03_k9qqb_xM9NjAPVHw-xJ",
+        "accreditation": {
+            "d": "EAdyOKjFvjDtZoh5CpuR2bQ9MZnLnjOENo4j4o4PVX-f",
             "u": "0ABhY2Rjc3BlY3dvcmtyYXcz",
-            "n": "EIF7egPvC8ITbGRdM9G0kd6aPELDg-azMkAqT-7cMuAi",
-            "s": "EK_iGlfdc7Q-qIGL-kqbDSD2z4fesT4dAQLEHGgH4lLG"
+            "n": "EPXbQWnLaNJ5oSu5JAoZXU5a1c5sicbNWgepjls1flG4",
+            "s": "EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf"
         },
-        "reports":
-        {
-            "d": "EOObmbCppe1S-7vtLuy766_4-RcfrC7p4ciFtBxdexuz",
+        "reports": {
+            "d": "EG56Nuf62I9r_K01jDudg7eIk96GUGr4Y3IfPlyVK0Lp",
             "u": "0ABhY2Rjc3BlY3dvcmtyYXc0",
             "o": "OR",
-            "research":
-            {
-                "d": "EN9ngstOcFHqsjqf75JZFKtCRmW76NkeRrUSxTLoqqkI",
+            "research": {
+                "d": "EHuAavMyMU7mTHqYpd5ZaATCaCuDVPQCswzXAdQYTIim",
                 "u": "0ABhY2Rjc3BlY3dvcmtyYXc2",
-                "n": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
+                "n": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
                 "o": "NI2I"
             },
-            "project":
-            {
-                "d": "EFwHz5qJ4_8c7IefP7_zugX2eIgtoyY8Up_WZ3osXwkI",
+            "project": {
+                "d": "EC6N1yUc_3Nqt3xyJHg_GMxYpWSusijz9JqsNuW2Ay3P",
                 "u": "0ABhY2Rjc3BlY3dvcmtyYXc1",
-                "n": "EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M",
+                "n": "EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv",
                 "o": "NI2I"
             }
         }
     },
-    "r":
-    {
+    "r": {
         "d": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU",
         "l": "Issuer provides this ACDC on an AS IS basis. This ACDC in whole or in part MUST NOT be shared with any other entity besides the intended recipient."
     }
@@ -4129,16 +4130,17 @@ Because the edges are in blocks, each with a SAID and UUID fields, the edges can
 This enables the graduated partial disclosure of the edges. The details of the linked (chained) credentials can be hidden by their block SAIDS so a disclosee can't see the linked ACDCs until the disclosse has to agreed to whatever terms are required by the discloser. Likewise for the rule section.  This illustrates that not only attributes but edges and rules can be partially disclosable.
 
 This ACDC can be compacted into its most compact form. This is as follows:
+<!-- example: transcriptCompact -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAGg.",
-    "d": "ENeNWgCCNcOf1JbgKxUzREKpyK5kABYFd2QYUzEfwz9H",
+    "d": "EAHU2Aby51UiUtAxthONvCXnYMwle2JxoOg9VUDWeYRq",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdk",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
+    "s": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
     "a": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
-    "e": "ECpmTyIIc1duvCeIceK19Sbd0uymklmwNTtwtmfjQnX0",
+    "e": "EKlVDgiwF_LvLcc2OojJNkT4i1k8GgO1ILQk2raIoUzr",
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
 }
 ```
@@ -4146,211 +4148,383 @@ Note that the SAIDs of the sections are the same in both the uncompact and compa
 
 The schema for this ACDC is as follows:
 
+<!-- example: transcriptSchema -->
 ```json
 {
-        "$id": "EABGAia_vH_zHCRLOK3Bm2xxujV5A8sYIJbypfSM_2Fh",
-        "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "title": "Transcript Schema",
-        "description": "Transcript JSON Schema for acm ACDC.",
-        "credentialType": "Transcript_ACDC_acm_message",
-        "version": "2.0.0",
-        "type": "object",
-        "required": ["v", "d", "i", "s", "a", "r"],
-        "properties":
-        {
-            "v": {"description": "ACDC version string", "type": "string"},
-            "t": {"description": "Message type", "type": "string"},
-            "d": {"description": "Message SAID", "type": "string"},
-            "u": {"description": "Message UUID", "type": "string"},
-            "i": {"description": "Issuer AID", "type": "string"},
-            "rd": {"description": "Registry SAID", "type": "string"},
-            "s":
-            {
-                "description": "Schema Section",
-                "oneOf":
-                [
-                    {"description": "Schema Section SAID", "type": "string"},
-                    {"description": "Schema Section Detail", "type": "object"}
-                ]
-            },
-            "a":
-             {
-                "description": "Attribute Section",
-                "oneOf":
-                [
-                    { "description": "Attribute Section SAID", "type": "string"},
-                    {
-                      "description": "Attribute Section Detail",
-                      "type": "object",
-                      "required": ["d", "u", "i", "name" "gpa", "grades"],
-                      "properties":
-                      {
-                        "d": {"description": "Attribute Section SAID", "type": "string"},
-                        "i": {"description": "Issuee AID", "type": "string"},
-                        "name": {"description": "Student Full Name", "type": "string"},
-                        "gpa": {"description": "Grade Point Average", "type": "number"},
-                        "grades":
-                        {
-                          "description": "Grades Block",
-                          "oneOf":
-                          [
-                            {"description": "Block SAID", "type": "string"},
-                            {
-                              "description": "Block detail",
-                              "type": "object",
-                              "required": ["d", "u", "history" "english", "math"],
-                              "properties":
-                              {
-                                "d": {"description": "Block SAID", "type": "string"},
-                                "u": {"description": "Block UUID", "type": "string"},
-                                "history": {"description": "History Grade", "type": "number"},
-                                "english": {"description": "English Grade", "type": "number"},
-                                "math": {"description": "Math Grade", "type": "number"}
-                              },
-                              "additionalProperties": false
-                            }
-                          ]
+    "$id": "EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Transcript Schema",
+    "description": "Transcript JSON Schema for acm ACDC.",
+    "credentialType": "Transcript_ACDC_acm_message",
+    "version": "2.0.0",
+    "type": "object",
+    "required": [
+        "v",
+        "d",
+        "i",
+        "s",
+        "a",
+        "r"
+    ],
+    "properties": {
+        "v": {
+            "description": "ACDC version string",
+            "type": "string"
+        },
+        "t": {
+            "description": "Message type",
+            "type": "string"
+        },
+        "d": {
+            "description": "Message SAID",
+            "type": "string"
+        },
+        "u": {
+            "description": "Message UUID",
+            "type": "string"
+        },
+        "i": {
+            "description": "Issuer AID",
+            "type": "string"
+        },
+        "rd": {
+            "description": "Registry SAID",
+            "type": "string"
+        },
+        "s": {
+            "description": "Schema Section",
+            "oneOf": [
+                {
+                    "description": "Schema Section SAID",
+                    "type": "string"
+                },
+                {
+                    "description": "Schema Section Detail",
+                    "type": "object"
+                }
+            ]
+        },
+        "a": {
+            "description": "Attribute Section",
+            "oneOf": [
+                {
+                    "description": "Attribute Section SAID",
+                    "type": "string"
+                },
+                {
+                    "description": "Attribute Section Detail",
+                    "type": "object",
+                    "required": [
+                        "d",
+                        "u",
+                        "i",
+                        "name",
+                        "gpa",
+                        "grades"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Attribute Section SAID",
+                            "type": "string"
+                        },
+                        "i": {
+                            "description": "Issuee AID",
+                            "type": "string"
+                        },
+                        "name": {
+                            "description": "Student Full Name",
+                            "type": "string"
+                        },
+                        "gpa": {
+                            "description": "Grade Point Average",
+                            "type": "number"
+                        },
+                        "grades": {
+                            "description": "Grades Block",
+                            "oneOf": [
+                                {
+                                    "description": "Block SAID",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "Block detail",
+                                    "type": "object",
+                                    "required": [
+                                        "d",
+                                        "u",
+                                        "history",
+                                        "english",
+                                        "math"
+                                    ],
+                                    "properties": {
+                                        "d": {
+                                            "description": "Block SAID",
+                                            "type": "string"
+                                        },
+                                        "u": {
+                                            "description": "Block UUID",
+                                            "type": "string"
+                                        },
+                                        "history": {
+                                            "description": "History Grade",
+                                            "type": "number"
+                                        },
+                                        "english": {
+                                            "description": "English Grade",
+                                            "type": "number"
+                                        },
+                                        "math": {
+                                            "description": "Math Grade",
+                                            "type": "number"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
                         },
                         "additionalProperties": false
-                      }
                     }
-                ]
-            },
-            "e":
-            {
-                "description": "Edge Section",
-                "oneOf":
-                [
-                  { "description": "Edge Section SAID", "type": "string"},
-                  {
+                }
+            ]
+        },
+        "e": {
+            "description": "Edge Section",
+            "oneOf": [
+                {
+                    "description": "Edge Section SAID",
+                    "type": "string"
+                },
+                {
                     "description": "Edge Section Detail",
                     "type": "object",
-                    "required": ["d", "u", "accreditation" "reports"],
-                    "properties":
-                    {
-                      "d": {"description": "Edge Section SAID", "type": "string"},
-                      "u": {"description": "Edge Section UUID", "type": "string"},
-                      "o": {"description": "Edge Section M-ary Operator", "type": "string"},
-                      "w": {"description": "Edge Section Weight", "type": "number"},
-                      "accreditation":
-                      {
-                        "description": "Accreditation Edge",
-                        "oneOf":
-                        [
-                          {"description": "Edge SAID", "type": "string"},
-                          {
-                            "description": "Edge Detail",
-                            "type": "object",
-                            "required": ["n"],
-                            "properties":
-                            {
-                              "d": {"description": "Edge SAID", "type": "string"},
-                              "u": {"description": "Edge UUID", "type": "string"},
-                              "n": {"description": "Far Node SAID", "type": "string"},
-                              "s": {"description": "Far Node Schema SAID", "type": "string"},
-                              "o": {"description": "Edge Unary Operator", "type": "string"},
-                              "w": {"description": "Edge Weight", "type": "number"},
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      },
-                      "reports":
-                      {
-                        "description": "Reports Edge Group",
-                        "oneOf":
-                        [
-                          {"description": "Edge Group SAID", "type": "string"},
-                          {
-                            "description": "Edge Group detail",
-                            "type": "object",
-                            "required": ["research", "project"],
-                            "properties":
-                            {
-                              "d": {"description": "Block SAID", "type": "string"},
-                              "u": {"description": "Block UUID", "type": "string"},
-                              "s": {"description": "Far Node Schema SAID", "type": "string"},
-                              "o": {"description": "Edge Group M-ary Operator", "type": "string"},
-                              "w": {"description": "Edge Group Weight", "type": "number"},
-                              "research":
-                              {
-                                "description": "Research Edge",
-                                "oneOf":
-                                [
-                                  {"description": "Edge SAID", "type": "string"},
-                                  {
+                    "required": [
+                        "d",
+                        "u",
+                        "accreditation",
+                        "reports"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Edge Section SAID",
+                            "type": "string"
+                        },
+                        "u": {
+                            "description": "Edge Section UUID",
+                            "type": "string"
+                        },
+                        "o": {
+                            "description": "Edge Section M-ary Operator",
+                            "type": "string"
+                        },
+                        "w": {
+                            "description": "Edge Section Weight",
+                            "type": "number"
+                        },
+                        "accreditation": {
+                            "description": "Accreditation Edge",
+                            "oneOf": [
+                                {
+                                    "description": "Edge SAID",
+                                    "type": "string"
+                                },
+                                {
                                     "description": "Edge Detail",
                                     "type": "object",
-                                    "required": ["n"],
-                                    "properties":
-                                    {
-                                      "d": {"description": "Edge SAID", "type": "string"},
-                                      "u": {"description": "Edge UUID", "type": "string"},
-                                      "n": {"description": "Far Node SAID", "type": "string"},
-                                      "s": {"description": "Far Node Schema SAID", "type": "string"},
-                                      "o": {"description": "Edge Unary Operator", "type": "string"},
-                                      "w": {"description": "Edge Weight", "type": "number"},
+                                    "required": [
+                                        "n"
+                                    ],
+                                    "properties": {
+                                        "d": {
+                                            "description": "Edge SAID",
+                                            "type": "string"
+                                        },
+                                        "u": {
+                                            "description": "Edge UUID",
+                                            "type": "string"
+                                        },
+                                        "n": {
+                                            "description": "Far Node SAID",
+                                            "type": "string"
+                                        },
+                                        "s": {
+                                            "description": "Far Node Schema SAID",
+                                            "type": "string"
+                                        },
+                                        "o": {
+                                            "description": "Edge Unary Operator",
+                                            "type": "string"
+                                        },
+                                        "w": {
+                                            "description": "Edge Weight",
+                                            "type": "number"
+                                        }
                                     },
                                     "additionalProperties": false
-                                  }
-                                ]
-                              },
-                              "project":
-                              {
-                                "description": "Project Edge",
-                                "oneOf":
-                                [
-                                  {"description": "Edge SAID", "type": "string"},
-                                  {
-                                    "description": "Edge Detail",
+                                }
+                            ]
+                        },
+                        "reports": {
+                            "description": "Reports Edge Group",
+                            "oneOf": [
+                                {
+                                    "description": "Edge Group SAID",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "Edge Group detail",
                                     "type": "object",
-                                    "required": ["n"],
-                                    "properties":
-                                    {
-                                      "d": {"description": "Edge SAID", "type": "string"},
-                                      "u": {"description": "Edge UUID", "type": "string"},
-                                      "n": {"description": "Far Node SAID", "type": "string"},
-                                      "s": {"description": "Far Node Schema SAID", "type": "string"},
-                                      "o": {"description": "Edge Unary Operator", "type": "string"},
-                                      "w": {"description": "Edge Weight", "type": "number"},
+                                    "required": [
+                                        "research",
+                                        "project"
+                                    ],
+                                    "properties": {
+                                        "d": {
+                                            "description": "Block SAID",
+                                            "type": "string"
+                                        },
+                                        "u": {
+                                            "description": "Block UUID",
+                                            "type": "string"
+                                        },
+                                        "s": {
+                                            "description": "Far Node Schema SAID",
+                                            "type": "string"
+                                        },
+                                        "o": {
+                                            "description": "Edge Group M-ary Operator",
+                                            "type": "string"
+                                        },
+                                        "w": {
+                                            "description": "Edge Group Weight",
+                                            "type": "number"
+                                        },
+                                        "research": {
+                                            "description": "Research Edge",
+                                            "oneOf": [
+                                                {
+                                                    "description": "Edge SAID",
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "description": "Edge Detail",
+                                                    "type": "object",
+                                                    "required": [
+                                                        "n"
+                                                    ],
+                                                    "properties": {
+                                                        "d": {
+                                                            "description": "Edge SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "u": {
+                                                            "description": "Edge UUID",
+                                                            "type": "string"
+                                                        },
+                                                        "n": {
+                                                            "description": "Far Node SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "s": {
+                                                            "description": "Far Node Schema SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "o": {
+                                                            "description": "Edge Unary Operator",
+                                                            "type": "string"
+                                                        },
+                                                        "w": {
+                                                            "description": "Edge Weight",
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        },
+                                        "project": {
+                                            "description": "Project Edge",
+                                            "oneOf": [
+                                                {
+                                                    "description": "Edge SAID",
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "description": "Edge Detail",
+                                                    "type": "object",
+                                                    "required": [
+                                                        "n"
+                                                    ],
+                                                    "properties": {
+                                                        "d": {
+                                                            "description": "Edge SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "u": {
+                                                            "description": "Edge UUID",
+                                                            "type": "string"
+                                                        },
+                                                        "n": {
+                                                            "description": "Far Node SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "s": {
+                                                            "description": "Far Node Schema SAID",
+                                                            "type": "string"
+                                                        },
+                                                        "o": {
+                                                            "description": "Edge Unary Operator",
+                                                            "type": "string"
+                                                        },
+                                                        "w": {
+                                                            "description": "Edge Weight",
+                                                            "type": "number"
+                                                        }
+                                                    },
+                                                    "additionalProperties": false
+                                                }
+                                            ]
+                                        }
                                     },
                                     "additionalProperties": false
-                                  }
-                                ]
-                              }
-                            },
-                            "additionalProperties": false
-                          }
-                        ]
-                      },
-                      "additionalProperties": false
-                    }
-                  }
-                ]
-            },
-            "r":
-            {
-                "description": "Rule Section",
-                "oneOf":
-                [
-                    {"description": "Rule Section SAID", "type": "string"},
-                    {
-                        "description": "Rule Section Detail",
-                        "type": "object",
-                        "required": ["d", "l"],
-                        "properties":
-                        {
-                            "d": {"description": "Rule Section SAID", "type": "string"},
-                            "l": {"description": "Legal Language", "type": "string"}
+                                }
+                            ]
                         },
                         "additionalProperties": false
                     }
-                ]
-            }
+                }
+            ]
         },
-        "additionalProperties": false
+        "r": {
+            "description": "Rule Section",
+            "oneOf": [
+                {
+                    "description": "Rule Section SAID",
+                    "type": "string"
+                },
+                {
+                    "description": "Rule Section Detail",
+                    "type": "object",
+                    "required": [
+                        "d",
+                        "l"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Rule Section SAID",
+                            "type": "string"
+                        },
+                        "l": {
+                            "description": "Legal Language",
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            ]
+        }
+    },
+    "additionalProperties": false
 }
-
 ```
 
 ##### Transcript ACDC with Public Edges
@@ -4359,23 +4533,22 @@ Suppose there is no advantage to hidding the edges in the transcript ACDC. As a 
 
 The resulting ACDC is as follows:
 
+<!-- example: simpleTranscriptExpanded -->
 ```python
 {
     "v": "ACDCCAACAAJSONAAOD.",
-    "d": "EBaEMTKi6ZtHXmkhxHUoGEEtG8JKelw3b0gv6cFTg6BN",
+    "d": "EEpeIvCdedpcSm_X5YqP8QMp7WSdXu7uL2HUGBziH5UH",
     "u": "0ABhY2Rjc3BlY3dvcmtyYXdl",
     "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
     "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-    "s": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
-    "a":
-    {
+    "s": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
+    "a": {
         "d": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXcw",
         "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf",
         "name": "Zoe Doe",
         "gpa": 3.5,
-        "grades":
-        {
+        "grades": {
             "d": "EFQnBFeKAeS4DAWYoKDwWXOT4h2-XaGk7-w4-2N4ktXy",
             "u": "0ABhY2Rjc3BlY3dvcmtyYXcx",
             "history": 3.5,
@@ -4383,16 +4556,14 @@ The resulting ACDC is as follows:
             "math": 3.0
         }
     },
-    "e":
-    {
-        "d": "EEWx-E6Rexj3eORT-e2kLcAWVgviTqxwWvxS2LbNKuCh",
+    "e": {
+        "d": "ELhvGYtKnX58nUjvXRpAdgez7ukDVgHiNvbILvk39awY",
         "u": "0ABhY2Rjc3BlY3dvcmtyYXcy",
-        "accreditation": "EIF7egPvC8ITbGRdM9G0kd6aPELDg-azMkAqT-7cMuAi",
-        "reports":
-        {
+        "accreditation": "EPXbQWnLaNJ5oSu5JAoZXU5a1c5sicbNWgepjls1flG4",
+        "reports": {
             "o": "OR",
-            "research": "EAU5dUws4ffM9jZjWs0QfXTnhJ1qk2u3IUhBwFVbFnt5",
-            "project": "EMLjZLIMlfUOoKox_sDwQaJO-0wdoGW0uNbmI28Wwc4M"
+            "research": "ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt",
+            "project": "EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv"
         }
     },
     "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
@@ -4405,123 +4576,235 @@ Notices that each of the edge values is the SAID of the far node ACDC not the SA
 
 The most compact variant of this ACDC is as follows:
 
+<!-- example: simpleTranscriptCompact -->
 ```python
 {
-        "v": "ACDCCAACAAJSONAAGg.",
-        "d": "EBaEMTKi6ZtHXmkhxHUoGEEtG8JKelw3b0gv6cFTg6BN",
-        "u": "0ABhY2Rjc3BlY3dvcmtyYXdl",
-        "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
-        "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
-        "s": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
-        "a": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
-        "e": "EEWx-E6Rexj3eORT-e2kLcAWVgviTqxwWvxS2LbNKuCh",
-        "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
-    }
+    "v": "ACDCCAACAAJSONAAGg.",
+    "d": "EEpeIvCdedpcSm_X5YqP8QMp7WSdXu7uL2HUGBziH5UH",
+    "u": "0ABhY2Rjc3BlY3dvcmtyYXdl",
+    "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
+    "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "s": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
+    "a": "ELI2TuO6mLF0cR_0iU57EjYK4dExHIHdHxlRcAdO6x-U",
+    "e": "ELhvGYtKnX58nUjvXRpAdgez7ukDVgHiNvbILvk39awY",
+    "r": "EMZf9m0XYwqo4L8tnIDMZuX7YCZnMswS7Ta9j0CuYfjU"
+}
 ```
 
 The ACDC's schema is as follows:
 
+<!-- example: simpleTranscriptSchema -->
 ```json
 {
-    "$id": "ECVhGE4yeuHZ8KEqWK-lx5O9xrfUg6wiDPkkxxQSjgfk",
+    "$id": "EKq-KXY-8jd5OR9WEWjj6JRRRRrvtdzqBNkOh9Oj0afK",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
     "title": "Transcript Schema",
     "description": "Transcript JSON Schema for acm ACDC.",
     "credentialType": "Transcript_ACDC_acm_message",
     "version": "2.0.0",
     "type": "object",
-    "required": ["v", "d", "i", "s", "a", "r"],
-    "properties":
-    {
-        "v": {"description": "ACDC version string", "type": "string"},
-        "t": {"description": "Message type", "type": "string"},
-        "d": {"description": "Message SAID", "type": "string"},
-        "u": {"description": "Message UUID", "type": "string"},
-        "i": {"description": "Issuer AID", "type": "string"},
-        "rd": {"description": "Registry SAID", "type": "string"},
-        "s":
-        {
-            "description": "Schema Section",
-            "oneOf":
-            [
-                {"description": "Schema Section SAID", "type": "string"},
-                {"description": "Schema Section Detail", "type": "object"}
-            ]
+    "required": [
+        "v",
+        "d",
+        "i",
+        "s",
+        "a",
+        "r"
+    ],
+    "properties": {
+        "v": {
+            "description": "ACDC version string",
+            "type": "string"
         },
-        "a":
-         {
-            "description": "Attribute Section",
-            "oneOf":
-            [
-                { "description": "Attribute Section SAID", "type": "string"},
+        "t": {
+            "description": "Message type",
+            "type": "string"
+        },
+        "d": {
+            "description": "Message SAID",
+            "type": "string"
+        },
+        "u": {
+            "description": "Message UUID",
+            "type": "string"
+        },
+        "i": {
+            "description": "Issuer AID",
+            "type": "string"
+        },
+        "rd": {
+            "description": "Registry SAID",
+            "type": "string"
+        },
+        "s": {
+            "description": "Schema Section",
+            "oneOf": [
                 {
-                  "description": "Attribute Section Detail",
-                  "type": "object",
-                  "required": ["d", "u", "i", "name" "gpa", "grades"],
-                  "properties":
-                  {
-                    "d": {"description": "Attribute Section SAID", "type": "string"},
-                    "i": {"description": "Issuee AID", "type": "string"},
-                    "name": {"description": "Student Full Name", "type": "string"},
-                    "gpa": {"description": "Grade Point Average", "type": "number"},
-                    "grades":
-                    {
-                      "description": "Grades Block",
-                      "oneOf":
-                      [
-                        {"description": "Block SAID", "type": "string"},
-                        {
-                          "description": "Block detail",
-                          "type": "object",
-                          "required": ["d", "u", "history" "english", "math"],
-                          "properties":
-                          {
-                            "d": {"description": "Block SAID", "type": "string"},
-                            "u": {"description": "Block UUID", "type": "string"},
-                            "history": {"description": "History Grade", "type": "number"},
-                            "english": {"description": "English Grade", "type": "number"},
-                            "math": {"description": "Math Grade", "type": "number"}
-                          },
-                          "additionalProperties": false
-                        }
-                      ]
-                    },
-                    "additionalProperties": false
-                  }
+                    "description": "Schema Section SAID",
+                    "type": "string"
+                },
+                {
+                    "description": "Schema Section Detail",
+                    "type": "object"
                 }
             ]
         },
-        "e":
-        {
+        "a": {
+            "description": "Attribute Section",
+            "oneOf": [
+                {
+                    "description": "Attribute Section SAID",
+                    "type": "string"
+                },
+                {
+                    "description": "Attribute Section Detail",
+                    "type": "object",
+                    "required": [
+                        "d",
+                        "u",
+                        "i",
+                        "name",
+                        "gpa",
+                        "grades"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Attribute Section SAID",
+                            "type": "string"
+                        },
+                        "i": {
+                            "description": "Issuee AID",
+                            "type": "string"
+                        },
+                        "name": {
+                            "description": "Student Full Name",
+                            "type": "string"
+                        },
+                        "gpa": {
+                            "description": "Grade Point Average",
+                            "type": "number"
+                        },
+                        "grades": {
+                            "description": "Grades Block",
+                            "oneOf": [
+                                {
+                                    "description": "Block SAID",
+                                    "type": "string"
+                                },
+                                {
+                                    "description": "Block detail",
+                                    "type": "object",
+                                    "required": [
+                                        "d",
+                                        "u",
+                                        "history",
+                                        "english",
+                                        "math"
+                                    ],
+                                    "properties": {
+                                        "d": {
+                                            "description": "Block SAID",
+                                            "type": "string"
+                                        },
+                                        "u": {
+                                            "description": "Block UUID",
+                                            "type": "string"
+                                        },
+                                        "history": {
+                                            "description": "History Grade",
+                                            "type": "number"
+                                        },
+                                        "english": {
+                                            "description": "English Grade",
+                                            "type": "number"
+                                        },
+                                        "math": {
+                                            "description": "Math Grade",
+                                            "type": "number"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            ]
+                        },
+                        "additionalProperties": false
+                    }
+                }
+            ]
+        },
+        "e": {
             "description": "Edge Section",
-            "oneOf":
-            [
-                { "description": "Edge Section SAID", "type": "string"},
+            "oneOf": [
+                {
+                    "description": "Edge Section SAID",
+                    "type": "string"
+                },
                 {
                     "description": "Edge Section Detail",
                     "type": "object",
-                    "required": ["d", "u", "accreditation" "reports"],
-                    "properties":
-                    {
-                        "d": {"description": "Edge Section SAID", "type": "string"},
-                        "u": {"description": "Edge Section UUID", "type": "string"},
-                        "o": {"description": "Edge Section M-ary Operator", "type": "string"},
-                        "w": {"description": "Edge Section Weight", "type": "number"},
-                        "accreditation": {"description": "Far Node SAID", "type": "string"},
-                        "reports":
-                        {
+                    "required": [
+                        "d",
+                        "u",
+                        "accreditation",
+                        "reports"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Edge Section SAID",
+                            "type": "string"
+                        },
+                        "u": {
+                            "description": "Edge Section UUID",
+                            "type": "string"
+                        },
+                        "o": {
+                            "description": "Edge Section M-ary Operator",
+                            "type": "string"
+                        },
+                        "w": {
+                            "description": "Edge Section Weight",
+                            "type": "number"
+                        },
+                        "accreditation": {
+                            "description": "Far Node SAID",
+                            "type": "string"
+                        },
+                        "reports": {
                             "description": "Edge Group detail",
                             "type": "object",
-                            "required": ["research", "project"],
-                            "properties":
-                            {
-                                "d": {"description": "Block SAID", "type": "string"},
-                                "u": {"description": "Block UUID", "type": "string"},
-                                "s": {"description": "Far Node Schema SAID", "type": "string"},
-                                "o": {"description": "Edge Group M-ary Operator", "type": "string"},
-                                "w": {"description": "Edge Group Weight", "type": "number"},
-                                "research": {"description": "Far Node SAID", "type": "string"},
-                                "project": {"description": "Far Node SAID", "type": "string"},
+                            "required": [
+                                "research",
+                                "project"
+                            ],
+                            "properties": {
+                                "d": {
+                                    "description": "Block SAID",
+                                    "type": "string"
+                                },
+                                "u": {
+                                    "description": "Block UUID",
+                                    "type": "string"
+                                },
+                                "s": {
+                                    "description": "Far Node Schema SAID",
+                                    "type": "string"
+                                },
+                                "o": {
+                                    "description": "Edge Group M-ary Operator",
+                                    "type": "string"
+                                },
+                                "w": {
+                                    "description": "Edge Group Weight",
+                                    "type": "number"
+                                },
+                                "research": {
+                                    "description": "Far Node SAID",
+                                    "type": "string"
+                                },
+                                "project": {
+                                    "description": "Far Node SAID",
+                                    "type": "string"
+                                }
                             },
                             "additionalProperties": false
                         }
@@ -4530,20 +4813,29 @@ The ACDC's schema is as follows:
                 }
             ]
         },
-        "r":
-        {
+        "r": {
             "description": "Rule Section",
-            "oneOf":
-            [
-                {"description": "Rule Section SAID", "type": "string"},
+            "oneOf": [
+                {
+                    "description": "Rule Section SAID",
+                    "type": "string"
+                },
                 {
                     "description": "Rule Section Detail",
                     "type": "object",
-                    "required": ["d", "l"],
-                    "properties":
-                    {
-                        "d": {"description": "Rule Section SAID", "type": "string"},
-                        "l": {"description": "Legal Language", "type": "string"}
+                    "required": [
+                        "d",
+                        "l"
+                    ],
+                    "properties": {
+                        "d": {
+                            "description": "Rule Section SAID",
+                            "type": "string"
+                        },
+                        "l": {
+                            "description": "Legal Language",
+                            "type": "string"
+                        }
                     },
                     "additionalProperties": false
                 }
