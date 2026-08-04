@@ -38,7 +38,7 @@ The following fields are REQUIRED `[v, d, i, s]` i.e. they MUST appear in any AC
 ### Other Reserved Fields
 
 The following table defines non-top-level fields whose labels MUST be reserved.
-These MAY appear at other levels besides the top-level of an ACDC.
+Most of these MAY appear at other levels besides the top-level of an ACDC.
 
 | Label | Title | Description |
 |:-:|:--|:--|
@@ -52,10 +52,19 @@ These MAY appear at other levels besides the top-level of an ACDC.
 |`w`| Weight| Edge weight property that enables default property for directed weighted edges and operators on directed weighted edges.|
 |`l`| Legal Language| Text of Ricardian contract clause.|
 |`dt`| Datetime | Context-dependent ISO datetime string |
+|`_`| DAG Hop | Virtual label that denotes the traversal (hop) from an Edge in the near-side ACDC to the top level of the far-side ACDC referenced by that Edge's Node, `n`, field. It appears only in an expansion of a DAG of chained ACDCs and MUST NOT appear as a field label in an ACDC (see [Field Label Restrictions](#field-label-restrictions)).|
 
 ### Compact Labels
 
 The primary field labels are compact in that they MUST use only one or at most two characters. ACDCs are meant to support resource-constrained applications such as supply chain or IoT (Internet of Things) applications. Compact labels better support resource-constrained applications in general. With compact labels, the over-the-wire verifiable signed serialization consumes a minimum amount of bandwidth. Nevertheless, without loss of generality, a one-to-one normative semantic overlay using more verbose expressive field labels may be applied to the normative compact labels after verification of the over-the-wire serialization. This approach better supports bandwidth and storage constraints on transmission while not precluding any later semantic post-processing. This is a well-known design pattern for resource-constrained applications.
+
+### Field Label Restrictions
+
+Field labels serve as the components of the paths that reference parts of an ACDC or parts of a DAG of chained ACDCs. The components of such a path are separated by the path delimiter, `/`. When a path is serialized compactly as a CESR primitive, the path delimiter, `/`, is replaced by the character `-` so that the resultant serialization consists solely of [Base64](#RFC4648) characters and therefore incurs no expansion of non-Base64 characters into their Base64 equivalents. Consequently, a field label in an ACDC MUST NOT contain the character `-`. This is not a burdensome restriction because most programming languages do not allow `-` in an attribute name. Although a field map key MAY in general be any string, by convention a key that contains `-` is both less readable and less compactly serialized in CESR, so there is good reason to avoid it.
+
+Because `-` is thereby reserved as the compactly serialized path delimiter, the only remaining Base64 character available to denote a hop across an Edge from one ACDC to another is `_`. The field label `_` MUST therefore be reserved as a virtual path component that denotes such a hop, that is, the traversal from an Edge in the near-side ACDC to the top level of the far-side ACDC referenced by that Edge's Node, `n`, field. Consequently, a field in an ACDC MUST NOT be labeled with a single `_` character. The `_` character MAY appear within a longer field label, such as `first_name`. To clarify, only a field label consisting of exactly one `_` character is forbidden. This is not a burdensome restriction because the convention in most programming languages is to use a lone `_` as the name of an ignored variable, and an ACDC has little reason to include a field whose value is meant to be ignored.
+
+To elaborate, the `_` label appears only in an expansion of a DAG of chained ACDCs into a single field map. In such an expansion, each Edge block gains an additional field whose label is `_` and whose value is the subgraph contributed by the far-side ACDC referenced by that Edge's Node, `n`, field. Because the expansion supplies a field labeled `_` at each hop, a path that traverses the DAG needs no path delimiter other than `/`, and extraction of a value from the expansion uses the same path syntax as extraction of a value from within a single ACDC.
 
 ### Version String Field
 
