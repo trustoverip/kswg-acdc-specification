@@ -66,10 +66,7 @@ With `-` reserved as the compact path delimiter, the only Base64 character left 
 
 The `_` label appears only in an expansion of a DAG of chained ACDCs into a single field map. In such an expansion, each Edge block gains a field labeled `_` whose value is the subgraph contributed by the far-side ACDC named by that Edge's Node, `n`, field. Because every hop supplies such a field, a path across the DAG needs no delimiter but `/`, and a value is extracted from the expansion just as it is from within a single ACDC. See [Traversing Edges](#traversing-edges).
 
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1549
-Whether these restrictions reach the labels within the Schema Section is not settled. That section's labels are drawn from the JSON Schema vocabulary rather than chosen by the Issuer, and some of them, such as `$id`, contain characters that could never appear in a path component in any case.
-:::
+Both restrictions govern the field labels of an ACDC proper, that is, the labels of its top-level fields and of the fields within its Attribute, Aggregate, Edge, and Rule sections. They do not reach the labels within the Schema Section. Those are drawn from the JSON Schema vocabulary rather than chosen by the Issuer, some of them, such as `$id`, contain characters that could never appear in a path component in any case, and no disclosure path descends into that section, which is always disclosed (see [Closures](#closures)).
 
 ### Version String Field
 
@@ -1856,6 +1853,8 @@ A path ending in the path delimiter (equivalently, whose last component in tuple
 
 A path ending in a non-empty field label or index component designates a single leaf. Such a path designates the disclosure of that leaf alone, together with whatever nodes along its branch are needed to validate the SAIDs on that branch. It requires no sibling branch.
 
+Where the final component of a node path is a SAID, `d`, field, the node it designates is the block that the SAID commits to. A node path is therefore the expanded counterpart of the compacted value at its final component: `a/d/` and `a/` designate the same block, and a top-level `d/`, since the top-level SAID commits to the ACDC's top-level block, designates the whole of that ACDC.
+
 The node form is a hammer, the leaf form a scalpel. A node path to the top level of an ACDC designates the whole ACDC; to the top of a subgraph, that subgraph. A leaf path designates one value and no more than is needed to verify it.
 
 #### Closures
@@ -1864,7 +1863,7 @@ A disclosure path translates into a closure over the fields or array elements it
 
 What a leaf path closes over depends on the section it reaches, because the sections differ in how they blind their contents.
 
-- In a partially disclosable Attribute Section, the simple fields of a block share one SAID and one UUID. A leaf path into such a block therefore closes over every simple field of that block. Its nested sub-blocks stay compacted as their SAIDs.
+- In a partially disclosable section, that is, the Attribute, Edge, or Rule Section, the simple fields of a block share one SAID and one UUID. A leaf path into such a block therefore closes over every simple field of that block. Its nested sub-blocks stay compacted as their SAIDs. A leaf path into an Edge block accordingly closes over that Edge's node, `n`, and other simple fields together, which is what verifying the Edge against the far-side ACDC requires, and a leaf path into a blinded Rule block closes over that clause and no sibling clause.
 
 - In a selectively disclosable Aggregate Section, each blinded attribute block carries its own SAID, `d`, and UUID, `u`, field. A leaf path to one such block therefore closes over that block alone and tells nothing of any sibling. All fields in a blinded attribute block MUST be disclosed together (see [Aggregate Section](#aggregate-section)), so the closure is the whole block and no more.
 
@@ -1872,10 +1871,7 @@ The top-level Schema Section of an ACDC is always disclosed, so no path need des
 
 The partially disclosable sections are the Attribute, Edge, and Rule sections. The selectively disclosable section is the Aggregate section. The Rule Section is usually disclosed in full, but rules MAY be blinded, so it too supports Partial Disclosure and MUST NOT be assumed fully disclosed. A path MUST designate it when it is wanted.
 
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1512
-The closures for the Edge and Rule sections are not yet specified to the same degree as those for the Attribute and Aggregate sections. Blinded Edges and blinded Rule clauses each introduce their own combinatorics, which have been identified but not settled.
-:::
+A closure states what a path discloses. It does not bound what the Disclosee may then do with what it holds. Unblinding an Edge, in particular, yields the SAID of the far-side ACDC and so enables a further request for that ACDC, but that request is a separate disclosure with a closure of its own.
 
 ### Disclosure Paths, `dp`, Field
 
@@ -1887,23 +1883,15 @@ A list of tuples is used rather than a field map keyed by Schema SAID so that a 
 
 Every path of one tuple's path list reaches into the same ACDC, so in DAG-absolute form every one of them begins with the same route to that ACDC. The path prefix carries that route once for the whole tuple, and the paths of its path list carry only what distinguishes them.
 
-The path prefix of a tuple is the DAG-absolute route to the ACDC that the tuple's ACDCSchemaSAID names. It MUST be either the empty string or a DAG-absolute path that both begins and ends with the path delimiter, `/`. For the origin node ACDC, the prefix is the bare delimiter, `/`, which designates the top level of the DAG. For any other ACDC, the prefix descends through the Edge Sections, Edge-groups, and Edges that reach that ACDC, ending in the `_` hop component and the delimiter that follows it, as in `/e/accreditation/_/`.
+The path prefix of a tuple is the DAG-absolute route to the ACDC that the tuple's ACDCSchemaSAID names. It MUST be either the empty string or a DAG-absolute path that both begins and ends with the path delimiter, `/`. For the origin node ACDC, the prefix is the bare delimiter, `/`, which designates the top level of the DAG. For any other ACDC, the prefix descends through the Edge Sections, Edge-groups, and Edges that reach that ACDC, ending in the `_` hop component and the delimiter that follows it, as in `/e/accreditation/_/`. A prefix MUST NOT reach past the top level of the ACDC it names. Its office is to locate that ACDC, and the entries of its path list are what reach into it.
 
 The effective path designated by an entry of the path list is the prefix and that entry concatenated, with no delimiter inserted between them. An entry of a path list MUST NOT begin with the path delimiter. Because a prefix is either empty or delimiter-terminated, and an entry never begins with a delimiter, the concatenation is always a well-formed path, with no delimiter either doubled or missing. This holds equally of the compact serialization, in which the delimiter is `-`.
 
 Where the prefix is the empty string, the effective path is the entry itself, which is therefore an ACDC-relative path rooted at the top level of the ACDC the tuple names. Which ACDC that is follows from the position of the tuple in the `dp` list. A non-empty prefix names that ACDC explicitly instead, and the effective paths of such a tuple are DAG-absolute.
 
-An empty entry, `""`, in a path list designates the node at which the prefix is rooted, that is, the whole of the ACDC the tuple names. It is the node form (see [Node Paths and Leaf Paths](#node-paths-and-leaf-paths)) applied to the top level of that ACDC: a non-empty prefix already ends in the path delimiter, so nothing need follow it. Where the prefix is empty, an empty entry designates the whole of that tuple's ACDC likewise.
+Where the prefix is non-empty, an empty entry, `""`, in its path list designates the whole of the ACDC the tuple names. The prefix already ends in the path delimiter, so the effective path is the prefix itself, which is a node path (see [Node Paths and Leaf Paths](#node-paths-and-leaf-paths)) designating the top level of that ACDC. For the origin node, whose prefix is the bare delimiter, the effective path is `/`, in which the delimiter that opens a DAG-absolute path and the delimiter that terminates a node path are one and the same.
 
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1549
-Whether a prefix MAY reach past the top level of the ACDC it names, so that the entries of its path list are rooted at some interior node such as that ACDC's Attribute Section, is not settled. The construct was proposed to remove the redundancy that the paths of one tuple share, and a deeper prefix would remove more of it, but every example given of the construct ends at the top level of an ACDC.
-:::
-
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1549
-The spelling of a path designating a whole ACDC is not settled. Before the prefix was introduced, that path was the bare delimiter, `/`. A prefix already ends in a delimiter and no delimiter may be doubled, so the empty entry is used here in its place.
-:::
+Where the prefix is empty, an empty entry designates nothing. An ACDC-relative path has no leading delimiter to serve as its terminator, so a path designating a whole ACDC MUST name a top-level field of it and end in the delimiter. The top-level SAID field gives the shortest such path, `d/`, since that SAID commits to the ACDC's top-level block.
 
 #### Identifying Each Tuple's ACDC
 
@@ -1911,10 +1899,9 @@ The elements of the `dp` list MUST appear in the breadth-first search order of t
 
 The zeroth-element requirement binds a first-contact request too. It is rare for a requester to be unable to name the Schema of the origin node, because in practice the requester defines the shape of the DAG it will accept, and that shape fixes the origin node's Schema even where the origin is an ACDC that the Discloser issues for the purpose of the exchange (see [Disclosure-specific (Bespoke) Issued ACDCs](#disclosure-specific-bespoke-issued-acdcs)). Where a requester genuinely cannot predict the shape, it names a deliberately permissive origin Schema, one constraining little beyond the Issuer and Issuee, in place of the shape it cannot state.
 
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1549
-Whether the list MUST enumerate every ACDC in the DAG, or MAY be a subset covering only those ACDCs from which something is requested, is not settled. A non-empty prefix names each tuple's ACDC explicitly, which appears to make both the breadth-first ordering and the zeroth-element requirement unnecessary in that form, and a subset unambiguous. Whether the two requirements are therefore relaxed wherever prefixes are non-empty, or kept in both forms so that two `dp` values remain comparable element by element, is not settled either.
-:::
+A non-empty prefix names its tuple's ACDC explicitly, so where every prefix is non-empty the ordering is not what identifies each tuple. It is required even so. Any party that generates a `dp` value must already linearize the DAG in order to walk it, so ordering the list costs nothing and would take deliberate effort to avoid, and a `dp` value in one form then reads the same way as a `dp` value in the other.
+
+Which ACDCs the list MUST carry follows from what identifies them. Where prefixes are empty, position is the identifier, so the list MUST hold one element for every ACDC of the DAG in breadth-first order, and an element from which nothing is requested carries an empty path list. Where prefixes are non-empty, each element names its own ACDC, so the list MAY omit any ACDC from which nothing is requested, provided the elements it does carry remain in breadth-first order.
 
 Because the breadth-first ordering already fixes which ACDC each element refers to, in most cases the prefix MAY be the empty string and each path expressed in ACDC-relative form. The origin node's prefix MAY be either the empty string or the bare delimiter, `/`, since for the origin node there is never any ambiguity.
 
@@ -1932,10 +1919,7 @@ When a `dp` field appears in a message answering a prior message that also carri
 
 Pathing into the selectively disclosable Aggregate Section is special. Its blinded attribute blocks are elements of an array, and by design a Disclosee does not know the offset at which any given block lies. Each block does, however, carry a uniquely labeled field, so a path designating such a block MUST use that label as its component rather than an offset. Extraction then requires computing the offset that corresponds to the label, so that the offset can index the array.
 
-::: issue
-https://github.com/WebOfTrust/keripy/discussions/1549
-Whether a path such as `A/over21` designates the blinded attribute block that contains the uniquely labeled field or the labeled field itself is not settled. The two coincide when the block holds a single attribute field, because all fields in a blinded attribute block MUST be disclosed together, but they differ when the block holds more than one.
-:::
+Such a path designates the block that holds the uniquely labeled field, not the field alone. A path `A/over21` therefore closes over the whole of the blinded attribute block in which `over21` appears, whether that block holds one attribute field or several, which is what the requirement that all fields of a blinded attribute block be disclosed together already implies (see [Aggregate Section](#aggregate-section)).
 
 #### Simple Compact Edge
 
@@ -1979,10 +1963,16 @@ The same request in DAG-absolute form is as follows. Only the prefixes differ; e
 
 The effective paths of the first element are therefore `/e/accreditation/_/i`, `/e/accreditation/_/a/i`, and `/e/accreditation/_/r/`, and the disclosure is the same as for the ACDC-relative form. Were the transcript Schema to make any of the three Edges optional, a non-empty prefix would be REQUIRED, because a party holding only the Schema could not then tell which Edge the second element refers to.
 
-An element that asked for the whole of the accreditation ACDC rather than three parts of it would carry a single empty path.
+An element that asked for the whole of the accreditation ACDC rather than three parts of it would carry a single empty path, whose effective path is the prefix itself.
 
 ```json
 ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "/e/accreditation/_/", [""]]
+```
+
+The same element with an empty prefix, which has no leading delimiter to terminate, names the top-level SAID field instead.
+
+```json
+["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "", ["d/"]]
 ```
 
 
