@@ -1831,7 +1831,7 @@ One such order is that of a breadth-first search from the origin node. Depth-fir
 
 ### Path Syntax
 
-A path is a tuple of components. Each component is a field label or, where the collection it indexes is an array, tuple, or list rather than a field map, a zero-based integer offset into that array. When serialized for transmission, the components are separated by the path delimiter, `/`, and when serialized compactly as a CESR primitive, by `-` (see [Field Label Restrictions](#field-label-restrictions)). The syntax allows both indexed and labeled components, but for readability a path SHOULD use field labels wherever they exist, that is, except where it traverses an array.
+A path is a tuple of components. Each component is a field label or, where the collection it indexes is an array, tuple, or list rather than a field map, a zero-based integer offset into that array. When serialized for transmission, the components are separated by the path delimiter, `/`, and when serialized compactly as a CESR primitive, by `-` (see [Field Label Restrictions](#field-label-restrictions)). The syntax allows both indexed and labeled components, but for readability a path SHOULD use field labels wherever they exist, that is, except where it traverses an array. The Aggregate Section is a partial exception in both directions, since its blinded blocks are array elements that a path MAY name by label (see [Aggregate Section Pathing](#aggregate-section-pathing)).
 
 A path that begins with the path delimiter, `/` (equivalently, whose first component in tuple form is an empty string), is a DAG-absolute path, rooted at the top level of the DAG's origin ACDC.
 
@@ -1865,7 +1865,7 @@ What a leaf path closes over depends on the section it reaches, because the sect
 
 - In a partially disclosable section, that is, the Attribute, Edge, or Rule Section, the simple fields of a block share one SAID and one UUID. A leaf path into such a block therefore closes over every simple field of that block. Its nested sub-blocks stay compacted as their SAIDs. A leaf path into an Edge block accordingly closes over that Edge's node, `n`, and other simple fields together, which is what verifying the Edge against the far-side ACDC requires, and a leaf path into a blinded Rule block closes over that clause and no sibling clause.
 
-- In a selectively disclosable Aggregate Section, each blinded attribute block carries its own SAID, `d`, and UUID, `u`, field. A leaf path to one such block therefore closes over that block alone and tells nothing of any sibling. All fields in a blinded attribute block MUST be disclosed together (see [Aggregate Section](#aggregate-section)), so the closure is the whole block and no more.
+- In a selectively disclosable Aggregate Section, each blinded attribute block carries its own SAID, `d`, and UUID, `u`, field. A leaf path to one such block therefore closes over that block alone and tells nothing of any sibling. All fields in a blinded attribute block MUST be disclosed together (see [Aggregate Section](#aggregate-section)), so the closure is the whole block and no more, together with the unblinded AGID at the head of the array, against which the block's inclusion is proved (see [Aggregate Section Pathing](#aggregate-section-pathing)).
 
 The top-level Schema Section of an ACDC is always disclosed, so no path need designate it.
 
@@ -1915,11 +1915,17 @@ When a `dp` field appears in a message answering a prior message that also carri
 
 ### Special Cases
 
-#### Aggregate Section
+#### Aggregate Section Pathing
 
-Pathing into the selectively disclosable Aggregate Section is special. Its blinded attribute blocks are elements of an array, and by design a Disclosee does not know the offset at which any given block lies. Each block does, however, carry a uniquely labeled field, so a path designating such a block MUST use that label as its component rather than an offset. Extraction then requires computing the offset that corresponds to the label, so that the offset can index the array.
+Pathing into the selectively disclosable Aggregate Section is special. Its blinded attribute blocks are elements of an array, and by design a Disclosee does not know the offset at which any given block lies. Each block does, however, carry a uniquely labeled field, that is, a field whose label appears in no other block, besides the SAID, `d`, and UUID, `u`, fields that every block carries. A path MAY therefore name a block by that label in place of its offset, as in `A/over21`.
 
-Such a path designates the block that holds the uniquely labeled field, not the field alone. A path `A/over21` therefore closes over the whole of the blinded attribute block in which `over21` appears, whether that block holds one attribute field or several, which is what the requirement that all fields of a blinded attribute block be disclosed together already implies (see [Aggregate Section](#aggregate-section)).
+Such a path designates the block that holds the labeled field, not the field alone, and closes over the whole of it, whether the block holds one attribute field or several, which is what the requirement that all fields of a blinded attribute block be disclosed together already implies (see [Aggregate Section](#aggregate-section)). Extraction requires computing the offset that corresponds to the label, so that the offset can index the array. The labeled form is therefore a shorthand for the indexed form and expands to it: where the block lies at offset 1, `A/over21` and `A/1/over21` designate the same closure. Nothing is ambiguous between the two forms, because a field label MUST NOT begin with a numeral.
+
+Where the designated block holds no nested sub-blocks, the leaf and node forms of the shorthand designate the same closure, so `A/over21` and `A/over21/` are equivalent.
+
+Where the block does hold nested sub-blocks, the shorthand cannot reach into them, and a path that attempts it, such as `A/over21/issued`, MUST be rejected when expanded. Disclosing part of the inside of a selectively disclosed block mixes Partial Disclosure into Selective Disclosure, and a Schema that calls for it is better rewritten as a DAG of ACDCs. A path that must reach a nested sub-block MUST name the offset explicitly, as in `A/1/over21/issued`.
+
+The zeroth element of the Aggregate array is the AGID rather than a blinded block (see [Blinded attribute array](#blinded-attribute-array)). It is not blinded, and an inclusion proof is verified against it, so it is disclosed in any closure that discloses any element of the section. A path MAY designate it alone, as `A/0`, and the node path `A/` designates the whole section, expanded.
 
 #### Simple Compact Edge
 
