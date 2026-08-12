@@ -4127,7 +4127,7 @@ The first Edge is to the accreditation ACDC. This is targeted and the value of t
 In the Edge group labeled `reports` are the other two edges; neither of these is targeted.  This edge group uses an `OR` operator. This means that the Edge group is satisfied if either or both of its Edges are satisfied.
 
 For the sake of example, each edge has a Unary, `NI2I` edge operator.
-Because the edges are in blocks, each with a SAID and unique entropy fields, the edges can be compacted for confidentiality.
+Because the edges are in blocks, each with SAID and unique-entropy fields, the edges can be compacted for confidentiality.
 
 This enables the graduated partial disclosure of the edges. The details of the linked (chained) credentials can be hidden by their block SAIDS so a disclosee can't see the linked ACDCs until the disclosse has to agreed to whatever terms are required by the discloser. Likewise for the rule section.  This illustrates that not only attributes but edges and rules can be partially disclosable.
 
