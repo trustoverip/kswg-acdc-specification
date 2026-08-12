@@ -1848,6 +1848,8 @@ For example, `/e/reports/project/_/a/author` starts at the top level of the orig
 
 A path that traverses two Edges, such as `/e/evidence/_/e/reports/project/_/a/author`, starts at the origin node, takes its `evidence` Edge, hops to a second ACDC, descends that ACDC's Edge Section through its Edge-group `reports` to its Edge `project`, hops to a third ACDC, and reaches the `author` field of that ACDC's Attribute Section.
 
+Where such a path appears in a Disclosure Paths, `dp`, field, the traversal is ordinarily carried by the path prefix of the tuple rather than repeated in every path of that tuple's path list (see [Path Prefix](#path-prefix)). The requirements of this section apply to the effective path, that is, to the prefix and the path taken together.
+
 #### Node Paths and Leaf Paths
 
 A path ending in the path delimiter (equivalently, whose last component in tuple form is an empty string) designates a whole node, that is, the field map or array that is the value of the path's final label. Such a path designates the disclosure of that node and the full expansion of every branch beneath it. It also requires disclosure of enough of the branch leading to that node to validate the SAIDs along the path.
@@ -1877,20 +1879,46 @@ The closures for the Edge and Rule sections are not yet specified to the same de
 
 ### Disclosure Paths, `dp`, Field
 
-The value of the Disclosure Paths, `dp`, field is a list of tuples. Each tuple represents one ACDC in the DAG that is the object of the exchange and is of the form `(ACDCSchemaSAID, [paths])`. The first element of the tuple is the qb64-encoded SAID of the Schema of the associated ACDC. The second element is a list of paths into that ACDC. In a serialization that has no distinct tuple type, such as JSON, each tuple MUST be represented as a two-element array.
+The value of the Disclosure Paths, `dp`, field is a list of tuples. Each tuple represents one ACDC in the DAG that is the object of the exchange and is of the form `(ACDCSchemaSAID, PathPrefix, [paths])`. The first element of the tuple is the qb64-encoded SAID of the Schema of the associated ACDC. The second element is the path prefix shared by every path of the third element, as defined in [Path Prefix](#path-prefix) below. The third element is a list of paths into that ACDC. In a serialization that has no distinct tuple type, such as JSON, each tuple MUST be represented as a three-element array.
 
 A list of tuples is used rather than a field map keyed by Schema SAID so that a Schema SAID MAY appear more than once. Two ACDCs of the same type, that is, of the same Schema SAID, MAY appear in one DAG, and a field map could not tell them apart. The DAG in [Complete ACDC Example: Private (partially disclosable) ACDC with Edges](#complete-acdc-example-private-partially-disclosable-acdc-with-edges) is such a case: the research report ACDC and the project report ACDC share a Schema.
 
-The elements of the `dp` list MUST appear in the breadth-first search order of the DAG from its origin node. The zeroth element MUST represent the origin node ACDC. Its ACDCSchemaSAID MUST be the Schema SAID of the origin ACDC in qb64 form, and its path list holds the paths whose closures cover the parts of the origin ACDC to be disclosed. Each later element represents another ACDC of the DAG, in breadth-first order, with a path list into that ACDC.
+#### Path Prefix
+
+Every path of one tuple's path list reaches into the same ACDC, so in DAG-absolute form every one of them begins with the same route to that ACDC. The path prefix carries that route once for the whole tuple, and the paths of its path list carry only what distinguishes them.
+
+The path prefix of a tuple is the DAG-absolute route to the ACDC that the tuple's ACDCSchemaSAID names. It MUST be either the empty string or a DAG-absolute path that both begins and ends with the path delimiter, `/`. For the origin node ACDC, the prefix is the bare delimiter, `/`, which designates the top level of the DAG. For any other ACDC, the prefix descends through the Edge Sections, Edge-groups, and Edges that reach that ACDC, ending in the `_` hop component and the delimiter that follows it, as in `/e/accreditation/_/`.
+
+The effective path designated by an entry of the path list is the prefix and that entry concatenated, with no delimiter inserted between them. An entry of a path list MUST NOT begin with the path delimiter. Because a prefix is either empty or delimiter-terminated, and an entry never begins with a delimiter, the concatenation is always a well-formed path, with no delimiter either doubled or missing. This holds equally of the compact serialization, in which the delimiter is `-`.
+
+Where the prefix is the empty string, the effective path is the entry itself, which is therefore an ACDC-relative path rooted at the top level of the ACDC the tuple names. Which ACDC that is follows from the position of the tuple in the `dp` list. A non-empty prefix names that ACDC explicitly instead, and the effective paths of such a tuple are DAG-absolute.
+
+An empty entry, `""`, in a path list designates the node at which the prefix is rooted, that is, the whole of the ACDC the tuple names. It is the node form (see [Node Paths and Leaf Paths](#node-paths-and-leaf-paths)) applied to the top level of that ACDC: a non-empty prefix already ends in the path delimiter, so nothing need follow it. Where the prefix is empty, an empty entry designates the whole of that tuple's ACDC likewise.
 
 ::: issue
-https://github.com/WebOfTrust/keripy/discussions/1542
-Whether the zeroth-element requirement holds for a first-contact request, in which the requester may not be able to name the Schema of an origin node that the responder has not yet supplied, is not settled. Nor is it settled whether the list MUST enumerate every ACDC in the DAG or MAY be a subset that covers only those ACDCs from which something is requested.
+https://github.com/WebOfTrust/keripy/discussions/1549
+Whether a prefix MAY reach past the top level of the ACDC it names, so that the entries of its path list are rooted at some interior node such as that ACDC's Attribute Section, is not settled. The construct was proposed to remove the redundancy that the paths of one tuple share, and a deeper prefix would remove more of it, but every example given of the construct ends at the top level of an ACDC.
 :::
 
-Because the breadth-first ordering already fixes which ACDC each element refers to, in most cases no path need traverse an Edge, and each MAY be expressed in ACDC-relative form. Paths in the origin node's path list MAY take either form, since for the origin node there is never any ambiguity.
+::: issue
+https://github.com/WebOfTrust/keripy/discussions/1549
+The spelling of a path designating a whole ACDC is not settled. Before the prefix was introduced, that path was the bare delimiter, `/`. A prefix already ends in a delimiter and no delimiter may be doubled, so the empty entry is used here in its place.
+:::
 
-The ordering alone is not always sufficient. Where the Schema makes an Edge optional, or makes an Edge-group optional and thereby its Edges, a party that knows only the Schema cannot generate a total ordering, because a node the Schema allows may be absent from the DAG as issued. The ordering then has gaps. In that case the paths in every path list after the zeroth element MUST be in DAG-absolute form, which removes the ambiguity a missing node would introduce.
+#### Identifying Each Tuple's ACDC
+
+The elements of the `dp` list MUST appear in the breadth-first search order of the DAG from its origin node. The zeroth element MUST represent the origin node ACDC. Its ACDCSchemaSAID MUST be the Schema SAID of the origin ACDC in qb64 form, and its path list holds the paths whose closures cover the parts of the origin ACDC to be disclosed. Each later element represents another ACDC of the DAG, in breadth-first order, with a path list into that ACDC.
+
+The zeroth-element requirement binds a first-contact request too. It is rare for a requester to be unable to name the Schema of the origin node, because in practice the requester defines the shape of the DAG it will accept, and that shape fixes the origin node's Schema even where the origin is an ACDC that the Discloser issues for the purpose of the exchange (see [Disclosure-specific (Bespoke) Issued ACDCs](#disclosure-specific-bespoke-issued-acdcs)). Where a requester genuinely cannot predict the shape, it names a deliberately permissive origin Schema, one constraining little beyond the Issuer and Issuee, in place of the shape it cannot state.
+
+::: issue
+https://github.com/WebOfTrust/keripy/discussions/1549
+Whether the list MUST enumerate every ACDC in the DAG, or MAY be a subset covering only those ACDCs from which something is requested, is not settled. A non-empty prefix names each tuple's ACDC explicitly, which appears to make both the breadth-first ordering and the zeroth-element requirement unnecessary in that form, and a subset unambiguous. Whether the two requirements are therefore relaxed wherever prefixes are non-empty, or kept in both forms so that two `dp` values remain comparable element by element, is not settled either.
+:::
+
+Because the breadth-first ordering already fixes which ACDC each element refers to, in most cases the prefix MAY be the empty string and each path expressed in ACDC-relative form. The origin node's prefix MAY be either the empty string or the bare delimiter, `/`, since for the origin node there is never any ambiguity.
+
+The ordering alone is not always sufficient. Where the Schema makes an Edge optional, or makes an Edge-group optional and thereby its Edges, a party that knows only the Schema cannot generate a total ordering, because a node the Schema allows may be absent from the DAG as issued. The ordering then has gaps. In that case the prefix of every element after the zeroth MUST be non-empty, so that each names its ACDC explicitly rather than by position, which removes the ambiguity a missing node would introduce.
 
 Together the node and leaf forms let a path list designate as much as a whole ACDC or as little as one value drawn from a branch into its top level or into any of its Attribute, Aggregate, Edge, or Rule sections. A `dp` field thus states, compactly and precisely, what parts of a DAG are to be disclosed.
 
@@ -1921,14 +1949,14 @@ For a private Edge, the Edge block label is known from the Schema, so a path can
 
 The DAG in [Complete ACDC Example: Private (partially disclosable) ACDC with Edges](#complete-acdc-example-private-partially-disclosable-acdc-with-edges) consists of four ACDCs. The transcript ACDC is the origin node. Its Edge Section has an `accreditation` Edge to the accreditation ACDC and a `reports` Edge-group containing a `research` Edge to the research report ACDC and a `project` Edge to the project report ACDC. Breadth-first search from the origin therefore yields the order: transcript, accreditation, research report, project report.
 
-Suppose the disclosure requested is, from each of the four ACDCs, the Issuer, the Issuee or author, and the whole Rule Section. In ACDC-relative form the `dp` value is as follows.
+Suppose the disclosure requested is, from each of the four ACDCs, the Issuer, the Issuee or author, and the whole Rule Section. In ACDC-relative form, that is, with an empty prefix in every element, the `dp` value is as follows.
 
 ```json
 [
-  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", ["i", "a/i", "r/"]],
-  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", ["i", "a/i", "r/"]],
-  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", ["i", "a/author", "r/"]],
-  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", ["i", "a/author", "r/"]]
+  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", "", ["i", "a/i", "r/"]],
+  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "", ["i", "a/i", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "", ["i", "a/author", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "", ["i", "a/author", "r/"]]
 ]
 ```
 
@@ -1938,18 +1966,24 @@ Consider the closures for the zeroth element, the transcript ACDC. The path `i` 
 
 The closure for the first element, the accreditation ACDC, is like it, and also takes in the transcript ACDC's compacted Edge Section and its uncompacted `accreditation` Edge block, which verify the Edge SAID that reaches the accreditation ACDC. The closures for the second and third elements likewise take in the branch of the transcript's Edge Section that runs through the `reports` Edge-group to the `research` and `project` Edges. The total disclosure is the union of the four closures.
 
-The same request in DAG-absolute form is as follows.
+The same request in DAG-absolute form is as follows. Only the prefixes differ; each path list is the one above, because the route to each ACDC has been factored out of its paths and into its prefix.
 
 ```json
 [
-  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", ["/i", "/a/i", "/r/"]],
-  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", ["/e/accreditation/_/i", "/e/accreditation/_/a/i", "/e/accreditation/_/r/"]],
-  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", ["/e/reports/research/_/i", "/e/reports/research/_/a/author", "/e/reports/research/_/r/"]],
-  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", ["/e/reports/project/_/i", "/e/reports/project/_/a/author", "/e/reports/project/_/r/"]]
+  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", "/", ["i", "a/i", "r/"]],
+  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "/e/accreditation/_/", ["i", "a/i", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "/e/reports/research/_/", ["i", "a/author", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "/e/reports/project/_/", ["i", "a/author", "r/"]]
 ]
 ```
 
-The disclosure is the same as for the ACDC-relative form. Were the transcript Schema to make any of the three Edges optional, the DAG-absolute form would be REQUIRED, because a party holding only the Schema could not then tell which Edge the second element refers to.
+The effective paths of the first element are therefore `/e/accreditation/_/i`, `/e/accreditation/_/a/i`, and `/e/accreditation/_/r/`, and the disclosure is the same as for the ACDC-relative form. Were the transcript Schema to make any of the three Edges optional, a non-empty prefix would be REQUIRED, because a party holding only the Schema could not then tell which Edge the second element refers to.
+
+An element that asked for the whole of the accreditation ACDC rather than three parts of it would carry a single empty path.
+
+```json
+["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "/e/accreditation/_/", [""]]
+```
 
 
 ## Issuance and Presentation Exchange (IPEX)
