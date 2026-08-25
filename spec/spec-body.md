@@ -60,11 +60,13 @@ The primary field labels are compact in that they MUST use only one or at most t
 
 ### Field Label Restrictions
 
-Field labels serve as the components of the paths that reference parts of an ACDC or parts of a DAG of chained ACDCs. The components of such a path are separated by the path delimiter, `/`. When a path is serialized compactly as a CESR primitive, the path delimiter, `/`, is replaced by the character `-` so that the resultant serialization consists solely of [Base64](#RFC4648) characters and therefore incurs no expansion of non-Base64 characters into their Base64 equivalents. Consequently, a field label in an ACDC MUST NOT contain the character `-`. This is not a burdensome restriction because most programming languages do not allow `-` in an attribute name. Although a field map key MAY in general be any string, by convention a key that contains `-` is both less readable and less compactly serialized in CESR, so there is good reason to avoid it.
+Field labels are the components of the paths that reference parts of an ACDC, or parts of a DAG of chained ACDCs, as defined in [Disclosure Paths](#disclosure-paths) below. When a path is serialized compactly as a CESR primitive, the path delimiter, `/`, is replaced by `-`, so that the result is pure [Base64](#RFC4648) and no character has to be expanded into a Base64 equivalent. A field label in an ACDC MUST NOT, therefore, contain the character `-`. The restriction costs little. Most programming languages do not allow `-` in an attribute name, and although a field map key MAY be any string, a key containing `-` is both harder to read and less compactly serialized in CESR.
 
-Because `-` is thereby reserved as the compactly serialized path delimiter, the only remaining Base64 character available to denote a hop across an Edge from one ACDC to another is `_`. The field label `_` MUST therefore be reserved as a virtual path component that denotes such a hop, that is, the traversal from an Edge in the near-side ACDC to the top level of the far-side ACDC referenced by that Edge's Node, `n`, field. Consequently, a field in an ACDC MUST NOT be labeled with a single `_` character. The `_` character MAY appear within a longer field label, such as `first_name`. To clarify, only a field label consisting of exactly one `_` character is forbidden. This is not a burdensome restriction because the convention in most programming languages is to use a lone `_` as the name of an ignored variable, and an ACDC has little reason to include a field whose value is meant to be ignored.
+With `-` reserved as the compact path delimiter, the only Base64 character left to denote a hop across an Edge is `_`. The label `_` MUST therefore be reserved as a virtual path component denoting that hop: the traversal from an Edge in the near-side ACDC to the top level of the far-side ACDC named by that Edge's Node, `n`, field. A field in an ACDC MUST NOT be labeled with a single `_`. Only that label is forbidden; `_` MAY appear within a longer label, such as `first_name`. This restriction costs little too. Most programming languages use a lone `_` to name a variable that is ignored, and an ACDC has little reason to carry a field meant to be ignored.
 
-To elaborate, the `_` label appears only in an expansion of a DAG of chained ACDCs into a single field map. In such an expansion, each Edge block gains an additional field whose label is `_` and whose value is the subgraph contributed by the far-side ACDC referenced by that Edge's Node, `n`, field. Because the expansion supplies a field labeled `_` at each hop, a path that traverses the DAG needs no path delimiter other than `/`, and extraction of a value from the expansion uses the same path syntax as extraction of a value from within a single ACDC.
+The `_` label appears only in an expansion of a DAG of chained ACDCs into a single field map. In such an expansion, each Edge block gains a field labeled `_` whose value is the subgraph contributed by the far-side ACDC named by that Edge's Node, `n`, field. Because every hop supplies such a field, a path across the DAG needs no delimiter but `/`, and a value is extracted from the expansion just as it is from within a single ACDC. See [Traversing Edges](#traversing-edges).
+
+Both restrictions govern the field labels of an ACDC proper, that is, the labels of its top-level fields and of the fields within its Attribute, Aggregate, Edge, and Rule sections. They do not reach the labels within the Schema Section. Those are drawn from the JSON Schema vocabulary rather than chosen by the Issuer, some of them, such as `$id`, contain characters that could never appear in a path component in any case, and no disclosure path descends into that section, which is always disclosed (see [Closures](#closures)).
 
 ### Version String Field
 
@@ -1804,6 +1806,185 @@ One special case of a Contractually protected disclosure is a Chain-Link Confide
 Another special case of Contractually Protected Disclosure is Contingent Disclosure. In a Contingent Disclosure, some contingency is specified in the Rules section that places an obligation by some party to make a disclosure when the contingency is satisfied. This might be recourse given the breach of some other contract term. When that contingency is met, then the Contingent Disclosure MUST be made by the party whose responsibility it is to satisfy that disclosure obligation. The responsible party MAY be the Discloser, or it MAY be some other party, such as an escrow agent. The Contingent Disclosure clause MAY reference a cryptographic commitment to a private ACDC or private Attribute ACDC (Partial Disclosure) that satisfies via its Full Disclosure the Contingent Disclosure requirement. Contingent Disclosure MAY be used to limit the actual disclosure of personally identifying information (PII) to a just-in-time, need-to-know basis (i.e., upon the contingency) and not a priori. As long as the Discloser and Disclosee trust the escrow agent and the verifiability of the commitment, there is no need to disclose PII about the Discloser in order to enable a transaction, but merely an agreement to the terms of the contingency. This enables something called latent accountability. Recourse via Full Disclosure of PII is latent in the Contingent Disclosure but never realized (actualized) until the conditions of the contingency is satisfied. This minimizes inadvertent leakage while protecting both the Discloser and the Disclosee.
 
 
+## Disclosure Paths
+
+This section is normative. It defines the path syntax that designates the parts of an ACDC, or of a DAG of chained ACDCs, to be disclosed, and the Disclosure Paths, `dp`, field that carries a set of such paths. The [IPEX](#issuance-and-presentation-exchange-ipex) section below, which is non-normative, binds the `dp` field to particular messages of the Issuance and Presentation Exchange protocol. The syntax and semantics defined here apply wherever a `dp` field appears.
+
+The `dp` field is not an ACDC field. It appears in the messages that negotiate a disclosure, not in the ACDCs that are disclosed. It is therefore not reserved as an ACDC field label (see [Other Reserved Fields](#other-reserved-fields)).
+
+### DAG of ACDCs
+
+An ACDC is a graph fragment. It consists of a near-side node and that node's outgoing Edges, which its Edge Section contains. An ACDC holds no Edges incoming to its own node, only outgoing ones; its incoming Edges belong to other fragments. The node part of a fragment is its top level plus its Schema, Attribute, Aggregate, and Rule sections. For brevity, an ACDC MAY be called a node of the DAG where that carries no ambiguity. An ACDC is not simply a node, but it holds exactly one, so the shorthand is safe.
+
+A source node in a DAG is a node that has no incoming Edges. It MUST either have no Edges at all or only outgoing Edges.
+
+An issuance or presentation exchange discloses a single DAG of connected ACDC graph fragments. That DAG MUST have exactly one source node, called the origin node. The origin node belongs to the principal ACDC being disclosed.
+
+Where a single exchange is to convey several unchained ACDCs, a DAG MUST be formed by issuing a bespoke ACDC whose node is the origin, with Edges chaining back to every other ACDC the exchange includes. A bespoke ACDC thereby combines several DAGs into one with a single origin node. Any Discloser MAY issue one (see [Disclosure-specific (Bespoke) Issued ACDCs](#disclosure-specific-bespoke-issued-acdcs)). This gives every exchange the same normalized structure, on which the `dp` field depends.
+
+#### DAG of Subgraphs
+
+An ACDC is itself a nested set of collections, expressed either as field maps (associative arrays) or as arrays. The top-level section of an ACDC is a field map. Each value at that top level may itself be a field map or an array, nested further in turn. The nesting forms a graph, specifically a tree. A DAG of ACDCs is therefore a graph of subgraphs, one subgraph per ACDC. So in what follows, node may mean a node of the DAG of ACDCs or a node of one ACDC's subgraph. A path that traverses Edges traverses several subgraphs.
+
+#### Ordering
+
+The field maps inside an ACDC MUST be insertion-ordered (see [Ordered Nested Field Maps](#ordered-nested-field-maps)). Insertion order survives round-trip serialization. Because arrays are already ordered, the subgraph inside each ACDC is a well-ordered tree, and because each Edge Section is an ordered field map, the DAG of ACDCs is well-ordered as well. A well-ordered DAG with a single source node linearizes into a unique, reproducible order.
+
+One such order is that of a breadth-first search from the origin node. Depth-first search yields a unique, reproducible order too. Breadth-first is chosen because in some applications, such as a dossier using joint issuance, the joint-issued ACDCs fall together in breadth-first order and scatter in depth-first, and together is easier to read. Where the DAG is a single chain, the two orders agree.
+
+### Path Syntax
+
+A path is a tuple of components. Each component is a field label or, where the collection it indexes is an array, tuple, or list rather than a field map, a zero-based integer offset into that array. When serialized for transmission, the components are separated by the path delimiter, `/`, and when serialized compactly as a CESR primitive, by `-` (see [Field Label Restrictions](#field-label-restrictions)). The syntax allows both indexed and labeled components, but for readability a path SHOULD use field labels wherever they exist, that is, except where it traverses an array. The Aggregate Section is a partial exception in both directions, since its blinded blocks are array elements that a path MAY name by label (see [Aggregate Section Pathing](#aggregate-section-pathing)).
+
+A path that begins with the path delimiter, `/` (equivalently, whose first component in tuple form is an empty string), is a DAG-absolute path, rooted at the top level of the DAG's origin ACDC.
+
+A path that does not begin with the path delimiter (equivalently, whose first component in tuple form is not an empty string) is an ACDC-relative path, rooted at the top level of its associated ACDC.
+
+#### Traversing Edges
+
+A path that traverses one or more Edges MUST be in DAG-absolute form, and MUST therefore begin with `/e`, the Edge Section of the origin node ACDC. It then descends through any nested Edge-group labels and finally the Edge label. The hop from that Edge to the top level of the far-side ACDC is denoted by the virtual path component `_` (see [Field Label Restrictions](#field-label-restrictions)). The Edge block's node, `n`, field label is not a path component; `_` stands for the traversal that `n` designates. Each further Edge traversal repeats the pattern.
+
+For example, `/e/reports/project/_/a/author` starts at the top level of the origin ACDC, descends through its Edge Section, `e`, through its Edge-group `reports`, to its Edge `project`, hops to the top level of the far-side ACDC, and descends through that ACDC's Attribute Section, `a`, to its `author` field.
+
+A path that traverses two Edges, such as `/e/evidence/_/e/reports/project/_/a/author`, starts at the origin node, takes its `evidence` Edge, hops to a second ACDC, descends that ACDC's Edge Section through its Edge-group `reports` to its Edge `project`, hops to a third ACDC, and reaches the `author` field of that ACDC's Attribute Section.
+
+Where such a path appears in a Disclosure Paths, `dp`, field, the traversal is ordinarily carried by the path prefix of the tuple rather than repeated in every path of that tuple's path list (see [Path Prefix](#path-prefix)). The requirements of this section apply to the effective path, that is, to the prefix and the path taken together.
+
+#### Node Paths and Leaf Paths
+
+A path ending in the path delimiter (equivalently, whose last component in tuple form is an empty string) designates a whole node, that is, the field map or array that is the value of the path's final label. Such a path designates the disclosure of that node and the full expansion of every branch beneath it. It also requires disclosure of enough of the branch leading to that node to validate the SAIDs along the path.
+
+A path ending in a non-empty field label or index component designates a single leaf. Such a path designates the disclosure of that leaf alone, together with whatever nodes along its branch are needed to validate the SAIDs on that branch. It requires no sibling branch.
+
+Where the final component of a node path is a SAID, `d`, field, the node it designates is the block that the SAID commits to. A node path is therefore the expanded counterpart of the compacted value at its final component: `a/d/` and `a/` designate the same block, and a top-level `d/`, since the top-level SAID commits to the ACDC's top-level block, designates the whole of that ACDC.
+
+The node form is a hammer, the leaf form a scalpel. A node path to the top level of an ACDC designates the whole ACDC; to the top of a subgraph, that subgraph. A leaf path designates one value and no more than is needed to verify it.
+
+#### Closures
+
+A disclosure path translates into a closure over the fields or array elements it implies. That closure MAY span several ACDCs where the path traverses Edges. The disclosure designated by a set of paths is the union of their closures.
+
+What a leaf path closes over depends on the section it reaches, because the sections differ in how they blind their contents.
+
+- In a partially disclosable section, that is, the Attribute, Edge, or Rule Section, the simple fields of a block share one SAID and one UUID. A leaf path into such a block therefore closes over every simple field of that block. Its nested sub-blocks stay compacted as their SAIDs. A leaf path into an Edge block accordingly closes over that Edge's node, `n`, and other simple fields together, which is what verifying the Edge against the far-side ACDC requires, and a leaf path into a blinded Rule block closes over that clause and no sibling clause.
+
+- In a selectively disclosable Aggregate Section, each blinded attribute block carries its own SAID, `d`, and UUID, `u`, field. A leaf path to one such block therefore closes over that block alone and tells nothing of any sibling. All fields in a blinded attribute block MUST be disclosed together (see [Aggregate Section](#aggregate-section)), so the closure is the whole block and no more, together with the unblinded AGID at the head of the array, against which the block's inclusion is proved (see [Aggregate Section Pathing](#aggregate-section-pathing)).
+
+The top-level Schema Section of an ACDC is always disclosed, so no path need designate it.
+
+The partially disclosable sections are the Attribute, Edge, and Rule sections. The selectively disclosable section is the Aggregate section. The Rule Section is usually disclosed in full, but rules MAY be blinded, so it too supports Partial Disclosure and MUST NOT be assumed fully disclosed. A path MUST designate it when it is wanted.
+
+A closure states what a path discloses. It does not bound what the Disclosee may then do with what it holds. Unblinding an Edge, in particular, yields the SAID of the far-side ACDC and so enables a further request for that ACDC, but that request is a separate disclosure with a closure of its own.
+
+### Disclosure Paths, `dp`, Field
+
+The value of the Disclosure Paths, `dp`, field is a list of tuples. Each tuple represents one ACDC in the DAG that is the object of the exchange and is of the form `(ACDCSchemaSAID, PathPrefix, [paths])`. The first element of the tuple is the qb64-encoded SAID of the Schema of the associated ACDC. The second element is the path prefix shared by every path of the third element, as defined in [Path Prefix](#path-prefix) below. The third element is a list of paths into that ACDC. In a serialization that has no distinct tuple type, such as JSON, each tuple MUST be represented as a three-element array.
+
+A list of tuples is used rather than a field map keyed by Schema SAID so that a Schema SAID MAY appear more than once. Two ACDCs of the same type, that is, of the same Schema SAID, MAY appear in one DAG, and a field map could not tell them apart. The DAG in [Complete ACDC Example: Private (partially disclosable) ACDC with Edges](#complete-acdc-example-private-partially-disclosable-acdc-with-edges) is such a case: the research report ACDC and the project report ACDC share a Schema.
+
+#### Path Prefix
+
+Every path of one tuple's path list reaches into the same ACDC, so in DAG-absolute form every one of them begins with the same route to that ACDC. The path prefix carries that route once for the whole tuple, and the paths of its path list carry only what distinguishes them.
+
+The path prefix of a tuple is the DAG-absolute route to the ACDC that the tuple's ACDCSchemaSAID names. It MUST be either the empty string or a DAG-absolute path that both begins and ends with the path delimiter, `/`. For the origin node ACDC, the prefix is the bare delimiter, `/`, which designates the top level of the DAG. For any other ACDC, the prefix descends through the Edge Sections, Edge-groups, and Edges that reach that ACDC, ending in the `_` hop component and the delimiter that follows it, as in `/e/accreditation/_/`. A prefix MUST NOT reach past the top level of the ACDC it names. Its office is to locate that ACDC, and the entries of its path list are what reach into it.
+
+The effective path designated by an entry of the path list is the prefix and that entry concatenated, with no delimiter inserted between them. An entry of a path list MUST NOT begin with the path delimiter. Because a prefix is either empty or delimiter-terminated, and an entry never begins with a delimiter, the concatenation is always a well-formed path, with no delimiter either doubled or missing. This holds equally of the compact serialization, in which the delimiter is `-`.
+
+Where the prefix is the empty string, the effective path is the entry itself, which is therefore an ACDC-relative path rooted at the top level of the ACDC the tuple names. Which ACDC that is follows from the position of the tuple in the `dp` list. A non-empty prefix names that ACDC explicitly instead, and the effective paths of such a tuple are DAG-absolute.
+
+Where the prefix is non-empty, an empty entry, `""`, in its path list designates the whole of the ACDC the tuple names. The prefix already ends in the path delimiter, so the effective path is the prefix itself, which is a node path (see [Node Paths and Leaf Paths](#node-paths-and-leaf-paths)) designating the top level of that ACDC. For the origin node, whose prefix is the bare delimiter, the effective path is `/`, in which the delimiter that opens a DAG-absolute path and the delimiter that terminates a node path are one and the same.
+
+Where the prefix is empty, an empty entry designates nothing. An ACDC-relative path has no leading delimiter to serve as its terminator, so a path designating a whole ACDC MUST name a top-level field of it and end in the delimiter. The top-level SAID field gives the shortest such path, `d/`, since that SAID commits to the ACDC's top-level block.
+
+#### Identifying Each Tuple's ACDC
+
+The elements of the `dp` list MUST appear in the breadth-first search order of the DAG from its origin node. The zeroth element MUST represent the origin node ACDC. Its ACDCSchemaSAID MUST be the Schema SAID of the origin ACDC in qb64 form, and its path list holds the paths whose closures cover the parts of the origin ACDC to be disclosed. Each later element represents another ACDC of the DAG, in breadth-first order, with a path list into that ACDC.
+
+The zeroth-element requirement binds a first-contact request too. It is rare for a requester to be unable to name the Schema of the origin node, because in practice the requester defines the shape of the DAG it will accept, and that shape fixes the origin node's Schema even where the origin is an ACDC that the Discloser issues for the purpose of the exchange (see [Disclosure-specific (Bespoke) Issued ACDCs](#disclosure-specific-bespoke-issued-acdcs)). Where a requester genuinely cannot predict the shape, it names a deliberately permissive origin Schema, one constraining little beyond the Issuer and Issuee, in place of the shape it cannot state.
+
+A non-empty prefix names its tuple's ACDC explicitly, so where every prefix is non-empty the ordering is not what identifies each tuple. It is required even so. Any party that generates a `dp` value must already linearize the DAG in order to walk it, so ordering the list costs nothing and would take deliberate effort to avoid, and a `dp` value in one form then reads the same way as a `dp` value in the other.
+
+Which ACDCs the list MUST carry follows from what identifies them. Where prefixes are empty, position is the identifier, so the list MUST hold one element for every ACDC of the DAG in breadth-first order, and an element from which nothing is requested carries an empty path list. Where prefixes are non-empty, each element names its own ACDC, so the list MAY omit any ACDC from which nothing is requested, provided the elements it does carry remain in breadth-first order.
+
+Because the breadth-first ordering already fixes which ACDC each element refers to, in most cases the prefix MAY be the empty string and each path expressed in ACDC-relative form. The origin node's prefix MAY be either the empty string or the bare delimiter, `/`, since for the origin node there is never any ambiguity.
+
+The ordering alone is not always sufficient. Where the Schema makes an Edge optional, or makes an Edge-group optional and thereby its Edges, a party that knows only the Schema cannot generate a total ordering, because a node the Schema allows may be absent from the DAG as issued. The ordering then has gaps. In that case the prefix of every element after the zeroth MUST be non-empty, so that each names its ACDC explicitly rather than by position, which removes the ambiguity a missing node would introduce.
+
+Together the node and leaf forms let a path list designate as much as a whole ACDC or as little as one value drawn from a branch into its top level or into any of its Attribute, Aggregate, Edge, or Rule sections. A `dp` field thus states, compactly and precisely, what parts of a DAG are to be disclosed.
+
+#### Solicited Response
+
+When a `dp` field appears in a message answering a prior message that also carried one, an empty list, `[]`, means that the answering path list is the same as the one it answers. Where the answering list differs, or where the message is unsolicited, the `dp` value MUST NOT be an empty list.
+
+### Special Cases
+
+#### Aggregate Section Pathing
+
+Pathing into the selectively disclosable Aggregate Section is special. Its blinded attribute blocks are elements of an array, and by design a Disclosee does not know the offset at which any given block lies. Each block does, however, carry a uniquely labeled field, that is, a field whose label appears in no other block, besides the SAID, `d`, and UUID, `u`, fields that every block carries. A path MAY therefore name a block by that label in place of its offset, as in `A/over21`.
+
+Such a path designates the block that holds the labeled field, not the field alone, and closes over the whole of it, whether the block holds one attribute field or several, which is what the requirement that all fields of a blinded attribute block be disclosed together already implies (see [Aggregate Section](#aggregate-section)). Extraction requires computing the offset that corresponds to the label, so that the offset can index the array. The labeled form is therefore a shorthand for the indexed form and expands to it: where the block lies at offset 1, `A/over21` and `A/1/over21` designate the same closure. Nothing is ambiguous between the two forms, because a field label MUST NOT begin with a numeral.
+
+Where the designated block holds no nested sub-blocks, the leaf and node forms of the shorthand designate the same closure, so `A/over21` and `A/over21/` are equivalent.
+
+Where the block does hold nested sub-blocks, the shorthand cannot reach into them, and a path that attempts it, such as `A/over21/issued`, MUST be rejected when expanded. Disclosing part of the inside of a selectively disclosed block mixes Partial Disclosure into Selective Disclosure, and a Schema that calls for it is better rewritten as a DAG of ACDCs. A path that must reach a nested sub-block MUST name the offset explicitly, as in `A/1/over21/issued`.
+
+The zeroth element of the Aggregate array is the AGID rather than a blinded block (see [Blinded attribute array](#blinded-attribute-array)). It is not blinded, and an inclusion proof is verified against it, so it is disclosed in any closure that discloses any element of the section. A path MAY designate it alone, as `A/0`, and the node path `A/` designates the whole section, expanded.
+
+#### Simple Compact Edge
+
+A simple compact Edge is not a block. Its labeled Edge field value is the far node SAID itself, and its Schema says so, marking the value as the far node SAID rather than the SAID of an Edge block (see [Simple compact edge](#simple-compact-edge)). The path to such an Edge is just the Edge label, followed by the `_` hop component as for any other Edge. A simple compact Edge is represented differently within the ACDC, but the path syntax for traversing it is the same.
+
+#### Private Edge
+
+For a private Edge, the Edge block label is known from the Schema, so a path can always be built from the Schema alone. But the Schema SAID of the Edge block, or of an enclosing Edge-group block, may not be available until an earlier step of the exchange has unblinded that Edge. A private Edge MAY therefore require a two-step negotiation: an earlier agreement releases an enhanced offer that uncovers the private Edge's Schema, and a later request designates the ACDC behind it.
+
+### Disclosure Paths Example
+
+The DAG in [Complete ACDC Example: Private (partially disclosable) ACDC with Edges](#complete-acdc-example-private-partially-disclosable-acdc-with-edges) consists of four ACDCs. The transcript ACDC is the origin node. Its Edge Section has an `accreditation` Edge to the accreditation ACDC and a `reports` Edge-group containing a `research` Edge to the research report ACDC and a `project` Edge to the project report ACDC. Breadth-first search from the origin therefore yields the order: transcript, accreditation, research report, project report.
+
+Suppose the disclosure requested is, from each of the four ACDCs, the Issuer, the Issuee or author, and the whole Rule Section. In ACDC-relative form, that is, with an empty prefix in every element, the `dp` value is as follows.
+
+```json
+[
+  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", "", ["i", "a/i", "r/"]],
+  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "", ["i", "a/i", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "", ["i", "a/author", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "", ["i", "a/author", "r/"]]
+]
+```
+
+Note that the last two elements carry the same Schema SAID, because the research report ACDC and the project report ACDC share a Schema. This is the case that a field map keyed by Schema SAID could not express.
+
+Consider the closures for the zeroth element, the transcript ACDC. The path `i` is a leaf designating the Issuer field; its closure holds every top-level field in compact form, which is what validates the ACDC's top-level SAID. The path `a/i` is a leaf designating the Issuee field; its closure holds every simple field at the top level of the Attribute Section, which validates the Attribute Section SAID, and leaves the nested `grades` block compacted as its SAID. The path `r/` is a node designating the Rule Section; its closure holds that section expanded all the way down. Together these closures reach no part of the Edge Section.
+
+The closure for the first element, the accreditation ACDC, is like it, and also takes in the transcript ACDC's compacted Edge Section and its uncompacted `accreditation` Edge block, which verify the Edge SAID that reaches the accreditation ACDC. The closures for the second and third elements likewise take in the branch of the transcript's Edge Section that runs through the `reports` Edge-group to the `research` and `project` Edges. The total disclosure is the union of the four closures.
+
+The same request in DAG-absolute form is as follows. Only the prefixes differ; each path list is the one above, because the route to each ACDC has been factored out of its paths and into its prefix.
+
+```json
+[
+  ["EMm9Gn9Qq9gkRQduJx9Vjtj3b3l1cVpe4Sv18EdAVRtb", "/", ["i", "a/i", "r/"]],
+  ["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "/e/accreditation/_/", ["i", "a/i", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "/e/reports/research/_/", ["i", "a/author", "r/"]],
+  ["EOumGkAf8Y28g9xBWmVJAisgkolBPaJ64nPlf8McWgvg", "/e/reports/project/_/", ["i", "a/author", "r/"]]
+]
+```
+
+The effective paths of the first element are therefore `/e/accreditation/_/i`, `/e/accreditation/_/a/i`, and `/e/accreditation/_/r/`, and the disclosure is the same as for the ACDC-relative form. Were the transcript Schema to make any of the three Edges optional, a non-empty prefix would be REQUIRED, because a party holding only the Schema could not then tell which Edge the second element refers to.
+
+An element that asked for the whole of the accreditation ACDC rather than three parts of it would carry a single empty path, whose effective path is the prefix itself.
+
+```json
+["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "/e/accreditation/_/", [""]]
+```
+
+The same element with an empty prefix, which has no leading delimiter to terminate, names the top-level SAID field instead.
+
+```json
+["EOlgQaGgXI6Zqikg4I0KWaQeL9sRUGu7PUj78GekKnSf", "", ["d/"]]
+```
+
+
 ## Issuance and Presentation Exchange (IPEX)
 
 This section is non-normative. This merely outlines the Issuance and Presentation Exchange (IPEX) Protocol. A separate more detailed specification is being developed to more fully explicate this prototol. The IPEX protocol provides a uniform mechanism for the issuance and presentation of ACDCs [[ref: ACDC]] in a securely attributable manner. A single protocol is able to work for both types of exchanges by recognizing that all exchanges (both issuance and presentation) MAY be modeled as the disclosure of information by a Discloser to a Disclosee. This specification is not exhaustive, it is only normative in the sense that it specifies the message types and routes that SHOULD be used in either issuance or presentation exchanges. It provides sufficient detail to show a likely mechanism for implementing the various Graduated Disclosure mechanisms described above. A given implementation of issuance and or presentation exchange is typically application and ecosystem-dependent and would, therefore, require additional specifications for issuance and/or presentation exchange tuned to those application and ecosystem contexts. This specification provides a baseline for other specifications.
@@ -1820,14 +2001,22 @@ The baseline exchange protocol is composed of a standard set of routed KERI exch
 
 | Discloser | Disclosee | Initiate | Contents | Description |
 |:-:|:-:|:-:|:--|:--|
-| | `apply`| Y | Schema or its SAID, Attribute field label list, Aggregate element label list, signature on `apply` or its SAID | defines wanted disclosure |
+| | `apply`| Y | Disclosure Paths, `dp`, signature on `apply` or its SAID | defines wanted disclosure |
 |`spurn`|  | N | |rejects `apply` |
-|`offer`|  | Y | Metadata ACDC or its SAID, Schema or its SAID, partial disclosure, Aggregate element label list, signature on `offer` or its SAID  | proposes acceptable disclosure |
+|`offer`|  | Y | Metadata ACDC or its SAID, Disclosure Paths, `dp`, partial disclosure, signature on `offer` or its SAID  | proposes acceptable disclosure |
 | | `spurn` | N | |rejects `offer` |
 | | `agree`| N | signature and/or anchored seal on `offer` or its SAID | accepts `offer` |
 |`spurn`|  | N | |rejects `agree` |
 |`grant`|  | Y | Full or Selective Disclosure ACDC, signature on `grant` or its SAID  | discloses agreed to `offer` |
 | | `admit` | N | signature and/or anchored seal on `grant` or its SAID  | confirms received `grant` disclosure|
+
+#### Disclosure Paths in `apply` and `offer`
+
+The `apply` and `offer` messages each designate a disclosure, and both do so with a Disclosure Paths, `dp`, field, defined normatively in [Disclosure Paths](#disclosure-paths) above. An exchange, `exn`, message carries both a query section, `q`, and an attribute section, `a`, so that it can model a ReST request with little impedance mismatch: the route, `r`, field holds the path, the query section holds the query string as a field map, and the attribute section holds the body. A request to disclose names which parts of which ACDCs are wanted. It is a query. So where a `dp` field appears in an `apply` or `offer`, it MUST appear in that message's query section, `q`, and not in its attribute section, `a`.
+
+An `offer` answering an `apply` is a solicited response in the sense defined above, so an empty `dp` list in such an `offer` means the offered disclosure is the one the `apply` requested. An `offer` proposing a different disclosure, and an unsolicited `offer` that opens an exchange, MUST NOT carry an empty `dp` list.
+
+The `offer` usually carries a Metadata ACDC disclosing the Rule Section of the ACDC on offer, so that the Disclosee can `agree` to those terms before any attribute value is disclosed.
 
 #### Commitments via SAID
 
