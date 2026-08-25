@@ -18,7 +18,7 @@ The following table defines the top-level fields in an ACDC and their order of a
 |`v`| Version String | Regexable format: `ACDCMmmGggKKKKSSSS.` that provides protocol type, version, CESR genus version, serialization type, size, and terminator |
 |`t`| Message Type | Three-character Message type |
 |`d`| Message Digest SAID ([[3](#SAID)]) | Self-referential fully qualified cryptographic digest of enclosing map |
-|`u`| UUID | Random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`i`| Issuer AID ([[ref: AID]])| Autonomic Identifier whose control authority is established via KERI verifiable Key State. |
 |`rd`| Registry Digest SAID ([[3](#SAID)]) | Issuance and/or revocation, transfer, or retraction registry for ACDC |
 |`s`| Schema| Either the SAID [[3](#SAID)] of a JSON Schema block or the block itself. |
@@ -43,7 +43,7 @@ These MAY appear at other levels besides the top-level of an ACDC.
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest SAID ([[3](#SAID)]) | Self-referential fully qualified cryptographic digest of enclosing map. |
-|`u`| UUID | Random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`i`| Identifier AID ([[ref: AID]])| Context-dependent AID as determined by its enclosing map such as Issuee identifier. |
 |`rd`| Registry Digest SAID ([[3](#SAID)]) | Issuance and/or revocation, transfer, retraction, or usage registry for ACDC when not at top-level |
 |`dt`| Datetime | Context-dependent ISO datetime string |
@@ -84,11 +84,11 @@ A cryptographic commitment (such as a digital signature or a cryptographic diges
 
 When present at the top-level, the registry SAID, `rd` field value is the SAID of the initializing event for a given transaction event log (TEL) registry that maintains a dynamic state for the ACDC, such as issuance and revocation state. Typically, this field appears at the top level, but in some applications, such as bulk-issued [bulk-issued](#bulk-issued-private-acdcs) ACDCs [bulk-issued](#bulk-issued-private-acdcs), it may appear nested inside the [[ref: Attribute]], `a`, or aggregate, `A`, section field maps [attr](#attribute-section) and [aggr](#aggregate-section). This nested appearance better facilitates contractually protected disclosure of the registry SAID. When the registry SAID, `rd` field is used at the top level for the Issuer's registry, a registry SAID, `rd` field that appears nested in the Attributed, `a`, or Aggregate, `A`, section MAY be used for some other registry, such as an application-specific or Issuer-specific registry.
 
-### Universally Unique Identifier (UUID) Fields
+### Unique Entropy (UE) Fields
 
-The purpose of the UUID, `u`, field in any block is to provide sufficient entropy to the SAID, `d`, field of the associated block to make computationally infeasible any brute force attacks on that block that attempt to discover the block contents from the schema and the SAID. The UUID, `u`, field may be considered a salty nonce [[29](#Salt)]. Without the entropy provided by the UUID, `u`, field, an adversary may be able to reconstruct the block contents merely from the SAID of the block and the [[ref: Schema]] of the block using a rainbow or dictionary attack on the set of field values allowed by the Schema [[30](#RB)] [[31](#DRB)]. The resultant effective security level, entropy, or cryptographic strength of the schema-compliant field values may be much less than the cryptographic strength of the SAID digest. Another way of saying this is that the cardinality of the power set of all combinations of allowed field values may be much less than the cryptographic strength of the SAID as a cryptographic digest. Thus, an adversary could successfully discover the exact block by creating digests of all the elements of the power set, which may be small enough to be computationally feasible, rather than inverting the SAID itself. Sufficient entropy in the `u` field, however, ensures that the cardinality of the power set allowed by the schema is at least as great as the entropy of the SAID digest algorithm itself.
+The purpose of the unique-entropy, `u`, field in any block is to provide sufficient entropy to the SAID, `d`, field of the associated block to make computationally infeasible any brute force attacks on that block that attempt to discover the block contents from the schema and the SAID. The unique-entropy, `u`, field may be considered a salty nonce [[29](#Salt)]. Without the entropy provided by the unique-entropy, `u`, field, an adversary may be able to reconstruct the block contents merely from the SAID of the block and the [[ref: Schema]] of the block using a rainbow or dictionary attack on the set of field values allowed by the Schema [[30](#RB)] [[31](#DRB)]. The resultant effective security level, entropy, or cryptographic strength of the schema-compliant field values may be much less than the cryptographic strength of the SAID digest. Another way of saying this is that the cardinality of the power set of all combinations of allowed field values may be much less than the cryptographic strength of the SAID as a cryptographic digest. Thus, an adversary could successfully discover the exact block by creating digests of all the elements of the power set, which may be small enough to be computationally feasible, rather than inverting the SAID itself. Sufficient entropy in the `u` field, however, ensures that the cardinality of the power set allowed by the schema is at least as great as the entropy of the SAID digest algorithm itself.
 
-A UUID, `u` field, MAY optionally appear in any block (field map) at any level of an ACDC. Whenever a block in an ACDC includes a UUID, `u`, field then, its associated SAID, `d`, field makes a blinded commitment to the contents of that block. The UUID, `u`, field is the blinding factor. This makes that block securely partially disclosable or even selectively disclosable, notwithstanding disclosure of the associated Schema of the block along with the block SAID. With an embedded UUID field value that contains sufficient cryptographic entropy, the block contents can only be discovered if the included UUID field is explicitly disclosed. Likewise, when a UUID, `u`, field appears at the top level of an ACDC then, that top-level SAID, `d`, field makes a blinded commitment to the contents of the whole ACDC itself. Thus, the whole ACDC, not merely some block within the ACDC, MAY be disclosed in a correlation-minimizing (what some call privacy-preserving) manner.
+A unique-entropy, `u` field, MAY optionally appear in any block (field map) at any level of an ACDC. Whenever a block in an ACDC includes a unique-entropy, `u`, field then, its associated SAID, `d`, field makes a blinded commitment to the contents of that block. The unique-entropy, `u`, field is the blinding factor. This makes that block securely partially disclosable or even selectively disclosable, notwithstanding disclosure of the associated Schema of the block along with the block SAID. With an embedded unique-entropy field value that contains sufficient cryptographic entropy, the block contents can only be discovered if the included unique-entropy field is explicitly disclosed. Likewise, when a unique-entropy, `u`, field appears at the top level of an ACDC then, that top-level SAID, `d`, field makes a blinded commitment to the contents of the whole ACDC itself. Thus, the whole ACDC, not merely some block within the ACDC, MAY be disclosed in a correlation-minimizing (what some call privacy-preserving) manner.
 
 ### Autonomic IDentifier (AID) Fields
 
@@ -123,7 +123,7 @@ There are several variants of ACDCs determined by the presence/absence of certai
 
 All the variants have two alternate forms, compact and non-compact. In the compact form of any variant, the values of the top-level fields for the Schema, Attribute, Aggregate, Edge, and Rule sections are the SAIDs (digests) of the corresponding expanded (non-compact) form of each section [[ref: SAID]]. When in a non-compact form then one or more of the section fields may be partially or fully expanded. Additional variants arise from the presence or absence of different fields inside the Attribute or Attribute aggregate section.
 
-At the top level, the presence (absence), of the UUID, `u`, field produces two additional variant combinations. These are private (public), respectively. In addition, a present but empty UUID, `u`, field produces a *Private Metadata* variant. Furthermore, a given variant MAY be either *Targeted* or *Untargeted* based on the presence of the Issuee field in the Attribute or Attribute aggregate sections. Similarly, any variant with an Attribute section MAY have nested sub-blocks within the Attribute section that are either compact or non-compact. This enables nested Partial Disclosure. The type of disclosure a given variant supports MAY be dependent on how the different sections appear in the ACDC.
+At the top level, the presence (absence), of the unique-entropy, `u`, field produces two additional variant combinations. These are private (public), respectively. In addition, a present but empty unique-entropy, `u`, field produces a *Private Metadata* variant. Furthermore, a given variant MAY be either *Targeted* or *Untargeted* based on the presence of the Issuee field in the Attribute or Attribute aggregate sections. Similarly, any variant with an Attribute section MAY have nested sub-blocks within the Attribute section that are either compact or non-compact. This enables nested Partial Disclosure. The type of disclosure a given variant supports MAY be dependent on how the different sections appear in the ACDC.
 
 An overview of each variant is explained below.
 
@@ -157,15 +157,15 @@ The top-level section field values of a Compact ACDC are the SAIDs of each uncom
 
 ### Public ACDC
 
-Given that there is no top-level UUID, `u`, field in an ACDC, then knowledge of both the schema of the ACDC and the top-level SAID, `d`, field may enable the discovery of the remaining contents of the ACDC via a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, although the top-level, `d`, field is a cryptographic digest, it may not securely blind the contents of the ACDC when knowledge of the Schema is available.  The field values may be discoverable. Consequently, any cryptographic commitment to the top-level SAID, `d`, field may provide a fixed point of correlation, potentially to the ACDC field values themselves in spite of non-disclosure of those field values. Thus, an ACDC without a top-level UUID, `u`, field SHOULD be considered a public (non-confidential) ACDC.
+Given that there is no top-level unique-entropy, `u`, field in an ACDC, then knowledge of both the schema of the ACDC and the top-level SAID, `d`, field may enable the discovery of the remaining contents of the ACDC via a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, although the top-level, `d`, field is a cryptographic digest, it may not securely blind the contents of the ACDC when knowledge of the Schema is available.  The field values may be discoverable. Consequently, any cryptographic commitment to the top-level SAID, `d`, field may provide a fixed point of correlation, potentially to the ACDC field values themselves in spite of non-disclosure of those field values. Thus, an ACDC without a top-level unique-entropy, `u`, field SHOULD be considered a public (non-confidential) ACDC.
 
 ### Private ACDC
 
-Given a top-level UUID, `u`, field, whose value has sufficient cryptographic entropy, then the top-level SAID, `d`, field of an ACDC could provide a secure cryptographic digest that blinds the contents of the ACDC [[48](#Hash)]. An adversary, when given both the Schema of the ACDC and the top-level SAID, `d`, field, is not able to discover the remaining contents of the ACDC in a computationally feasible manner, such as through a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, the top-level, UUID, `u`, field could be used to securely blind the contents of the ACDC, notwithstanding knowledge of the Schema and top-level, SAID, `d`, field.  Moreover, a cryptographic commitment to that top-level SAID, `d`, field does not provide a fixed point of correlation to the other ACDC field values themselves unless and until there has been a disclosure of those field values. Thus, an ACDC with a sufficiently high entropy top-level UUID, `u`, field MAY be considered a private (confidential) ACDC. This enables a verifiable commitment to the top-level SAID of a private ACDC to be made prior to the disclosure of the details of the ACDC itself without leaking those contents. This is called Partial Disclosure. Furthermore, including a UUID, `u`, field in a block also enables Selective Disclosure mechanisms described later in the section on [Selective Disclosure](#selective-disclosure).
+Given a top-level unique-entropy, `u`, field, whose value has sufficient cryptographic entropy, then the top-level SAID, `d`, field of an ACDC could provide a secure cryptographic digest that blinds the contents of the ACDC [[48](#Hash)]. An adversary, when given both the Schema of the ACDC and the top-level SAID, `d`, field, is not able to discover the remaining contents of the ACDC in a computationally feasible manner, such as through a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, the top-level, unique-entropy, `u`, field could be used to securely blind the contents of the ACDC, notwithstanding knowledge of the Schema and top-level, SAID, `d`, field.  Moreover, a cryptographic commitment to that top-level SAID, `d`, field does not provide a fixed point of correlation to the other ACDC field values themselves unless and until there has been a disclosure of those field values. Thus, an ACDC with a sufficiently high entropy top-level unique-entropy, `u`, field MAY be considered a private (confidential) ACDC. This enables a verifiable commitment to the top-level SAID of a private ACDC to be made prior to the disclosure of the details of the ACDC itself without leaking those contents. This is called Partial Disclosure. Furthermore, including a unique-entropy, `u`, field in a block also enables Selective Disclosure mechanisms described later in the section on [Selective Disclosure](#selective-disclosure).
 
 ### Metadata ACDC
 
-An empty, top-level UUID, `u`, field appearing in an ACDC indicates that the ACDC is a metadata ACDC. The purpose of a metadata ACDC is to provide a mechanism for a Discloser to make cryptographic commitments to the metadata of a yet to be disclosed private ACDC without providing any point of correlation to the actual top-level SAID, `d`, field of that yet to be disclosed ACDC. The top-level SAID, `d`, field, of the metadata ACDC, is cryptographically derived from an ACDC with an empty top-level UUID, `u`, field so its value will necessarily be different from that of an ACDC with a high entropy top-level UUID, `u`, field value. Nonetheless, the Discloser MAY make a non-repudiable cryptographic commitment to the metadata SAID in order to initiate a contractually protected exchange without leaking correlation to the actual ACDC to be disclosed. A Disclosee MAY verify the other metadata information in the metadata ACDC before agreeing to any restrictions imposed by the future disclosure. The metadata includes the Issuer, the Schema, the provenanced Edges, and the Rules (terms-of-use). The top-level Attribute section, `a`, field value, or the top-level Attribute aggregate, `A` field value of a metadata ACDC, MAY be empty or missing so that its value is not correlatable across disclosures (presentations). Should the potential Disclosee refuse to agree to the Rules, then the Discloser has not leaked the SAID of the actual ACDC or the SAID of the Attribute block that would have been disclosed.
+An empty, top-level unique-entropy, `u`, field appearing in an ACDC indicates that the ACDC is a metadata ACDC. The purpose of a metadata ACDC is to provide a mechanism for a Discloser to make cryptographic commitments to the metadata of a yet to be disclosed private ACDC without providing any point of correlation to the actual top-level SAID, `d`, field of that yet to be disclosed ACDC. The top-level SAID, `d`, field, of the metadata ACDC, is cryptographically derived from an ACDC with an empty top-level unique-entropy, `u`, field so its value will necessarily be different from that of an ACDC with a high entropy top-level unique-entropy, `u`, field value. Nonetheless, the Discloser MAY make a non-repudiable cryptographic commitment to the metadata SAID in order to initiate a contractually protected exchange without leaking correlation to the actual ACDC to be disclosed. A Disclosee MAY verify the other metadata information in the metadata ACDC before agreeing to any restrictions imposed by the future disclosure. The metadata includes the Issuer, the Schema, the provenanced Edges, and the Rules (terms-of-use). The top-level Attribute section, `a`, field value, or the top-level Attribute aggregate, `A` field value of a metadata ACDC, MAY be empty or missing so that its value is not correlatable across disclosures (presentations). Should the potential Disclosee refuse to agree to the Rules, then the Discloser has not leaked the SAID of the actual ACDC or the SAID of the Attribute block that would have been disclosed.
 
 Given the metadata ACDC, the potential Disclosee can verify the Issuer, the Schema, the provenance of the Edges, and the terms and conditions in the Rules prior to agreeing to the Rules.  Similarly, an Issuer MAY use a metadata ACDC to get agreement to a contractual waiver expressed in the Rules section with a potential Issuee prior to issuance. Should the Issuee refuse to accept the terms of the waiver, then the Issuer has not leaked the SAID of the actual ACDC that would have been issued, nor the SAID of its attributes block, nor the Attribute values themselves.
 
@@ -266,7 +266,7 @@ The following field labels are reserved at all nested field map levels in the At
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest (SAID) | Self-referential fully qualified cryptographic digest of enclosing map. |
-|`u`| UUID | Random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`i`| Identifier (AID)| Context-dependent AID as determined by its enclosing map such as Issuee identifier. |
 |`rd`| Registry Digest ([[3](#SAID)]) | Issuance and/or revocation, transfer, or retraction registry for ACDC when not at top-level |
 |`dt`| Datetime | Issuer's relative ISO datetime string |
@@ -303,7 +303,7 @@ When the value of the  Attribute section has been compacted into its SAID, its J
 
 Two variants, namely, Targeted (Untargeted), are defined respectively by the presence (absence) of an Issuee, `i` field at the top-level of the uncompacted Attribute section block.
 
-Two other variants, namely private (public), are defined respectively by the presence (absence) of a UUID, `u`, field at the top-level of the uncompacted Attribute section block.
+Two other variants, namely private (public), are defined respectively by the presence (absence) of a unique-entropy, `u`, field at the top-level of the uncompacted Attribute section block.
 
 These four variants MAY appear in combination.
 
@@ -337,9 +337,9 @@ To elaborate, an Untargeted ACDC provides a container for authentic data only (n
 
 As discussed above, the presence of the `i` field at the top level of the Attribute section block makes this a targeted Attribute section. The AID given by the `i` field value is the target entity called the Issuee. The semantics of the Issuee SHOULD be defined by the Credential Frameworks in an associated Ecosystem Goveranance Framework (EGF) for the ACDC.
 
-Given the presence of a top-level UUID, `u`, field of the Attribute block whose value has sufficient cryptographic entropy, then the top-level SAID, `d`, field of the Attribute block provides a secure cryptographic digest of the contents of the Attribute block [[48](#Hash)]. An adversary when given both the Schema of the Attribute block and its SAID, `d`, field, is not able to discover the remaining contents of the attribute block in a computationally feasible manner such as a rainbow table attack  [[30](#RB)] ] [[31](#DRB)].  Therefore, the attribute block's UUID, `u`, field in a compact ACDC enables its Attribute block's SAID, `d`, field to securely blind the contents of the Attribute block notwithstanding knowledge of the Attribute block's Schema and SAID, `d` field.  Moreover, a cryptographic commitment to that Attribute block's, SAID, `d`, field does not provide a fixed point of correlation to the Attribute field values themselves unless and until there has been a disclosure of those field values.
+Given the presence of a top-level unique-entropy, `u`, field of the Attribute block whose value has sufficient cryptographic entropy, then the top-level SAID, `d`, field of the Attribute block provides a secure cryptographic digest of the contents of the Attribute block [[48](#Hash)]. An adversary when given both the Schema of the Attribute block and its SAID, `d`, field, is not able to discover the remaining contents of the attribute block in a computationally feasible manner such as a rainbow table attack  [[30](#RB)] ] [[31](#DRB)].  Therefore, the attribute block's unique-entropy, `u`, field in a compact ACDC enables its Attribute block's SAID, `d`, field to securely blind the contents of the Attribute block notwithstanding knowledge of the Attribute block's Schema and SAID, `d` field.  Moreover, a cryptographic commitment to that Attribute block's, SAID, `d`, field does not provide a fixed point of correlation to the Attribute field values themselves unless and until there has been a disclosure of those field values.
 
-To elaborate, when an ACDC includes a sufficiently high entropy UUID, `u`, field at the top level of its Attributes block then the ACDC MAY be considered a private-attributes ACDC when expressed in compact form, that is, the Attribute block is represented by its SAID, `d`, field and the value of its top-level Attribute section, `a`, field is the value of the nested SAID, `d`, field from the uncompacted version of the Attribute block. A verifiable commitment MAY be made to the compact form of the ACDC without leaking details of the Attributes. Later disclosure of the uncompacted Attribute block SHOULD be verified against its SAID, `d`, field that was provided in the compact form as the value of the top-level Attribute section, `a`, field.
+To elaborate, when an ACDC includes a sufficiently high entropy unique-entropy, `u`, field at the top level of its Attributes block then the ACDC MAY be considered a private-attributes ACDC when expressed in compact form, that is, the Attribute block is represented by its SAID, `d`, field and the value of its top-level Attribute section, `a`, field is the value of the nested SAID, `d`, field from the uncompacted version of the Attribute block. A verifiable commitment MAY be made to the compact form of the ACDC without leaking details of the Attributes. Later disclosure of the uncompacted Attribute block SHOULD be verified against its SAID, `d`, field that was provided in the compact form as the value of the top-level Attribute section, `a`, field.
 
 Because the Issuee AID is nested in the attribute block as that block's top-level, Issuee, `i`, field, a presentation exchange (disclosure) could be initiated on behalf of a different AID that has not yet been correlated to the Issuee AID and then only correlated to the Issuee AID after the Disclosee has agreed to the Chain-Link Confidentiality provisions in the rules section of the private-attributes ACDC [[44]].
 
@@ -375,7 +375,7 @@ Consider an example of an Attribute Section as defined by the following JSON Sch
               },
               "u":
               {
-                "description": "Attribute Section UUID",
+                "description": "Attribute Section Unique Entropy",
                 "type": "string"
               },
               "i":
@@ -498,7 +498,7 @@ The SAID, `d`, field at the top level of the uncompacted Attribute block is the 
 
 As discussed above, the presence of the `i` field at the top level of the Attribute section block makes this a targeted Attribute section. The AID given by the `i` field value is the Target or Issuee. The semantics of the issuance SHOULD be defined by the Credential Frameworks of the EGF.
 
-Given the absence of a `u` field at the top level of the Attributes block, however, knowledge of both SAID, `d`, field at the top level of an Attributes block and the schema of the Attributes block may enable the discovery of the remaining contents of the attributes block via a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, the SAID, `d`, field of the Attributes block, although a cryptographic digest, does not securely blind the contents of the Attributes block given knowledge of the Schema. It only provides compactness, not privacy. Moreover, any cryptographic commitment to that SAID, `d`, field potentially provides a fixed correlation point to the attribute block field values despite the non-disclosure of those field values via a Compact Attribute section. Thus, an ACDC without a UUID, `u` field in its Attributes block MUST be considered a Public-Attribute ACDC even when expressed in compact form.
+Given the absence of a `u` field at the top level of the Attributes block, however, knowledge of both SAID, `d`, field at the top level of an Attributes block and the schema of the Attributes block may enable the discovery of the remaining contents of the attributes block via a rainbow table attack [[30](#RB)] [[31](#DRB)]. Therefore, the SAID, `d`, field of the Attributes block, although a cryptographic digest, does not securely blind the contents of the Attributes block given knowledge of the Schema. It only provides compactness, not privacy. Moreover, any cryptographic commitment to that SAID, `d`, field potentially provides a fixed correlation point to the attribute block field values despite the non-disclosure of those field values via a Compact Attribute section. Thus, an ACDC without a unique-entropy, `u` field in its Attributes block MUST be considered a Public-Attribute ACDC even when expressed in compact form.
 
 #### Nested Partially Disclosable Attribute Section Example
 
@@ -577,7 +577,7 @@ Suppose that the subschema for the  Attribute section of an ACDC is as follows:
                   },
                   "u":
                   {
-                    "description": "Block UUID",
+                    "description": "Block Unique Entropy",
                     "type": "string"
                   },
                   "history":
@@ -630,7 +630,7 @@ Attribute section:
 ```
 
 
-The Attribute section subschema includes a `oneOf` composition operator at the grades subblock. The `grades` subblock has both a block level SAID, `d` and UUID, `u` field. This means that the `grades` subblock detail can be hidden so that only the top-level fields in the Attribute section are disclosed. The following shows a compatible partially disclosed variant of the Attribute section.
+The Attribute section subschema includes a `oneOf` composition operator at the grades subblock. The `grades` subblock has both a block level SAID, `d` and unique-entropy, `u` field. This means that the `grades` subblock detail can be hidden so that only the top-level fields in the Attribute section are disclosed. The following shows a compatible partially disclosed variant of the Attribute section.
 
 Partially disclosed Attribute section:
 
@@ -670,7 +670,7 @@ The following field labels are reserved at all nested field map levels in the Ag
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest (SAID) | Self-referential fully qualified cryptographic digest of enclosing map. |
-|`u`| UUID | Random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`i`| Identifier (AID)| Context-dependent AID as determined by its enclosing map such as Issuee identifier. |
 |`dt`| Datetime | Issuer's relative ISO datetime string |
 
@@ -689,7 +689,7 @@ Together, the combination of sufficient cryptographic entropy of the blinding fa
 
 #### Selectively disclosable Aggregate of attribute blocks
 
-The selectively disclosable aggregate section of an ACDC, provides an ordered set of Attributes as an list (array) of blinded blocks. In addition to its attribute-specific field or fields, each blinded attribute block in the set has its own SAID, `d`, field and UUID, `u`, field. All fields in a given block MUST be disclosed together as a set. When a blinded attribute block has more than one attribute field, then each field in the block is not independently selectively disclosable.
+The selectively disclosable aggregate section of an ACDC, provides an ordered set of Attributes as an list (array) of blinded blocks. In addition to its attribute-specific field or fields, each blinded attribute block in the set has its own SAID, `d`, field and unique-entropy, `u`, field. All fields in a given block MUST be disclosed together as a set. When a blinded attribute block has more than one attribute field, then each field in the block is not independently selectively disclosable.
 
 Notably, because the field labels for a given block only appear within that blinded block, the field labels are also blinded. The order of appearance of elements in an 'anyOf' subschema for the Aggregate array is not correlated to the actual order of appearance of the associated block or blocks in the blinded array itself.
 
@@ -697,7 +697,7 @@ This prevents inference based on location in the blinded array. It also prevents
 
 ##### Blinded attribute array
 
-Given that each blindable Attribute block's UUID, `u`, field has sufficient cryptographic entropy, then each blindable Attribute block's SAID, `d`, field provides a secure cryptographic digest of its contents that effectively blinds the Attribute block's attribute value(s) from discovery given only its Schema and SAID. To clarify, the adversary, despite being given both the Schema of the Attribute block and its SAID, `d`, field value, is not able to discover the remaining contents of the Attribute block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the UUID, `u`, field of each blindable Attribute block enables the associated SAID, `d`, field to securely blind the block's contents notwithstanding knowledge of the block's Schema and that SAID, `d`, field.  Moreover, a cryptographic commitment to that SAID, `d`, field does not provide a fixed point of correlation to the associated Attribute (SAD) field values themselves unless and until there has been specific disclosure of those field values themselves.
+Given that each blindable Attribute block's unique-entropy, `u`, field has sufficient cryptographic entropy, then each blindable Attribute block's SAID, `d`, field provides a secure cryptographic digest of its contents that effectively blinds the Attribute block's attribute value(s) from discovery given only its Schema and SAID. To clarify, the adversary, despite being given both the Schema of the Attribute block and its SAID, `d`, field value, is not able to discover the remaining contents of the Attribute block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the unique-entropy, `u`, field of each blindable Attribute block enables the associated SAID, `d`, field to securely blind the block's contents notwithstanding knowledge of the block's Schema and that SAID, `d`, field.  Moreover, a cryptographic commitment to that SAID, `d`, field does not provide a fixed point of correlation to the associated Attribute (SAD) field values themselves unless and until there has been specific disclosure of those field values themselves.
 
 In addition to the blindable Attribute blocks, the blinded attribute array includes as its zeroth element the aggregate value. This is called the AGID (Aggregate ID). This serves the same function of the SAID of a field map. It provides a universally unique content addressable self-referential identifier of a given blindable attribute list.
 
@@ -727,7 +727,7 @@ Please note that the zeroth element \[a<sub>0</sub>] is a placeholder for the AG
 
 Given sufficient collision resistance of the digest Operator, the digest of an ordered concatenation is not subject to a birthday attack on its concatenated elements [[BDC](#BDC) [BDay](#BDay) [QCHC](#QCHC) [HCR](#HCR) [48](#Hash)].
 
-Moreover, the aggregate AGID makes a commitment to each element a<sub>i</sub> for i=1..N SAID. A block's SAID itself makes a blinded commitment to its block's (SAD) attribute value(s) in detail. Because each block is itself blinded by its SAID and UUID, disclosure of any given a<sub>i</sub> SAID does not expose or disclose any discoverable information detail about either its own or another block's Attribute value(s). Therefore, one may safely disclose the full list of a<sub>i</sub> elements without exposing the blinded block Attribute values.
+Moreover, the aggregate AGID makes a commitment to each element a<sub>i</sub> for i=1..N SAID. A block's SAID itself makes a blinded commitment to its block's (SAD) attribute value(s) in detail. Because each block is itself blinded by its SAID and unique entropy, disclosure of any given a<sub>i</sub> SAID does not expose or disclose any discoverable information detail about either its own or another block's Attribute value(s). Therefore, one may safely disclose the full list of a<sub>i</sub> elements without exposing the blinded block Attribute values.
 
 Proof of inclusion in the list of a given blindable block consists of checking the list for a matching SAID value. A computationally efficient way to do this is to create a hash table or B-tree of the list and then check for inclusion via lookup in the hash table or B-tree of a block's SAID.
 
@@ -801,7 +801,7 @@ Because the Aggregate section's selectively disclosable blindable Attribute bloc
                             },
                             "u":
                             {
-                              "description": "Block UUID",
+                              "description": "Block Unique Entropy",
                               "type": "string"
                             },
                             "i":
@@ -840,7 +840,7 @@ Because the Aggregate section's selectively disclosable blindable Attribute bloc
                             },
                             "u":
                             {
-                              "description": "Block UUID",
+                              "description": "Block Unique Entropy",
                               "type": "string"
                             },
                             "score":
@@ -879,7 +879,7 @@ Because the Aggregate section's selectively disclosable blindable Attribute bloc
                             },
                             "u":
                             {
-                              "description": "Block UUID",
+                              "description": "Block Unique Entropy",
                               "type": "string"
                             },
                             "name":
@@ -1076,7 +1076,7 @@ The reserved field labels for an Edge-group are detailed in the table below.
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest (SAID) | Optional, self-referential fully qualified cryptographic digest of enclosing Edge-group block. |
-|`u`| UUID | Optional random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Optional random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`o`| Operator| Optional as an m-ary operator on the Edges in the Edge-group. Enables expression of the edge logic on edge subgraph.|
 |`w`| Weight| Optional property for nested Edges or Edge-groups for weighted average `WAVG` operator. Enables expression weighted average on Edge or Edge-group sub-graph.|
 
@@ -1088,13 +1088,13 @@ An Edge-group MUST NOT have a node, `n`, field.
 
 The SAID, `d` field is optional but when it appears it MUST appear as the first field in the Edge-group block. The value of this field MUST be the SAID of its enclosing block.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-The UUID, `u` field is optional, but when it appears, it MUST appear as the second field in the Edge-group block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy. When present, the UUID, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [@Hash]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
+The unique-entropy, `u` field is optional, but when it appears, it MUST appear as the second field in the Edge-group block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy. When present, the unique-entropy, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [@Hash]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
 
 ##### Operator, `o` field
 
-The Operator, `o` field MUST appear immediately following the SAID, `d` field, and UUID, `u` field (when present) in the Edge-group block. The Operator field in an Edge-group block is an aggregating (m-ary) operator on all the nested labeled Edges or Edge-groups that appear in its block. This differs from the Operator, `o` field in an Edge block (see below).
+The Operator, `o` field MUST appear immediately following the SAID, `d` field, and unique-entropy, `u` field (when present) in the Edge-group block. The Operator field in an Edge-group block is an aggregating (m-ary) operator on all the nested labeled Edges or Edge-groups that appear in its block. This differs from the Operator, `o` field in an Edge block (see below).
 
 The m-ary operators are defined in the table below:
 
@@ -1117,7 +1117,7 @@ When the top-level Edge-group, the Edge Section includes more than one Edge dire
 
 ##### Weight, `w` field
 
-The Weight, `w` field, is OPTIONAL but when present, it MUST appear immediately following all of the SAID, `d` field, UUID, `u` field (when present), and Operator, `o` field (when present) in the Edge-group block. The Weight field enables weighted averages with Operators that perform some type of weighted average, such as the `WAVG` Operator. The top-level Edge-group MUST NOT have a weight, `w` field, because it is not a member of another Edge-group.
+The Weight, `w` field, is OPTIONAL but when present, it MUST appear immediately following all of the SAID, `d` field, unique-entropy, `u` field (when present), and Operator, `o` field (when present) in the Edge-group block. The Weight field enables weighted averages with Operators that perform some type of weighted average, such as the `WAVG` Operator. The top-level Edge-group MUST NOT have a weight, `w` field, because it is not a member of another Edge-group.
 
 A Edge-group with a weight MAY provide an aggregate of weighted directed Edges. Weighted directed Edges MAY represent degrees of confidence or likelihood. PGs with weighted, directed Edges are commonly used for machine learning or reasoning under uncertainty. The Weight, `w` field provides a reserved label that MAY be the primary weight on an Edge group to be applied by the Operator of its enclosing Edge-group. To elaborate, many aggregating Operators used for automated reasoning, such as the weighted average, `WAVG`, Operator, or ranking aggregation Operators, depend on each input's weight. To simplify the semantics for such Operators, the Weight, `w`, field MUST be the reserved field label for weighting. Other fields with other labels (labeled Edge-group properties) MAY provide other types of weights, but having a default label, namely `w`, simplifies the default definitions of weighted Operators.
 
@@ -1140,13 +1140,13 @@ The reserved field labels within an Edge block are defined in the table below.
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest (SAID) | Optional, self-referential fully qualified cryptographic digest of enclosing Edge map. |
-|`u`| UUID | Optional random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Optional random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`n`| Node| Required SAID of the far node ACDC as the terminating point of a directed edge that connects the Edge's encapsulating near node ACDC to the specified far node ACDC as a fragment of a distributed property graph (PG).|
 |`s`| Schema| Optional SAID of the JSON Schema block of the far node ACDC. |
 |`o`| Operator| Optional as either a unary operator on the Edge itself or an m-ary operator on the Edge-group in Edge section. Enables expression of the Edge logic on Edge subgraph.|
 |`w`| Weight| Optional edge weight property that enables default property for directed weighted edges and operators that use weights.|
 
-An Edge block MUST have a node, `n`, field. This differentiates an Edge block from an Edge-group block.  The SAID, `d`, UUID, `u`, schema, `s`, operator, `o`, and weight, `w`  fields are OPTIONAL. To clarify, each Edge block MUST have a node, `n`, field and MAY have any combination of SAID, `d`, UUID, `u`, schema, `s`, operator, `o`, or weight, `w` fields. When present the order of appearance of these fields MUST be as follows: `[d, u, n, s, o, w]'.
+An Edge block MUST have a node, `n`, field. This differentiates an Edge block from an Edge-group block.  The SAID, `d`, unique-entropy, `u`, schema, `s`, operator, `o`, and weight, `w`  fields are OPTIONAL. To clarify, each Edge block MUST have a node, `n`, field and MAY have any combination of SAID, `d`, unique-entropy, `u`, schema, `s`, operator, `o`, or weight, `w` fields. When present the order of appearance of these fields MUST be as follows: `[d, u, n, s, o, w]'.
 
 
 ##### SAID, `d` field
@@ -1155,14 +1155,14 @@ The SAID, `d` field is optional but, when present, MUST appear as the first fiel
 
 ###### Compact edge
 
-Given that an individual edge's property block includes a SAID, `d`, field, a compact representation of the edge's property block is provided by replacing it with its SAID. This is called a compact edge. The schema for that edge's label MUST indicate that the edge value is the edge block SAID by using a `oneOf` composition of the compact form and the expanded form. This is useful for compacting complex edges with many properties and then expanding them later. When the edge block also includes a UUID, `u` field, then compacting also hides the edge properties for later disclosure. A compact edge without a UUID, `u` field, is defined to be a public compact edge.  A compact edge with a UUID, `u` field, is defined to be a private compact edge.
+Given that an individual edge's property block includes a SAID, `d`, field, a compact representation of the edge's property block is provided by replacing it with its SAID. This is called a compact edge. The schema for that edge's label MUST indicate that the edge value is the edge block SAID by using a `oneOf` composition of the compact form and the expanded form. This is useful for compacting complex edges with many properties and then expanding them later. When the edge block also includes a unique-entropy, `u` field, then compacting also hides the edge properties for later disclosure. A compact edge without a unique-entropy, `u` field, is defined to be a public compact edge.  A compact edge with a unique-entropy, `u` field, is defined to be a private compact edge.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-The UUID, `u` field is optional, but when it appears, it MUST appear as the second field in the Edge block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy (nominally). When present, the UUID, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48](#Hash)]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [[30](#RB)] [[31](#DRB)].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
+The unique-entropy, `u` field is optional, but when it appears, it MUST appear as the second field in the Edge block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy (nominally). When present, the unique-entropy, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48](#Hash)]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [[30](#RB)] [[31](#DRB)].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
 
-The absence of the UUID, `u` field in an Edge block makes that edge a Public Edge.
-The presence of the UUID, `u` field in an Edge block makes that Edge a Private Edge.  A Private Edge in compact form, i.e., a Compact Private Edge, enables a presenter of that ACDC to make a verifiable commitment to the ACDC attached to the Edge without disclosing any details of that ACDC, including the ACDC's SAID. Private ACDCs (nodes) and Private Edges MAY be combined to better protect the privacy of the information in a distributed property graph.
+The absence of the unique-entropy, `u` field in an Edge block makes that edge a Public Edge.
+The presence of the unique-entropy, `u` field in an Edge block makes that Edge a Private Edge.  A Private Edge in compact form, i.e., a Compact Private Edge, enables a presenter of that ACDC to make a verifiable commitment to the ACDC attached to the Edge without disclosing any details of that ACDC, including the ACDC's SAID. Private ACDCs (nodes) and Private Edges MAY be combined to better protect the privacy of the information in a distributed property graph.
 
 
 ##### Node, `n` field
@@ -1183,7 +1183,7 @@ Major version changes, in contrast, are, by definition, backward-breaking, so ei
 
 ##### Operator, `o` field
 
-The Operator, `o` field MUST appear immediately following the SAID, `d` field, UUID, `u` field, node, `n` field, or schema, `s` field (when present) in the Edge block. The Operator, `o`, field value in an Edge block is a unary Operator on the Edge itself. When more than one unary Operator is applied to a given Edge, then the value of the Operator, `o`, field is a list of those unary Operators. When multiple unary Operators appear in the list, and there is a conflict between Operators, the latest Operator among the conflicting Operators in the list takes precedence. This differs from the Operator, `o` field in an Edge-group block (see above).
+The Operator, `o` field MUST appear immediately following the SAID, `d` field, unique-entropy, `u` field, node, `n` field, or schema, `s` field (when present) in the Edge block. The Operator, `o`, field value in an Edge block is a unary Operator on the Edge itself. When more than one unary Operator is applied to a given Edge, then the value of the Operator, `o`, field is a list of those unary Operators. When multiple unary Operators appear in the list, and there is a conflict between Operators, the latest Operator among the conflicting Operators in the list takes precedence. This differs from the Operator, `o` field in an Edge-group block (see above).
 
 The unary operators are defined in the table below:
 
@@ -1215,7 +1215,7 @@ The `NOT` unary Operator, when present, inverts the validation truthiness of the
 
 ###### Weight, `w` field.
 
-The Weight, `w` field MUST appear immediately following the SAID, `d` field, UUID, `u` field, Node, `n` field, Schema, `s` field, or Operator, `o` field (when present) in the Edge block. The Weight field enables weighted direct Edges. The weighted directed Edges within an enclosing Edge-group MAY be aggregated when that Edge-group's Operator performs some type of weighted average.
+The Weight, `w` field MUST appear immediately following the SAID, `d` field, unique-entropy, `u` field, Node, `n` field, Schema, `s` field, or Operator, `o` field (when present) in the Edge block. The Weight field enables weighted direct Edges. The weighted directed Edges within an enclosing Edge-group MAY be aggregated when that Edge-group's Operator performs some type of weighted average.
 
 Weighted directed Edges may represent degrees of confidence or likelihood. PGs with weighted, directed Edges are commonly used for machine learning or reasoning under uncertainty. The Weight, `w` field provides a reserved label for the primary Weight on an Edge. To elaborate, many aggregating operators used for automated reasoning, such as the weighted average, `WAVG`, Operator, or ranking aggregation Operators, depend on each input's Weight. To simplify the semantics for such Operators, the Weight, `w` field is the reserved field label for weighting. Other fields with other labels (labeled Edge properties) could provide other types of weights, but having a default label, namely `w` simplifies the default definitions of weighted Operators.
 
@@ -1262,20 +1262,20 @@ The reserved field labels for Rule-groups are detailed in the table below.
 | Label | Title | Description |
 |:-:|:--|:--|
 |`d`| Digest (SAID) | Optional Self-referential fully qualified cryptographic digest of enclosing block. |
-|`u`| UUID | Optional random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Optional random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`l`| Legal Language| Optional legal language for the Rule-group.|
 
 When present, the order of appearance of these fields is as follows: `[d, u, l]`.
 
-A Rule-group MAY have a Legal, `l`, field and MAY have a SAID, `d` field. When the Rule-group has a SAID, `d` field it MAY also have a UUID, `u` field. A Rule-group MAY have one or more other labeled fields whose values represent nested Rules or Rule-groups. In this sense, a Rule-group is an intermediate node in a sub-graph of Rule-groups and Rules.
+A Rule-group MAY have a Legal, `l`, field and MAY have a SAID, `d` field. When the Rule-group has a SAID, `d` field it MAY also have a unique-entropy, `u` field. A Rule-group MAY have one or more other labeled fields whose values represent nested Rules or Rule-groups. In this sense, a Rule-group is an intermediate node in a sub-graph of Rule-groups and Rules.
 
 ##### SAID, `d` field
 
 The SAID, `d` field is optional but when it appears it MUST appear as the first field in the Rule-group block. The value of this field MUST be the SAID of its enclosing block. To elaborate, when the Rule-group is the top-level Rule Section its SAID is the same SAID used as the compacted value of the Rule Section, `r` field that appears at the top level of the ACDC. When not the top-level Rule-group, a given nested Rule-group's SAID, `d` field enables a verifiable globally unique reference to that nested Rule-group, not merely the whole contract as given by the Rule section's top-level SAID, `d`, field.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-The UUID, `u` field is optional, but when it appears, it MUST appear as the second field in the Rule-group block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy (nominally). When present, the UUID, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [@Hash]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
+The unique-entropy, `u` field is optional, but when it appears, it MUST appear as the second field in the Rule-group block following the SAID, `d`, field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy (nominally). When present, the unique-entropy, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [@Hash]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [@RB][@DRB].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
 
 ##### Labeled nested rule and rule-group fields
 
@@ -1295,27 +1295,27 @@ The reserved field labels for a Rule block are detailed in the table below.
 | Label | Title | Description |
 |:-:|:--|:--|
 | `d` | Digest (SAID) | Optional self-referential fully qualified cryptographic digest of enclosing block. |
-| `u` | UUID | Optional random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+| `u` | UE | Optional random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 | `l` | Legal Language| The actual legal language for the clause.|
 
 When present, the order of appearance of these fields is as follows: `[d, u, l]`.
 
-A Rule MUST have a Legal, `l`, field. And MAY have a SAID, `d` field. When the Rule has a SAID, `d` field, it MAY also have a UUID, `u` field. A Rule MUST NOT have any other fields. In this sense, a Rule is a terminal node in a sub-graph of Rule-groups and Rules.
+A Rule MUST have a Legal, `l`, field. And MAY have a SAID, `d` field. When the Rule has a SAID, `d` field, it MAY also have a unique-entropy, `u` field. A Rule MUST NOT have any other fields. In this sense, a Rule is a terminal node in a sub-graph of Rule-groups and Rules.
 
 ##### SAID, `d` field
 The SAID, `d` field is optional, but when it appears, it MUST appear as the first field in the Clause block. The value of this field MUST be the SAID of its enclosing block. A Rule's SAID enables a verifiable globally unique reference to that rule, not merely the whole contract as given by the Rule section's top-level SAID, `d`, field.
 
 ##### Compact Rule
 
-Given that an individual Rule block includes a SAID, `d` field, a compact representation of the Rule's block is provided by replacing it with its SAID. This is called a compact Rule. The Schema for that clause's label MUST indicate that the clause field value is the clause block SAID by using a `oneOf` composition of the compact form and the expanded form. This may be useful for compacting lengthy clauses and then expanding them later. When the clause block also includes a UUID, `u` field, then compacting also hides the clause's legal language for later disclosure. A compact clause without a UUID, `u` field is defined to be a public compact clause.  A compact clause with a UUID, `u` field is defined to be a private compact clause.
+Given that an individual Rule block includes a SAID, `d` field, a compact representation of the Rule's block is provided by replacing it with its SAID. This is called a compact Rule. The Schema for that clause's label MUST indicate that the clause field value is the clause block SAID by using a `oneOf` composition of the compact form and the expanded form. This may be useful for compacting lengthy clauses and then expanding them later. When the clause block also includes a unique-entropy, `u` field, then compacting also hides the clause's legal language for later disclosure. A compact clause without a unique-entropy, `u` field is defined to be a public compact clause.  A compact clause with a unique-entropy, `u` field is defined to be a private compact clause.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-The UUID, `u` field is optional, but when it appears, it MUST appear as the second field in the Rule Section block following the SAID, `d` field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy. When present, the UUID, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48](#Hash)]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [[30](#RB)] [[31](#DRB)].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
+The unique-entropy, `u` field is optional, but when it appears, it MUST appear as the second field in the Rule Section block following the SAID, `d` field. The value of this field MUST be a cryptographic strength salty-nonce with approximately 128 bits of entropy. When present, the unique-entropy, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48](#Hash)]. An adversary, when given both the block's subschema and its SAID, cannot discover the remaining contents of the block in a computationally feasible manner, such as a rainbow table attack [[30](#RB)] [[31](#DRB)].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field notwithstanding knowledge of both the block's subschema and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's field values themselves unless and until there has been a disclosure of those field values.
 
-When any Rule or Rule-group block, as opposed to the Rule Section as a whole, has both its own SAID, `d`, field and UUID, `u,` field then that block may be used in a confidential manner via partial disclosure. To clarify, a Rule or Rule-group block with both a SAID, `d`, and UUID, `u` fields, where that UUID has sufficiently high entropy, protects the compact form of that block from discovery via a rainbow table attack merely from its SAID and subschema [[30]] [[31]]. Therefore, such a Rule or Rule-group may be kept hidden until later disclosure. These are referred to as private or confidential Rules or Rule Groups.
+When any Rule or Rule-group block, as opposed to the Rule Section as a whole, has both its own SAID, `d`, field and unique-entropy, `u,` field then that block may be used in a confidential manner via partial disclosure. To clarify, a Rule or Rule-group block with both a SAID, `d`, and unique-entropy, `u` fields, where that unique entropy has sufficiently high entropy, protects the compact form of that block from discovery via a rainbow table attack merely from its SAID and subschema [[30]] [[31]]. Therefore, such a Rule or Rule-group may be kept hidden until later disclosure. These are referred to as private or confidential Rules or Rule Groups.
 
-When there is no benefit to a nested private (partially disclosable) rules or rule groups then the rule's or rule group's UUID field is not needed.
+When there is no benefit to a nested private (partially disclosable) rules or rule groups then the rule's or rule group's unique-entropy field is not needed.
 
 ##### Legal, `l` Field
 
@@ -1357,7 +1357,7 @@ Consider the following sub-schema for a partially disclosable Rule section:
                 },
                 "u":
                 {
-                    "description": "Rule Section UUID",
+                    "description": "Rule Section Unique Entropy",
                     "type": "string"
                 },
                 "disclaimers":
@@ -1408,7 +1408,7 @@ Consider the following sub-schema for a partially disclosable Rule section:
                                                 },
                                                 "u":
                                                 {
-                                                    "description": "Rule UUID",
+                                                    "description": "Rule Unique Entropy",
                                                     "type": "string"
                                                 },
                                                 "l":
@@ -1447,7 +1447,7 @@ Consider the following sub-schema for a partially disclosable Rule section:
                                                 },
                                                 "u":
                                                 {
-                                                    "description": "Rule UUID",
+                                                    "description": "Rule Unique Entropy",
                                                     "type": "string"
                                                 },
                                                 "l":
@@ -1490,7 +1490,7 @@ Consider the following sub-schema for a partially disclosable Rule section:
                                 },
                                 "u":
                                 {
-                                    "description": "Clause UUID",
+                                    "description": "Clause Unique Entropy",
                                     "type": "string"
                                 },
                                 "l":
@@ -1763,15 +1763,15 @@ As their names suggest, the Graduated Disclosure mechanisms disclose more or les
 
 - Compact Disclosure of a block (field map) of data relies on the inclusion in that block of a cryptographic digest of the content (SAID) of that content. Disclosure of the SAID makes a verifiable commitment to its data that MAY be more fully disclosed later. The Schema for the block MUST include a `oneOf` composition Operator that validates against both the compact and full versions of the block.
 
-- Metadata Disclosure happens with a Metadata ACDC is used to disclose any part of an ACDC. As defined above, a Metadata ACDC is indicated by the appearance of an empty, top-level UUID, `u`, field. Recall that the purpose of a metadata ACDC is to provide a mechanism for a Discloser to make cryptographic commitments to the metadata of a yet-to-be-disclosed private ACDC without providing any point of correlation to the actual top-level SAID, `d`, the field of that yet-to-be disclosed ACDC.
+- Metadata Disclosure happens with a Metadata ACDC is used to disclose any part of an ACDC. As defined above, a Metadata ACDC is indicated by the appearance of an empty, top-level unique-entropy, `u`, field. Recall that the purpose of a metadata ACDC is to provide a mechanism for a Discloser to make cryptographic commitments to the metadata of a yet-to-be-disclosed private ACDC without providing any point of correlation to the actual top-level SAID, `d`, the field of that yet-to-be disclosed ACDC.
 
-- Partial Disclosure of a data block relies upon a cryptographic digest (SAID) of the content and a salty nonce (UUID) embedded in that content. The presence of the salty nonce means that disclosure of its digest (SAID) plus a Schema of that content is not enough to discover the actual content. The content remains blinded in spite of disclosure of its SAID until and unless the salty nonce (UUID) is also disclosed. The Schema for the block includes a `oneOf` composition Operator that validates against both the compact and full versions of the block.
+- Partial Disclosure of a data block relies upon a cryptographic digest (SAID) of the content and a salty nonce (UE) embedded in that content. The presence of the salty nonce means that disclosure of its digest (SAID) plus a Schema of that content is not enough to discover the actual content. The content remains blinded in spite of disclosure of its SAID until and unless the salty nonce (UE) is also disclosed. The Schema for the block includes a `oneOf` composition Operator that validates against both the compact and full versions of the block.
 
-- Nested Partial Disclosure of a tree of hierarchical data blocks relies on each nested block embedding both its digest (SAID) and a salty nonce (UUID). This allows the Partial Disclosure of different branches of the tree at different levels of nesting. The Schema for the block includes a `oneOf` composition Operator at each level of nesting that validates against both the compact and full versions of the nested block and any nesting levels above it in the tree.
+- Nested Partial Disclosure of a tree of hierarchical data blocks relies on each nested block embedding both its digest (SAID) and a salty nonce (UE). This allows the Partial Disclosure of different branches of the tree at different levels of nesting. The Schema for the block includes a `oneOf` composition Operator at each level of nesting that validates against both the compact and full versions of the nested block and any nesting levels above it in the tree.
 
 - Full Disclosure is disclosure without hiding a given block's content behind SAIDs or salted SAIDs.
 
-- Selective Disclosure of a set of data blocks relies on each element embedding its digest (said) and salty nonce (UUID) as partially disclosable elements. The Schema for such a set is unordered such that the disclosure of any element does not leak information about any other element. This requires a combination of an `anyOf` composition Operator at the set level and `oneOf` composition Operators for each element. Membership in the set can be verified against a set of SAIDs, one from each element. The salty nonce effectively blinds the element's contents when only its SAID is disclosed. The `anyOf` composition Operator is not order-dependent. This means that the selectively disclosable set can be provided as an ordered list of elements, yet one or more of its elements MAY be disclosed in any order so that the original order does not leak information.
+- Selective Disclosure of a set of data blocks relies on each element embedding its digest (said) and salty nonce (UE) as partially disclosable elements. The Schema for such a set is unordered such that the disclosure of any element does not leak information about any other element. This requires a combination of an `anyOf` composition Operator at the set level and `oneOf` composition Operators for each element. Membership in the set can be verified against a set of SAIDs, one from each element. The salty nonce effectively blinds the element's contents when only its SAID is disclosed. The `anyOf` composition Operator is not order-dependent. This means that the selectively disclosable set can be provided as an ordered list of elements, yet one or more of its elements MAY be disclosed in any order so that the original order does not leak information.
 
 - Bulk-issued Instance Disclosure relies on issuing multiple instances of a given ACDC, each a copy but with unique instance identifiers so that the disclosure of one instance is not correlatable to another via the instance identifiers.
 
@@ -1918,7 +1918,7 @@ Informative examples of fully-featured variants of ACDCs can be found in Annex C
 
 ### Overview
 
-A Transaction Event Log (TEL) is a hash-chained data structure of sealed transaction events that can be used to track the transaction states (typically those associated with one or more ACDCs). Events in the TEL are sealed (anchored) in a Key Event Log (KEL) using seals. A seal can be as simple as the event's SAID (cryptographic strength digest). A transaction event seal MAY also include the transaction event's sequence number to make it easier to look up and verify.  Because key events in a KEL are nonrepudiably signed by its Controller, the appearance of a transaction event seal provides a verifiable non-repudiable commitment to the transaction event by the KEL Controller. This makes TELs, which are thereby bound to KELs, also securely attributable to the KEL's controller.  This provides verifiable but decorrelatable extensibility to KEL semantics. Any number of transaction event types can be constructed for different applications that may be securely attributed without complicating KEL semantics. The seals need no semantics beyond their secure attributability to the AID of the KEL controller. The semantics of the transaction event's state may be hidden by the transaction event SAID, which in turn may be protected from rainbow table attack by a cryptographic strength UUID in the transaction event. Therefore, the transaction state, as given by a sequence of transaction events, can be either public or private, depending on how the transaction events are structured. Similar to ACDCs themselves, Graduated Disclosure mechanisms may be applied to transaction events.
+A Transaction Event Log (TEL) is a hash-chained data structure of sealed transaction events that can be used to track the transaction states (typically those associated with one or more ACDCs). Events in the TEL are sealed (anchored) in a Key Event Log (KEL) using seals. A seal can be as simple as the event's SAID (cryptographic strength digest). A transaction event seal MAY also include the transaction event's sequence number to make it easier to look up and verify.  Because key events in a KEL are nonrepudiably signed by its Controller, the appearance of a transaction event seal provides a verifiable non-repudiable commitment to the transaction event by the KEL Controller. This makes TELs, which are thereby bound to KELs, also securely attributable to the KEL's controller.  This provides verifiable but decorrelatable extensibility to KEL semantics. Any number of transaction event types can be constructed for different applications that may be securely attributed without complicating KEL semantics. The seals need no semantics beyond their secure attributability to the AID of the KEL controller. The semantics of the transaction event's state may be hidden by the transaction event SAID, which in turn may be protected from rainbow table attack by a cryptographic strength salty nonce in the transaction event. Therefore, the transaction state, as given by a sequence of transaction events, can be either public or private, depending on how the transaction events are structured. Similar to ACDCs themselves, Graduated Disclosure mechanisms may be applied to transaction events.
 
 Importantly, the process of sealing transaction events in a KEL binds the Key State at the sealing (anchoring) key event to the transaction state. This enables an extremely beneficial property of TELs; that is, the verifiability of transaction events in the TEL persists in spite of changes to Key States in the sealing KEL. In other words, the verifiability of transaction events persists in spite of changes in the Key State. To clarify, sealed transaction events remain verifiably bound to the Key State at the point of issuance of the sealing event. An example of a transaction state that benefits from this property is a TEL that tracks the issuance and revocation state of dynamically revocable ACDCs, i.e., a revocation registry.
 
@@ -1973,7 +1973,7 @@ The reserved field labels for the top level of a state registry (both blindable 
 |`v`| Version String |
 |`t`| Message type |
 |`d`| event block SAID |
-|`u`| UUID salty nonce |
+|`u`| UE salty nonce |
 |`i`| Issuer AID |
 |`rd`| Registry SAID|
 |`n`| sequence number|
@@ -2009,9 +2009,9 @@ The Message type, `t` field value MUST be  one of the Message types in the table
 
 The SAID, `d` field value MUST be the SAID of its enclosing block. A transaction event's SAID enables a verifiable globally unique reference to that event.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-The UUID, `u` field value MUST be a cryptographic strength salty nonce with approximately 128 bits of entropy (nominally). The UUID, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48]]. An adversary, when given both the block's SAID and knowledge of all possible state values, cannot discover the actual state in a computationally feasible manner, such as a rainbow table attack [[30]] [[31]].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field, notwithstanding knowledge of both the block's structure, possible state values, and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's state unless and until there has been a disclosure of that state.
+The unique-entropy, `u` field value MUST be a cryptographic strength salty nonce with approximately 128 bits of entropy (nominally). The unique-entropy, `u` field means that the block's SAID, `d` field value provides a secure cryptographic digest of the contents of the block [[48]]. An adversary, when given both the block's SAID and knowledge of all possible state values, cannot discover the actual state in a computationally feasible manner, such as a rainbow table attack [[30]] [[31]].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field, notwithstanding knowledge of both the block's structure, possible state values, and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's state unless and until there has been a disclosure of that state.
 
 ##### Issuer, `i` field
 
@@ -2054,7 +2054,7 @@ The blinded attribute block corresponding to the blinded attribute `b` field val
 |Virtual Label|Description|
 |---|---|
 |`d`| BLID blinding SAID |
-|`u`| UUID salty nonce blinding factor, random or HD generated |
+|`u`| UE salty nonce blinding factor, random or HD generated |
 |`td`| Transaction ACDC SAID field this is the value of the top-level `d` field in the ACDC|
 |`ts`| Transaction state value string |
 
@@ -2062,7 +2062,7 @@ The fields MUST appear in the following order: `[d, u, td, ts]`.
 
 The field labels are virtual in that the labels never appear in the CESR serialization; they are a mnemonic for reference purposes. For example, the value of the Bliding SAID `d` field in the blinded attribute block appears as the value of the labeled BLID `b` field in the associated blindable state update, `bup`, message. Likewise, the `td` and `ts` field values have the same semantics as the `td` and `ts` field values in the non-blindable update, `upd` message.
 
-The actual blinded attribute block is not part of the blindable update message. It MAY be provided as an attachment to some message, such as the associate ACDC, as part of a CESR serialization that MUST use one of the CESR group or count codes labeled `BlindedStateQuadruples` with code format `-a##` or `BigBlindedStateQuadruples` with code format `--a######`. When provided as an attachment, multiple blinded attribute blocks MAY be included in a given group. A group consists of its count code followed by one or more Blinded attribute blocks, where each block is composed of a concatenation of the four fields serialized in order as CESR primitives that are appropriate for the BLID, UUID, ACDC SAID, and transaction state string fields in that block. An example of an attachment serialization with group code is provided below.
+The actual blinded attribute block is not part of the blindable update message. It MAY be provided as an attachment to some message, such as the associate ACDC, as part of a CESR serialization that MUST use one of the CESR group or count codes labeled `BlindedStateQuadruples` with code format `-a##` or `BigBlindedStateQuadruples` with code format `--a######`. When provided as an attachment, multiple blinded attribute blocks MAY be included in a given group. A group consists of its count code followed by one or more Blinded attribute blocks, where each block is composed of a concatenation of the four fields serialized in order as CESR primitives that are appropriate for the BLID, UE, ACDC SAID, and transaction state string fields in that block. An example of an attachment serialization with group code is provided below.
 
 ##### BLID, `d` field
 
@@ -2071,17 +2071,17 @@ The blinding SAID, BLID, `b` field value MUST be calculated as a cryptographic s
 The BLID, `d` field should typically use the Blake3 Digest code `E`, but any of the cryptographic strength digest codes of length 44 characters in the qb64 Text domain MAY be used.
 When the `td` field value is the empty placeholder, it uses the CESR `Empty` primitive code with value `1AAP`.
 
-##### UUID, `u` field
+##### Unique Entropy, `u` field
 
-When not empty, the UUID `u` field value MUST be a cryptographic strength salty nonce with approximately 128 bits of entropy (nominally). The UUID `u` field means that the block's SAID `d` field value provides a secure cryptographic digest of the contents of the block [[48]]. An adversary, when given both the block's SAID and knowledge of all possible state values, cannot discover the actual state in a computationally feasible manner, such as a rainbow table attack [[30]] [[31]].  Therefore, the block's UUID, `u` field securely blinds the contents of the block via its SAID, `d` field, notwithstanding knowledge of both the block's structure, possible state values, and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's state unless and until there has been a disclosure of that state.
+When not empty, the unique-entropy `u` field value MUST be a cryptographic strength salty nonce with approximately 128 bits of entropy (nominally). The unique-entropy `u` field means that the block's SAID `d` field value provides a secure cryptographic digest of the contents of the block [[48]]. An adversary, when given both the block's SAID and knowledge of all possible state values, cannot discover the actual state in a computationally feasible manner, such as a rainbow table attack [[30]] [[31]].  Therefore, the block's unique-entropy, `u` field securely blinds the contents of the block via its SAID, `d` field, notwithstanding knowledge of both the block's structure, possible state values, and SAID.  Moreover, a cryptographic commitment to that block's SAID, `d` field does not provide a fixed point of correlation to the block's state unless and until there has been a disclosure of that state.
 
-When used in public (unblinded) mode, the UUID, `u` field value MAY be the empty nonce value.
+When used in public (unblinded) mode, the unique-entropy, `u` field value MAY be the empty nonce value.
 
-The UUID `u` field should use the `Salt_256` code for a 32-byte (256-bit) raw salty nonce value with approximately 256 bits of cryptographic strength. But any appropriate cryptographic digest may be used. Typically, this is some derivation process using a salt and a deterministic path based on the sequence number of the associated  `bup` event message. When used in public unblinded mode, the UUID, `u` field value MAY be the CESR `Empty` primitive code with value `1AAP`.
+The unique-entropy `u` field should use the `Salt_256` code for a 32-byte (256-bit) raw salty nonce value with approximately 256 bits of cryptographic strength. But any appropriate cryptographic digest may be used. Typically, this is some derivation process using a salt and a deterministic path based on the sequence number of the associated  `bup` event message. When used in public unblinded mode, the unique-entropy, `u` field value MAY be the CESR `Empty` primitive code with value `1AAP`.
 
-When the UUID, `u`, is derived from a shared secret salt and a public path, such as the sequence number using a hierarchically deterministic derivation algorithm, and given that the possible state values are finite and small, then any holder of the shared secret can derive the state given the public information in the top-level fields of the transaction event. When the `u` field value is derived from a shared secret salt, the derivation algorithm MUST preserve the approximately 128 bits of cryptographic strength. This typically means a derived UUID `u` field value is 256 bits in length.
+When the unique-entropy, `u`, is derived from a shared secret salt and a public path, such as the sequence number using a hierarchically deterministic derivation algorithm, and given that the possible state values are finite and small, then any holder of the shared secret can derive the state given the public information in the top-level fields of the transaction event. When the `u` field value is derived from a shared secret salt, the derivation algorithm MUST preserve the approximately 128 bits of cryptographic strength. This typically means a derived unique-entropy `u` field value is 256 bits in length.
 
-When the UUID is not derived with a hierarchically deterministic derivation algorithm, the Issuer and Issuee may need to interact for each transaction event update in order to exchange the shared secret salt.
+When the unique-entropy value is not derived with a hierarchically deterministic derivation algorithm, the Issuer and Issuee may need to interact for each transaction event update in order to exchange the shared secret salt.
 
 ##### Transaction ACDC SAID, `td` field
 
@@ -2099,7 +2099,7 @@ When the transaction state `ts` field value is a placeholder, it is indicated by
 In general, the state `ts` field value may be encoded using any of the codes from the following table for string-ish encodings:
 
 ```python
-Empty: str= `1AAP` # Empty value for Nonce, UUID, state or related fields
+Empty: str= `1AAP` # Empty value for Nonce, UE, state or related fields
 Tag1:  str = '0J'  # 1 B64 char tag with 1 pre pad
 Tag2:  str = '0K'  # 2 B64 char tag
 Tag3:  str = 'X'  # 3 B64 char tag
@@ -2133,7 +2133,7 @@ In some applications, it is desirable that the current state of an ACDC be hidde
 
 Usually, a disclosure of a blinded state by Discloser to Disclosee is interactive. A Disclosee may only observe the state when first unblinded in an interactive exchange with the Discloser. After disclosure, the Discloser may then request that the Issuer update the state with a new blinding factor (the blind). The Disclosee cannot then observe the current state of the TEL without yet another disclosure interaction with the Discloser.
 
-The blind is derived from a secret salt shared between the Issuer and the designated Discloser. The current blind is deterministically derived from this salt and the sequence number of the transaction event. This is used to blind the state of the event. To elaborate, the hierarchically deterministic derivation path for the blind is the sequence number of the TEL event, which, combined with the salt, produces a universally unique salty nonce (UUID) to act as the blind. The Issuer publishes the transaction event with a blinded state so that a Validator can independently verify the Issuer's commitment to that state, but without being able to determine the state via a transaction event seal in the Issuer's KEL with the SAID of that event. Only the Issuer can change the actual blinded state. Only the Issuer and Discloser have a copy of the secret salt, so only they can independently derive the current blind from the sequence number. Given the blind and a small finite number of possible values for the transaction state, the Discloser can verifiably discover and hence unblind the current transaction state from the published SAID of the current transaction event, its sequence number, and the shared secret salt.
+The blind is derived from a secret salt shared between the Issuer and the designated Discloser. The current blind is deterministically derived from this salt and the sequence number of the transaction event. This is used to blind the state of the event. To elaborate, the hierarchically deterministic derivation path for the blind is the sequence number of the TEL event, which, combined with the salt, produces a universally unique salty nonce (UE) to act as the blind. The Issuer publishes the transaction event with a blinded state so that a Validator can independently verify the Issuer's commitment to that state, but without being able to determine the state via a transaction event seal in the Issuer's KEL with the SAID of that event. Only the Issuer can change the actual blinded state. Only the Issuer and Discloser have a copy of the secret salt, so only they can independently derive the current blind from the sequence number. Given the blind and a small finite number of possible values for the transaction state, the Discloser can verifiably discover and hence unblind the current transaction state from the published SAID of the current transaction event, its sequence number, and the shared secret salt.
 
 The Issuer MAY provide an authenticated service endpoint for the Discloser to which the Discloser can make a signed request to update the blind.  Each new event published by the Issuer in the Registry MUST increment the sequence number and hence the blinding factor, but MAY or MAY not change the actual blinded state.  Because each updated event in the Registry has a new blinding factor, regardless of any actual change of state or not, an observer cannot correlate state to event updates.
 
@@ -2150,14 +2150,14 @@ As mentioned previously, disclosure of the blinded attribute block can be provid
 
 ##### Blinded Attribute Block Placeholder Calculation Example
 
-Suppose the UUID, `u` field value is encoded as `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`, the empty placeholder transaction ACDC said, `td` field value is encoded as `1AAP` (CESR coding for the empty value), and the transaction state, `ts` field is also encoded as `1AAP` for empty. The digest to be used to compute the BLID (Blinding SAID) is the BLAKE3-256 digest, which, when CESR encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 96 characters.
+Suppose the unique-entropy, `u` field value is encoded as `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`, the empty placeholder transaction ACDC said, `td` field value is encoded as `1AAP` (CESR coding for the empty value), and the transaction state, `ts` field is also encoded as `1AAP` for empty. The digest to be used to compute the BLID (Blinding SAID) is the BLAKE3-256 digest, which, when CESR encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 96 characters.
 
 For the sake of clarity, the field values are shown in the table below:
 
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
-| `u` | `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 
@@ -2178,7 +2178,7 @@ Broken out into fields, the values are provided in the table below:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `ECVr7QWEp_aqVQuz4yprRFXVxJ-9uWLx_d6oDinlHU6J`| BLID (Blinding SAID) |
-| `u` | `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 
@@ -2193,14 +2193,14 @@ An unblinded attachment of this blinded attribute block would be prefixed with t
 
 ##### Blinded Attribute Block ACDC State Calculation Example
 
-For example, suppose the UUID, `u` field value is encoded as `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, and the transaction state, `ts` field value is the string "issued" encoded as `0Missued`. The digest to be used to compute the BLID is the BLAKE3-256 digest, which when CESR encoded has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 140 characters.
+For example, suppose the unique-entropy, `u` field value is encoded as `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, and the transaction state, `ts` field value is the string "issued" encoded as `0Missued`. The digest to be used to compute the BLID is the BLAKE3-256 digest, which when CESR encoded has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 140 characters.
 
 For the sake of clarity, the field values are shown in the table below:
 
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
-| `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
@@ -2221,7 +2221,7 @@ Broken out into fields, the values are provided in the table below:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N`| Dummied BLID (Blinding SAID) |
-| `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
@@ -2250,7 +2250,7 @@ Consider a blindable state revocation registry for ACDCs operated in blinded (pr
 }
 ```
 
-With respect to the event above, given that the UUID, `u` field value has sufficient cryptographic entropy, the SAID, `d` field provides a universally unique identifier for the Registry that can be referenced elsewhere. This value is derived from the Issuer AID, binding the Registry to the Issuer AID. When this Registry identifier value is included in the Registry SAID `rd` field of an ACDC, it provides secure discovery of the Registry given the ACDC by binding the Registry to the ACDC within the ACDC. This binding provides a point of correlation between the Registry and the ACDC, so it may not be appropriate for some applications. In this latter case, a presentation of the ACDC MAY attach the `rd` field value and a reference to the TEL event. The registry SAID, `rd` field value can then be used to look up the TEL event to provide the `td` field value, which is the SAID of the ACDC. Therefore, even without secure discovery, a given ACDC state can be cryptographically verified once discovery is provided.
+With respect to the event above, given that the unique-entropy, `u` field value has sufficient cryptographic entropy, the SAID, `d` field provides a universally unique identifier for the Registry that can be referenced elsewhere. This value is derived from the Issuer AID, binding the Registry to the Issuer AID. When this Registry identifier value is included in the Registry SAID `rd` field of an ACDC, it provides secure discovery of the Registry given the ACDC by binding the Registry to the ACDC within the ACDC. This binding provides a point of correlation between the Registry and the ACDC, so it may not be appropriate for some applications. In this latter case, a presentation of the ACDC MAY attach the `rd` field value and a reference to the TEL event. The registry SAID, `rd` field value can then be used to look up the TEL event to provide the `td` field value, which is the SAID of the ACDC. Therefore, even without secure discovery, a given ACDC state can be cryptographically verified once discovery is provided.
 
 To clarify, the registry identifier, REGID, is `ECOWJI9kAjpCFYJ7RenpJx2w66-GsGlhyKLO-Or3qOIQ`. It is the value of the `d` field in the registry inception event above. It is computed as the SAID of that event.  When provided in an ACDC, it is the value of the `rd` field.
 
@@ -2274,19 +2274,19 @@ Notice in the event above that the registry SAID, `rd` field value matches the v
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `ECVr7QWEp_aqVQuz4yprRFXVxJ-9uWLx_d6oDinlHU6J`| BLID (Blinding SAID) |
-| `u` |`aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UUID salty nonce blinding factor, HD generated |
+| `u` |`aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 
 Notice that the value of the BLID blinded attribute, `b` field in the transaction event, matches the value of the BLID `d` field in the expanded attribute block.  Likewise, notice that the value of the transaction ACDC SAID, in the `td` field, is the CESR encoded value for empty, serving as a placeholder value. Furthermore, the value of the transaction state, `ts` field, is also the CESR encoded value for empty. This indicates that the transaction state does not yet correspond to a real ACDC.  The blind for this placeholder attribute block may be updated any number of times prior to its first use as the true state of a real ACDC.
 
-At some later time, the issuer issues a new blindable update event, `bup`, with a new blind, UUID `u` field value in the associate attribute block, derived from the shared Salt and the sequence number of the `bup` event.  This makes the first use(s) of the registry uncorrelated with the eventual actual issuance of a real ACDC. In this case, the Issuer used a hierarchically deterministic algorithm to compute the UUID, `u` field in the blinded attribute block.
+At some later time, the issuer issues a new blindable update event, `bup`, with a new blind, unique-entropy `u` field value in the associate attribute block, derived from the shared Salt and the sequence number of the `bup` event.  This makes the first use(s) of the registry uncorrelated with the eventual actual issuance of a real ACDC. In this case, the Issuer used a hierarchically deterministic algorithm to compute the unique-entropy, `u` field in the blinded attribute block.
 
-To do this, the Issuer and Discloser/Issuee must first have exchanged a shared secret salt from which the value of the blind, UUID, `u` field was derived. The shared secret salt MUST have approximately 128 bits of cryptographic entropy. The UUID field value is calculated using a hierarchically deterministic algorithm from the salt and the sequence number of the transaction event as the deterministic path. To preserve cryptographic entropy during derivation, the value of the UUID `u` field must be twice as long as the shared secret salt.
+To do this, the Issuer and Discloser/Issuee must first have exchanged a shared secret salt from which the value of the blind, unique-entropy, `u` field was derived. The shared secret salt MUST have approximately 128 bits of cryptographic entropy. The unique-entropy field value is calculated using a hierarchically deterministic algorithm from the salt and the sequence number of the transaction event as the deterministic path. To preserve cryptographic entropy during derivation, the value of the unique-entropy `u` field must be twice as long as the shared secret salt.
 
-Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID blinded attribute, `b` field value with the ACDC SAID value for its `td` field with `issued` as the ACDC state for the `ts` field.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of the new blinded attribute block.
+Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID blinded attribute, `b` field value with the ACDC SAID value for its `td` field with `issued` as the ACDC state for the `ts` field.  The unique-entropy, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of the new blinded attribute block.
 
-The Discloser can then download the published blinded update `bup` transaction event to get the sequence number `n` field value. With that value and the shared secret salt, the Discloser can regenerate the blind UUID and the `u` field value. The Discloser also knows the real ACDC that will be used for this Registry. Consequently, it knows that the value of the ACDC, SAID, `td` field MUST be either the empty string placeholder or the real ACDC SAID given above.
+The Discloser can then download the published blinded update `bup` transaction event to get the sequence number `n` field value. With that value and the shared secret salt, the Discloser can regenerate the blind unique entropy and the `u` field value. The Discloser also knows the real ACDC that will be used for this Registry. Consequently, it knows that the value of the ACDC, SAID, `td` field MUST be either the empty string placeholder or the real ACDC SAID given above.
 
 The Discloser can now compute the blinding SAID, BLID, `b` field value of the expanded Attribute block for all the combinations of the possible values for the `td` and `ts` fields. The `td` field possible values include either `1AAP` or `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The possible `ts` field values include one of `1AAP`, `0Missued`, or `Yrevoked`. These latter three values correspond to the CESR Text domain encodings of the strings "", "issued" and "revoked".  This gives a total of six combinations of possible field values. The Discloser tries each combination until it finds the one that matches the published transaction event blinded attribute, BLID, `b` field value. The Discloser can then verify if the published value is still a placeholder or the real initial state.
 
@@ -2312,21 +2312,21 @@ The value of the blinded attribute block BLID, `b` field, is taken from the issu
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EItpXDP26bvHIRZ0GrJwhOIR5lLEaviFcIxFodP6IJ8N`| Dummied BLID (Blinding SAID) |
-| `u` |`aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UUID salty nonce blinding factor HD generated |
+| `u` |`aLfCdNAnc-0P2SiruarZSajXiUWu5iU2VfQahvpNCyzB`| UE salty nonce blinding factor HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 
 
 Notice that the value of the blinded attribute, BLID, `b` field in the transaction event, matches the value of the BLID (Blinding SAID), `d` field in the expanded blinded attribute block. Further notice that the value of the `td` field is the same as the SAID (top-level `d`) field value of the issued ACDC.  Finally, notice that in this case, the value of the transaction state, `ts` field, is `issued` (not the empty placeholder).
 
-Suppose that the Discloser has been given the shared secret salt from which the value of the expanded attribute block's blind, UUID, `u` field was generated. The Discloser can then download the published transaction event to get the sequence number, `n` field value. With that value and the shared secret salt, the Discloser can regenerate the blind UUID, `u` field value. The Discloser also knows which ACDC it wishes to disclose, so it also has the ACDC, SAID, `d` field value. The Discloser can now compute the BLID, `b` field value of the expanded blinded attribute block for all the combinations of the possible values for the `td` and `ts` fields.  For the `td` field these are either of the CESR serializations of the empty string placeholder value or the actual ACDC SAID. For the `ts` field these are one of the CESR serializations of the strings, "", "issued", or "revokes" e.g. `1AAP`, `0Missued`, or `Yrevoked`. This gives six combinations to try. The Discloser tries each one until it finds the one that matches the published transaction event blinded attribute, BLID, `b` field value. The Discloser can then disclose the matching expanded blinded block to the Disclosee, who can verify it against the published transaction event.
+Suppose that the Discloser has been given the shared secret salt from which the value of the expanded attribute block's blind, unique-entropy, `u` field was generated. The Discloser can then download the published transaction event to get the sequence number, `n` field value. With that value and the shared secret salt, the Discloser can regenerate the blind unique-entropy, `u` field value. The Discloser also knows which ACDC it wishes to disclose, so it also has the ACDC, SAID, `d` field value. The Discloser can now compute the BLID, `b` field value of the expanded blinded attribute block for all the combinations of the possible values for the `td` and `ts` fields.  For the `td` field these are either of the CESR serializations of the empty string placeholder value or the actual ACDC SAID. For the `ts` field these are one of the CESR serializations of the strings, "", "issued", or "revokes" e.g. `1AAP`, `0Missued`, or `Yrevoked`. This gives six combinations to try. The Discloser tries each one until it finds the one that matches the published transaction event blinded attribute, BLID, `b` field value. The Discloser can then disclose the matching expanded blinded block to the Disclosee, who can verify it against the published transaction event.
 
 The Discloser can then instruct the Issuer to issue one or more updates with new blinding factors so that the initial Disclosee may no longer validate the state of the ACDC without another interactive disclosure by the Discloser.
 
 Suppose, sometime later, a Validator requires that the Discloser provide continuing proof of issuance. In that case, the Discloser would disclose the current state of the Registry. Suppose it has been revoked. The Discloser may either refuse to disclose (with the associated consequences) or may only verifiably disclose the true state.
 The Discloser could continue to have the blind updated periodically. This would generate new blindable update, `bup` transaction events with new values for its blinded attribute, `b` field, but without changing either the `td` or `ts` field values. This decorrelates the time of revocation with respect to the latest event in the Registry.
 
-At some time later, the issuer decides to revoke the issuance. The Issuer first creates a new BLID blinded attribute block with the `td` field set to the SAID of the ACDC and `revoked` as the value of the `ts` field.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number, which in this case is `3`, to compute its value.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of this new blinded attribute block.
+At some time later, the issuer decides to revoke the issuance. The Issuer first creates a new BLID blinded attribute block with the `td` field set to the SAID of the ACDC and `revoked` as the value of the `ts` field.  The unique-entropy, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number, which in this case is `3`, to compute its value.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of this new blinded attribute block.
 
 The published blindable update transaction event is as follows:
 
@@ -2355,7 +2355,7 @@ Broken out into a table, the fields are as follows:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EJakqLgla7ip4dygsRxRX3p3oYfAugvR6pm7zQByL0XO`| Dummied BLID (Blinding SAID) |
-| `u` |`aGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZG`| UUID salty nonce blinding factor HD generated |
+| `u` |`aGx7b16vGHVPT56tX30kYOEzTwiVY4aabc4k9AawYyZG`| UE salty nonce blinding factor HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `Yrevoked` |Transaction state value string |
 
@@ -2385,7 +2385,7 @@ Consider a unblindable state revocation Registry for ACDCs operated in an unblin
     "dt": "2025-07-04T17:53:00.000000+00:00"
 }
 ```
-With respect to the event above, given that the UUID, `u` field value has sufficient cryptographic entropy, the SAID, `d` field provides a universally unique identifier for the Registry that can be referenced elsewhere, typically as the value of the `rd` field in an ACDC or as an attached reference to the presentation of an ACDC.
+With respect to the event above, given that the unique-entropy, `u` field value has sufficient cryptographic entropy, the SAID, `d` field provides a universally unique identifier for the Registry that can be referenced elsewhere, typically as the value of the `rd` field in an ACDC or as an attached reference to the presentation of an ACDC.
 
 Sometime later, an ACDC is issued as indicated by its SAID, `d` field value, `ELCZRc2VlaDv0mdooNQ_Y_MGiaBS0YQ2OaSpV97Y-wrt`. The value of the Issuer, `i` field of that ACDC will be the same as the Issuer AID for the registry inception event. This binds the Issuer to both the ACDC and the registry. The SAID of the ACDC will be provided as the `td` field value in an update event.  This binds the ACDC to the Registry.
 
@@ -2440,7 +2440,7 @@ The bound blinded attribute block has the following fields:
 |Virtual Label|Description|
 |---|---|
 |`d`| BLID blinding SAID |
-|`u`| UUID salty nonce blinding factor, random or HD generated |
+|`u`| UE salty nonce blinding factor, random or HD generated |
 |`td`| Transaction ACDC SAID field, this is the value of the top-level `d` field in the ACDC|
 |`ts`| Transaction state value string |
 |`bn`| Bound Issuee key event sequence number field|
@@ -2452,7 +2452,7 @@ The field labels are virtual in that they never appear in the CESR serialization
 
 The semantics of the first four fields is identical to the blinded attribute block described above and are therefore not repeated here.
 
-The actual bound blinded attribute block is not part of the blindable update message. It MAY be provided as an attachment to some message, such as the associate ACDC, as part of a CESR serialization and MUST use one of the CESR group or count codes labeled `BoundStateSextuples` with code format `-b##` or `BigBoundStateSextuples` with code format `--b######`. When provided as an attachment, multiple blinded attribute blocks MAY be included in a given group. A group consists of its count code followed by one or more Blinded attribute blocks, where each block is composed of a concatenation of the six fields serialized in order as CESR primitives that are appropriate for the BLID, UUID, ACDC SAID, transaction state string, Issuee key state sequence number, and Issuee key state SAID fields in that block. An example of an attachment serialization with group code is provided below.
+The actual bound blinded attribute block is not part of the blindable update message. It MAY be provided as an attachment to some message, such as the associate ACDC, as part of a CESR serialization and MUST use one of the CESR group or count codes labeled `BoundStateSextuples` with code format `-b##` or `BigBoundStateSextuples` with code format `--b######`. When provided as an attachment, multiple blinded attribute blocks MAY be included in a given group. A group consists of its count code followed by one or more Blinded attribute blocks, where each block is composed of a concatenation of the six fields serialized in order as CESR primitives that are appropriate for the BLID, UE, ACDC SAID, transaction state string, Issuee key state sequence number, and Issuee key state SAID fields in that block. An example of an attachment serialization with group code is provided below.
 
 
 ##### Bound Issuee Key Event Sequence Number, `bn` Field
@@ -2484,7 +2484,7 @@ When the bound Issuee key event SAID, `bd`, field value is a placeholder as indi
 
 ##### Bound Blinded Attribute Block Placeholder Calculation Example
 
-Suppose the UUID, `u` field value is encoded as `aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`, the empty placeholder transaction ACDC said, `td` field value is encoded as `1AAP` (CESR coding for the empty value), the transaction state, `ts` field is also encoded as `1AAP` for empty, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAA` for 0, and the bound Issuee key event SAID, `bd` field value is encoded as `1AAP` (CESR coding for the empty value).
+Suppose the unique-entropy, `u` field value is encoded as `aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`, the empty placeholder transaction ACDC said, `td` field value is encoded as `1AAP` (CESR coding for the empty value), the transaction state, `ts` field is also encoded as `1AAP` for empty, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAA` for 0, and the bound Issuee key event SAID, `bd` field value is encoded as `1AAP` (CESR coding for the empty value).
 
 The digest to be used to compute the BLID (Blinding SAID) is the BLAKE3-256 digest, which, when CESR encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 104 characters.
 
@@ -2493,7 +2493,7 @@ For the sake of clarity, the field values are shown in the table below:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
-| `u` | `aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 | `bn` | `MAAA`| Bound Issuee key event sequence number field|
@@ -2516,7 +2516,7 @@ Broken out into fields, the values are provided in the table below:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EFaQ00QW-ZeoMxE9baWcpJbAFXrs5h0ya-wpKnHvMQ0c`| BLID (Blinding SAID) |
-| `u` |`aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UUID salty nonce blinding factor, HD generated |
+| `u` |`aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 | `bn` | `MAAA`| Bound Issuee key event sequence number field|
@@ -2532,14 +2532,14 @@ An unblinded attachment of this blinded attribute block would be prefixed with t
 
 ##### Blinded Attribute Block ACDC State Calculation Example
 
-For example, suppose the UUID, `u` field value is encoded as `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, the transaction state, `ts` field value is the string "issued" encoded as `0Missued`, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAB` for 1, and the bound Issuee key event SAID, `bd` field value is encoded as `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`. The digest to be used for computing the BLID is the BLAKE3-256 digest, which, when CESR-encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 188 characters.
+For example, suppose the unique-entropy, `u` field value is encoded as `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO` the transaction ACDC said, `td` field value is encoded as `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`, the transaction state, `ts` field value is the string "issued" encoded as `0Missued`, the bound Issuee key event sequence number, `bn` field value is encoded as `MAAB` for 1, and the bound Issuee key event SAID, `bd` field value is encoded as `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv`. The digest to be used for computing the BLID is the BLAKE3-256 digest, which, when CESR-encoded, has a length of 44 characters. This is filled with forty-four `#` dummy characters.  The resulting length of the group content is 188 characters.
 
 For the sake of clarity, the field values are shown in the table below:
 
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `############################################`| Dummied BLID (Blinding SAID) |
-| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
@@ -2561,7 +2561,7 @@ Broken out into fields, the values are provided in the table below:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57`| BLID (Blinding SAID) |
-| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
@@ -2615,7 +2615,7 @@ Notice in the event above that the registry SAID, `rd` field value matches the v
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EFaQ00QW-ZeoMxE9baWcpJbAFXrs5h0ya-wpKnHvMQ0c`| BLID (Blinding SAID) |
-| `u` |`aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UUID salty nonce blinding factor, HD generated |
+| `u` |`aJxtoz6qVeJxPCZvP-qBJifRfIxP3itQBVAAu7JJHxMa`| UE salty nonce blinding factor, HD generated |
 | `td` | `1AAP`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `1AAP` |Transaction state value string |
 | `bn` | `MAAA`| Bound Issuee key event sequence number field|
@@ -2623,9 +2623,9 @@ Notice in the event above that the registry SAID, `rd` field value matches the v
 
 Notice that the value of the BLID bound blinded attribute, `b` field in the transaction event, matches the value of the BLID, `d`, field in the expanded bound blinded attribute block.  Likewise, notice that the value of the transaction ACDC SAID, in the `td` field, is the CESR encoded value for empty, serving as a placeholder value, as it the value of the transaction state, `ts` field, which is also the CESR encoded value for empty. Furthermore, the values of the bound Issuee key event sequence number, `bn`, and the bound Issuee key event SAID fields are the placeholder values of `MAAA` and `1AAP`. This indicates that the transaction state does not yet correspond to a real ACDC, nor does the bound Issuee key state yet correspond to an extant Issuee's key state.  The blind for this placeholder attribute block may be updated any number of times prior to its first use as the true state of a real ACDC with a real Issuee.
 
-At some later time, the issuer issues a new blindable update event, `bup`, with a new blind, UUID `u` field value in the associate attribute block, derived from the shared Salt and the sequence number of the `bup` event.  This makes the first use(s) of the registry uncorrelated with the eventual actual issuance of a real ACDC. In this case, the Issuer used a hierarchically deterministic algorithm to compute the UUID, `u` field in the blinded attribute block.
+At some later time, the issuer issues a new blindable update event, `bup`, with a new blind, unique-entropy `u` field value in the associate attribute block, derived from the shared Salt and the sequence number of the `bup` event.  This makes the first use(s) of the registry uncorrelated with the eventual actual issuance of a real ACDC. In this case, the Issuer used a hierarchically deterministic algorithm to compute the unique-entropy, `u` field in the blinded attribute block.
 
-Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID, bound blinded attribute, `b` field value, with the ACDC SAID value for its `td` field, with `issued` as the ACDC state for the `ts` field, with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event.  The UUID, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new bound blindable update event `bup` with its `b` field set to the SAID of the new bound blinded attribute block.
+Suppose even later, the real ACDC is issued and is uniquely identified by its top-level SAID, `d`, field value, namely, `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`. The Issuer creates a new BLID, bound blinded attribute, `b` field value, with the ACDC SAID value for its `td` field, with `issued` as the ACDC state for the `ts` field, with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event.  The unique-entropy, `u`, field uses the hierarchically deterministic algorithm with the shared secret salt and the deterministic path set to the next sequence number.  The Issuer issues a new bound blindable update event `bup` with its `b` field set to the SAID of the new bound blinded attribute block.
 
 Suppose the associated update event occurs at sequence number 2 and the bound Issuee key event occurs at sequence number 1 in the Issuee's KEL. The published blindable update transaction event is as follows:
 
@@ -2647,7 +2647,7 @@ The value of the bound blinded attribute block BLID, `b` field, is taken from th
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EOhIBudxqPL1KP3PmJidkTHXtkneortJX4ygMcoC3p57`| BLID (Blinding SAID) |
-| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aKNPEY4_60x6vUx2g5_5kAoJTn0RDspR04Ql8ecNyTkO`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `0Missued` |Transaction state value string |
 | `bn` | `MAAB`| Bound Issuee key event sequence number field|
@@ -2656,7 +2656,7 @@ The value of the bound blinded attribute block BLID, `b` field, is taken from th
 
 Notice that the value of the bound blinded attribute, BLID, `b` field in the transaction event, matches the value of the BLID (Blinding SAID), `d` field in the expanded bound blinded attribute block. Further notice that the value of the `td` field is the same as the SAID (top-level `d`) field value of the issued ACDC.  Also, notice that in this case, the value of the transaction state, `ts` field, is `issued` (not the empty placeholder). Finally, notice, that the values of the bound Issuee key event sequence number and SAID field are not placeholders but correspond to a key event with sequence number == 1 (`s` field value), and SAID = `EJOnAKXGaSyJ_43kit0V806NNeGWS07lfjybB1UcfWsv` (`d` field value).
 
-At some time later, the issuer decides to revoke the issuance. The Issuer first creates a new BLID, a bound blinded attribute block, with the `td` field set to the SAID of the ACDC and `revoked` as the value of the `ts` field with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event. In this case, the Issuee's key event is as sequence number == 8. The UUID, `u`, field uses a hierarchically deterministic algorithm with a shared secret salt and a deterministic path set to the next sequence number, which in this case is `3`, to compute its value.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of this new blinded attribute block.
+At some time later, the issuer decides to revoke the issuance. The Issuer first creates a new BLID, a bound blinded attribute block, with the `td` field set to the SAID of the ACDC and `revoked` as the value of the `ts` field with the bound Issuee key event sequence number, `bn`, and key event SAID, `bd` field values taken from the Issuee AID's current key event. In this case, the Issuee's key event is as sequence number == 8. The unique-entropy, `u`, field uses a hierarchically deterministic algorithm with a shared secret salt and a deterministic path set to the next sequence number, which in this case is `3`, to compute its value.  The Issuer issues a new blindable update event `bup` with its `b` field set to the SAID of this new blinded attribute block.
 
 The published blindable update transaction event is as follows:
 
@@ -2685,7 +2685,7 @@ Broken out into a table, the fields are as follows:
 |Virtual Label|Value|Description|
 |---|---|---|
 | `d` | `EMCLq-2IOahj__yMPEDZ5Fu7Uyvft66GYD4WYuMW8ztG`| BLID (Blinding SAID) |
-| `u` | `aFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVD`| UUID salty nonce blinding factor, HD generated |
+| `u` | `aFudXE-d0b2owzZNBjd78sx4kCTJx-RTP_Zd19HRUcVD`| UE salty nonce blinding factor, HD generated |
 | `td` | `EP-iKGmXD-iZu3RhVA2FTI-dOdX50bRBV3VDCy-peOtv`| Transaction ACDC SAID field value, top-level `d`|
 | `ts` | `Yrevoked` |Transaction state value string |
 | `bn` | `MAAI`| Bound Issuee key event sequence number field|
@@ -2761,13 +2761,13 @@ There are several ways that the Issuer may securely share that secret salt. Give
 
 In an interactive approach, the Issuer derives a public asymmetric X25519 encryption key from the Issuee's published Ed25519 public key and the Issuee derives a public asymmetric X25519 encryption key from the Issuer's published Ed25519 public key. The two then interact via a Diffie-Hellman (DH) key exchange to create a shared symmetric encryption key [[46]] [[45]]. The shared symmetric encryption key may be used to encrypt the secret salt or the shared symmetric encryption key itself may be used as high entropy cryptographic material from which the secret salt may be derived.
 
-In a non-interactive approach, the Issuer derives an X25519 asymmetric public encryption key from the Issuee's (recipient's) public Ed25519 public key. The Issuer then encrypts the secret salt with that public asymmetric encryption key and signs the encryption with the Issuer's private Ed25519 signing key. This is transmitted to the Issuee, who verifies the signature and decrypts the secret salt using the private X25519 decryption key derived from the Issuee's private Ed25519 key. This non-interactive approach is more scalable for AIDs that are controlled with a multi-sig group of signing keys. The Issuer can broadcast to all members of the Issuee's (or recipient's) multi-sig signing group individually asymmetrically encrypted and signed copies of the secret salt may be derived. Likewise, both compact and uncompacted versions of the ACDC then may be generated. The derivation path for the top-level UUID, `u`, field (for private ACDCs), is the string "0" and derivation path the zeroth indexed attribute in the Attributes array is the string ‘0/0’. Likewise, the next Attribute's derivation path is the string ‘0/1’ and so forth.
+In a non-interactive approach, the Issuer derives an X25519 asymmetric public encryption key from the Issuee's (recipient's) public Ed25519 public key. The Issuer then encrypts the secret salt with that public asymmetric encryption key and signs the encryption with the Issuer's private Ed25519 signing key. This is transmitted to the Issuee, who verifies the signature and decrypts the secret salt using the private X25519 decryption key derived from the Issuee's private Ed25519 key. This non-interactive approach is more scalable for AIDs that are controlled with a multi-sig group of signing keys. The Issuer can broadcast to all members of the Issuee's (or recipient's) multi-sig signing group individually asymmetrically encrypted and signed copies of the secret salt may be derived. Likewise, both compact and uncompacted versions of the ACDC then may be generated. The derivation path for the top-level unique-entropy, `u`, field (for private ACDCs), is the string "0" and derivation path the zeroth indexed attribute in the Attributes array is the string ‘0/0’. Likewise, the next Attribute's derivation path is the string ‘0/1’ and so forth.
 
 In addition to the shared salt and ACDC template, the Issuer also provides its signature(s) on its own generated Compact version of the ACDC. The Issuer also may provide references to the anchoring issuance proof seals. Everything else an Issuee (or recipient) needs to make a verifiable presentation/disclosure can be computed at the time of presentation/disclosure by the Issuee.
 
 ### Bulk-issued Private ACDCs
 
-The purpose of bulk issuance is to enable the Issuee to use ACDCs with unique SAIDs more efficiently to isolate and minimize correlation across different usage contexts. Each member of a set of bulk-issued ACDCs is essentially the same ACDC but with a unique SAID. This enables public commitments to each of the unique ACDC SAIDs without a 3rd party being able to correlate between them. A private ACDC may be effectively issued in bulk as a set. In its basic form, the only difference between each ACDC is the top-level SAID, ‘d’ and UUID ‘u’ field values. To elaborate, bulk issuance enables the use of 3rd party uncorrelated copies while minimizing the associated data transfer and storage requirements involved in the issuance. Essentially, each copy (member) of a bulk-issued ACDC set shares a template that both the Issuer and Issuee use to generate on the fly a given ACDC in that set without requiring that the Issuer and Issuee exchange and store a unique copy of each member of the set independently. This minimizes the data transfer and storage requirements for both the Issuer and the Issuee.
+The purpose of bulk issuance is to enable the Issuee to use ACDCs with unique SAIDs more efficiently to isolate and minimize correlation across different usage contexts. Each member of a set of bulk-issued ACDCs is essentially the same ACDC but with a unique SAID. This enables public commitments to each of the unique ACDC SAIDs without a 3rd party being able to correlate between them. A private ACDC may be effectively issued in bulk as a set. In its basic form, the only difference between each ACDC is the top-level SAID, ‘d’ and unique-entropy ‘u’ field values. To elaborate, bulk issuance enables the use of 3rd party uncorrelated copies while minimizing the associated data transfer and storage requirements involved in the issuance. Essentially, each copy (member) of a bulk-issued ACDC set shares a template that both the Issuer and Issuee use to generate on the fly a given ACDC in that set without requiring that the Issuer and Issuee exchange and store a unique copy of each member of the set independently. This minimizes the data transfer and storage requirements for both the Issuer and the Issuee.
 
 The Issuer MAY make a cryptographically verifiable commitment to every member of the bulk-issued set by making a commitment to the bulk-issued aggregate value ‘B’ defined below. This commitment MAY be a seal in the Issuer's KEL or may be the value of the `td` field in a Registry TEL event. The commitment to the bulk aggregate `B` may be used to provide proof of issuance or proof of state of any member of the bulk-issued set. Because the aggregate value `B` could be a point of correlation to a given bulk-issued set, it should be disclosed only after Contractually Protected Disclosure is in place, i.e., no permissioned correlation. Thus, correlation would require a colluding 2nd-party who engages in unpermissioned correlation.
 
@@ -2789,7 +2789,7 @@ It is essential to note that a group of colluding malicious Verifiers may still 
 
 #### Basic Bulk Issuance Procedure
 
-The amount of data transferred between the Issuer and Issuee (or recipient of an untargeted ACDC) at issuance of a set of bulk issued ACDCs may be minimized by using a hierarchical deterministic derivation function to derive the value of the UUID, `u`, fields from a shared secret salt [[29](#Salt)].
+The amount of data transferred between the Issuer and Issuee (or recipient of an untargeted ACDC) at issuance of a set of bulk issued ACDCs may be minimized by using a hierarchical deterministic derivation function to derive the value of the unique-entropy, `u`, fields from a shared secret salt [[29](#Salt)].
 
 As described above, there are several ways that the Issuer may share a secret salt securely. Given that the Issuer and Issuee (or recipient for Untargeted ACDCs) AIDs are each controlled by an Ed25519 key pair(s), a corresponding X15519 asymmetric encryption key pair(s) may be derived from the controlling Ed25519 key pair(s) [[36](#EdSC)][[37](#PSEd)][[38](#TMEd)]. An X25519 public key may be securely derived from an Ed25519 public key [[46](#KeyEx)][[60](#SKEM)]. Likewise, an X25519 private key may be securely derived from an Ed25519 private key [[46](#KeyEx)][[60](#SKEM)].
 
@@ -2797,11 +2797,11 @@ In an interactive approach, the Issuer derives a public asymmetric X25519 encryp
 
 In a non-interactive approach, the Issuer derives an X25519 asymmetric public encryption key from the Issuee's (or recipient's) public Ed25519 public key. The Issuer then encrypts the secret salt with that public asymmetric encryption key and signs the encryption with the Issuer's private Ed25519 signing key. This is transmitted to the Issuee, who verifies the signature and decrypts the secret salt using the private X25519 decryption key derived from the Issuee's private Ed25519 key. This non-interactive approach is more scalable for AIDs that are controlled with a multi-sig group of signing keys. The Issuer can broadcast to all members of the Issuee's (or recipient's) multi-sig signing group individually asymmetrically encrypted and signed copies of the secret salt.
 
-In addition to the secret salt, the Issuer also provides a template of the private ACDC but with empty UUID, `u`, and SAID, `d`, fields at the top-level of each nested block with such fields. Each UUID, `u`, field value is then derived from the shared salt with a deterministic path prefix that indexes both its membership in the bulk-issued set and its location in the ACDC. Given the UUID, `u`, field value, the associated SAID, `d`, field value may then be derived. Likewise, both full and compact versions of the ACDC may then be generated. This generation is analogous to that described for creating the Aggregate value of the set of elements in the selectively disclosable [Aggregate Section](#aggregate-section), but extended to a set of private ACDCs.
+In addition to the secret salt, the Issuer also provides a template of the private ACDC but with empty unique-entropy, `u`, and SAID, `d`, fields at the top-level of each nested block with such fields. Each unique-entropy, `u`, field value is then derived from the shared salt with a deterministic path prefix that indexes both its membership in the bulk-issued set and its location in the ACDC. Given the unique-entropy, `u`, field value, the associated SAID, `d`, field value may then be derived. Likewise, both full and compact versions of the ACDC may then be generated. This generation is analogous to that described for creating the Aggregate value of the set of elements in the selectively disclosable [Aggregate Section](#aggregate-section), but extended to a set of private ACDCs.
 
-The initial element in each deterministic derivation path is the string value of the bulk-issued member's copy index `k`, such as `0`, `1`, `2`, etc.  Specifically, if `k` denotes the index of an ordered set of bulk-issued private ACDCs of size `M`, the derivation path starts with the string `k`, where `k` is replaced with the decimal or hexadecimal textual representation of the numeric index `k`. Furthermore, a bulk-issued private ACDC with a private Attribute section uses `k` to derive its top-level UUID and `k/0` to derive its Attribute section UUID. This hierarchical path is extended to any nested private Attribute blocks.
+The initial element in each deterministic derivation path is the string value of the bulk-issued member's copy index `k`, such as `0`, `1`, `2`, etc.  Specifically, if `k` denotes the index of an ordered set of bulk-issued private ACDCs of size `M`, the derivation path starts with the string `k`, where `k` is replaced with the decimal or hexadecimal textual representation of the numeric index `k`. Furthermore, a bulk-issued private ACDC with a private Attribute section uses `k` to derive its top-level unique entropy and `k/0` to derive its Attribute section unique entropy. This hierarchical path is extended to any nested private Attribute blocks.
 
-This approach can be further extended to enable bulk-issued Selective Disclosure ACDCs (i.e., those with an Aggregate Section instead of an Attribute Section) by using a similar hierarchical derivation path for the UUID field value in each of the selectively disclosable element blocks in its array of element attribute blocks. For example, the path `k/j` could be used to generate the UUID of aggregate element index `j` at bulk-issued ACDC index `k`.
+This approach can be further extended to enable bulk-issued Selective Disclosure ACDCs (i.e., those with an Aggregate Section instead of an Attribute Section) by using a similar hierarchical derivation path for the unique-entropy field value in each of the selectively disclosable element blocks in its array of element attribute blocks. For example, the path `k/j` could be used to generate the unique entropy of aggregate element index `j` at bulk-issued ACDC index `k`.
 
 The Issuee (or recipient) can generate on demand each compact or uncompacted ACDC from the template, the salt, and its index `k`. The Issuee does not need to store a copy of each bulk-issued ACDC, merely the template and the salt.
 
@@ -2809,9 +2809,9 @@ The Issuer MUST anchor in its KEL an issuance proof digest seal of the set of bu
 
 The issuance proof digest is a blinded aggregate generated from the blinded SAIDS of all members in the bulk-issued set of ACDCs. The complication of this approach is that it must be done in such a way as not to enable provable correlation by a third party of the actual SAIDs in the bulk-issued set of ACDCs. Therefore, the actual SAIDs themselves must not be aggregated but only blinded commitments to those SAID. With blinded commitments, knowledge of any or all members of such a set does not disclose the membership of any SAID unless and until it is unblinded. Recall that the purpose of bulk issuance is to allow the SAID of an ACDC in a bulk-issued set to be used publicly without correlating it in an unpermissioned provable way to the SAIDs of the other members.
 
-The basic approach is to compute the blinded aggregate commitment denoted `B` as the digest of the concatenation of a set of blinded digests of bulk-issued ACDC SAIDs. Each ACDC SAID is first blinded via concatenation to a UUID (salty nonce), and then the digest of that concatenation is concatenated with the other blinded SAID digests. Finally, a digest of that concatenation provides the blinded aggregate.
+The basic approach is to compute the blinded aggregate commitment denoted `B` as the digest of the concatenation of a set of blinded digests of bulk-issued ACDC SAIDs. Each ACDC SAID is first blinded via concatenation to a unique-entropy value (salty nonce), and then the digest of that concatenation is concatenated with the other blinded SAID digests. Finally, a digest of that concatenation provides the blinded aggregate.
 
-Suppose there are `M` ACDCs in a bulk-issued set. Using zero-based indexing for each member of the bulk-issued set of ACDCs, such that index `k` satisfies `k in {0, ..., M-1}`, let d<sub>k</sub> denote the top-level SAID of an ACDC in an ordered set of bulk-issued ACDCs. Let v<sub>k</sub> denote the UUID (salty nonce) or blinding factor that is used to blind that said. The blinding factor, v<sub>k</sub>, is not the top-level UUID, `u`, field of the ACDC itself, but an entirely different UUID used to blind the ACDC's SAID for the purpose of aggregation. Because the top-level UUID, u<sub>k</sub>, is itself derived from the shared secret salt at path `k` (see above), the blinding factor v<sub>k</sub> MUST be derived at a distinct path so that v<sub>k</sub> is not equal to u<sub>k</sub>. The derivation path for v<sub>k</sub> from the shared secret salt is therefore `k.`, that is, the decimal or hexadecimal textual representation of the index `k` followed by a period (`.`). This path by construction never collides with the top-level path `k`, the Attribute section path `k/0`, or any nested block or aggregate element path `k/j`, guaranteeing v<sub>k</sub> is an entirely different UUID than u<sub>k</sub> and than every other derived UUID in the ACDC. Deriving both u<sub>k</sub> and v<sub>k</sub> at the same path `k` (which would make them identical, because the derivation is a deterministic function of the salt and path alone) is prohibited.
+Suppose there are `M` ACDCs in a bulk-issued set. Using zero-based indexing for each member of the bulk-issued set of ACDCs, such that index `k` satisfies `k in {0, ..., M-1}`, let d<sub>k</sub> denote the top-level SAID of an ACDC in an ordered set of bulk-issued ACDCs. Let v<sub>k</sub> denote the unique entropy (salty nonce) or blinding factor that is used to blind that said. The blinding factor, v<sub>k</sub>, is not the top-level unique-entropy, `u`, field of the ACDC itself, but an entirely different unique-entropy value used to blind the ACDC's SAID for the purpose of aggregation. Because the top-level unique entropy, u<sub>k</sub>, is itself derived from the shared secret salt at path `k` (see above), the blinding factor v<sub>k</sub> MUST be derived at a distinct path so that v<sub>k</sub> is not equal to u<sub>k</sub>. The derivation path for v<sub>k</sub> from the shared secret salt is therefore `k.`, that is, the decimal or hexadecimal textual representation of the index `k` followed by a period (`.`). This path by construction never collides with the top-level path `k`, the Attribute section path `k/0`, or any nested block or aggregate element path `k/j`, guaranteeing v<sub>k</sub> is an entirely different unique-entropy value than u<sub>k</sub> and than every other derived unique-entropy value in the ACDC. Deriving both u<sub>k</sub> and v<sub>k</sub> at the same path `k` (which would make them identical, because the derivation is a deterministic function of the salt and path alone) is prohibited.
 
 Let c<sub>k</sub> = v<sub>k</sub> + d<sub>k</sub> denote the blinding concatenation where `+` is the infix concatenation operator.
 Then the blinded digest, b<sub>k</sub>, is given by,
@@ -2922,7 +2922,7 @@ When using a TEL as an ACDC state Registry for a bulk-issued set, each event in 
 
 The efficient inclusion proofs of an SMT enable a given Issuer to amalgamate all Registry transaction event seals for all its bulk-issued ACDCs into a single SMT. This provides so-called *herd privacy* to the updates. A given seal in the KEL of the Issuer no longer provides a point of correlation to any other transaction event to any given registry. A given inclusion proof for one event from one Registry does not reveal inclusion for events in other Registries or correlate a given bulk-issued ACDC to any other bulk-issued ACDC using a different Registry. This amalgamation requires only one seal in the Issuer's KEL.  Using an optimized SMT algorithm enables an Issuer to provide efficient inclusion proofs for an amalgamated SMT of all transaction update events across all Registries for all bulk-issued ACDCs to all Issuees.
 
-Essentially, the Issuer maintains a single SMT that includes all the event SAIDs from all transaction events across the Issuer's Registries. The values stored in the leaves of the tree are the SAIDs of each transaction event across all the Registries for all Issuees. When using blindable state update events in these Registries, then the ACDC is not viewable by a 3rd party. Each of these SAIDs is computed over a high-entropy UUID (salty Nonce). Therefore, they are not guessable. They can only be discovered when disclosed. Periodically, the Issuer anchors a bulk seal that is the current SMT root. This captures all events from all registries that have been updated since the last anchor. The Issuer's TEL Registrar also publishes to TEL Observers the incremental update to the SMT that resulted in the new SMT root. The Observer ban then efficiently maintains a verifiably synchronized copy of the SMT. A Validator can then query its TEL Observer for an inclusion proof of a TEL event at a point of validation (PoV) without the Registrar being able to track the PoV.
+Essentially, the Issuer maintains a single SMT that includes all the event SAIDs from all transaction events across the Issuer's Registries. The values stored in the leaves of the tree are the SAIDs of each transaction event across all the Registries for all Issuees. When using blindable state update events in these Registries, then the ACDC is not viewable by a 3rd party. Each of these SAIDs is computed over a high-entropy salty nonce. Therefore, they are not guessable. They can only be discovered when disclosed. Periodically, the Issuer anchors a bulk seal that is the current SMT root. This captures all events from all registries that have been updated since the last anchor. The Issuer's TEL Registrar also publishes to TEL Observers the incremental update to the SMT that resulted in the new SMT root. The Observer ban then efficiently maintains a verifiably synchronized copy of the SMT. A Validator can then query its TEL Observer for an inclusion proof of a TEL event at a point of validation (PoV) without the Registrar being able to track the PoV.
 
 To provide proof of ACDC state, a Validator can request the latest transaction event update from its TEL Observer for a specific Registry (TEL) from a bulk-issued set as disclosed to it by a presentation from the Issuee. Only the Issuee and the Issuer know that the Registry comes from a bulk-issued set. Then, an inclusion proof for that event's SAID can be obtained from the Observer's SMT. This inclusion proof enables the Validator to verify that the Issuer committed to that event. This process does not provide a point of correlation with other Registries in the same bulk-issued set because the latest SMT root anchoring seal captures all transaction update events from all other bulk-issued sets that occurred within the same batch period. This provides herd privacy. The Issuee can then unblind the transaction event and disclose the associated ACDC.
 
@@ -2993,7 +2993,7 @@ The following table defines the top-level fields in an ACDC and their order of a
 |`v`| Version String| Regexable format: `ACDCMmmGggKKKKSSSS.` that provides protocol type, version, CESR genus version, serialization type, size, and terminator. |
 |`t`| Message Type| Three-character Message type |
 |`d`| Message Digest SAID | Self-referential fully qualified cryptographic digest of enclosing map. |
-|`u`| UUID | Random Universally Unique Identifier as fully qualified high entropy pseudo-random string, a salty nonce. |
+|`u`| UE | Random unique entropy as fully qualified high entropy pseudo-random string, a salty nonce. |
 |`i`| Issuer Identifier AID| AID whose control authority is established via KERI verifiable Key State. |
 |`rd`| Registry Digest SAID | Issuance and/or revocation, transfer, or retraction Registry for ACDC |
 |`s`| Schema| Either the SAID of a JSON Schema block or the block itself. |
@@ -3057,7 +3057,7 @@ For clarity, the first column provides the equivalent label value for the other 
 | `v` | `0J_v` | `0OACDCCAACAA` | Protocol Version primitive, ACDC 2.0 CESR 2.0 |
 | `t` | `0J_t` | `Xact` | Message type primitive |
 | `d` |  `0J_d` |`EGgbiglDXNE0GC4NQq-hiB5xhHKXBxkiojgBabiu_JCk` | SAID of ACDC packet  |
-| `u` |  `0J_u` |`0AGC4NQq-hiB5xhHKXBxkiK` | UUID (salt) of ACDC packet  |
+| `u` |  `0J_u` |`0AGC4NQq-hiB5xhHKXBxkiK` | UE (salt) of ACDC packet  |
 | `i` |  `0J_i` |`EBabiu_JCkE0GbiglDXNB5C4NQq-hiGgxhHKXBxkiojg` | AID of issuer of ACDC |
 | `rd` |  `0Krd` |`ECkE0GbiglDXNB5C4NQq-hiGgxhHKXBxkiojgBabiu_J` | SAID of revocation registry for ACDC |
 | `s` |  `0J_s` |`EDXNB5C4NQq-hiGgxhHKXBxkiojgBabiu_JCkE0Gbigl` | SAID of schema section of ACDC packet  |
@@ -3606,9 +3606,9 @@ regCal = "EPtolmh_NE2vC02oFc7FOiWkPcEiKUPWm5uu_Gv1JZDw"
 regDeb = "EJl5EUxL23p_pqgN3IyM-pzru89Nb7NzOM8ijH644xSU"
 ```
 
-##### UUIDs
+##### Unique Entropy Values
 
-Many of the examples include UUID, `u` fields with salty nonce values. For ease of reproducibility deterministic UUIDs are used. These come from the following set:
+Many of the examples include unique-entropy, `u` fields with salty nonce values. For ease of reproducibility deterministic unique-entropy values are used. These come from the following set:
 
 ```python
 assert uuids == \
@@ -3744,7 +3744,7 @@ The schema for this ACDC is as follows:
             "v": {"description": "ACDC version string", "type": "string"},
             "t": {"description": "Message type", "type": "string"},
             "d": {"description": "Message SAID", "type": "string"},
-            "u": {"description": "Message UUID", "type": "string"},
+            "u": {"description": "Message Unique Entropy", "type": "string"},
             "i": {"description": "Issuer AID", "type": "string"},
             "rd": {"description": "Registry SAID", "type": "string"},
             "s":
@@ -3769,7 +3769,7 @@ The schema for this ACDC is as follows:
                         "properties":
                         {
                             "d": {"description": "Attribute Section SAID", "type": "string"},
-                            "u": {"description": "Attribute Section UUID", "type": "string"},
+                            "u": {"description": "Attribute Section Unique Entropy", "type": "string"},
                             "i": {"description": "Issuee AID", "type": "string"},
                             "name": {"description": "Institution Name", "type": "string"},
                             "level": {"description": "Accreditation Level", "type": "string"}
@@ -3900,7 +3900,7 @@ The schema for this ACDC is as follows:
         "v": {"description": "ACDC version string", "type": "string"},
         "t": {"description": "Message type", "type": "string"},
         "d": {"description": "Message SAID", "type": "string"},
-        "u": {"description": "Message UUID", "type": "string"},
+        "u": {"description": "Message Unique Entropy", "type": "string"},
         "i": {"description": "Issuer AID", "type": "string"},
         "rd": {"description": "Registry SAID", "type": "string"},
         "s":
@@ -3925,7 +3925,7 @@ The schema for this ACDC is as follows:
                     "properties":
                     {
                       "d": {"description": "Attribute Section SAID", "type": "string"},
-                      "u": {"description": "Attribute Section UUID", "type": "string"},
+                      "u": {"description": "Attribute Section Unique Entropy", "type": "string"},
                       "title": {"description": "Report Title", "type": "string"},
                       "author": {"description": "Author Full Name", "type": "string"},
                       "report": { "description": "Report Body", "type": "string"}
@@ -4130,7 +4130,7 @@ The first Edge is to the accreditation ACDC. This is targeted and the value of t
 In the Edge group labeled `reports` are the other two edges; neither of these is targeted.  This edge group uses an `OR` operator. This means that the Edge group is satisfied if either or both of its Edges are satisfied.
 
 For the sake of example, each edge has a Unary, `NI2I` edge operator.
-Because the edges are in blocks, each with a SAID and UUID fields, the edges can be compacted for confidentiality.
+Because the edges are in blocks, each with SAID and unique-entropy fields, the edges can be compacted for confidentiality.
 
 This enables the graduated partial disclosure of the edges. The details of the linked (chained) credentials can be hidden by their block SAIDS so a disclosee can't see the linked ACDCs until the disclosse has to agreed to whatever terms are required by the discloser. Likewise for the rule section.  This illustrates that not only attributes but edges and rules can be partially disclosable.
 
@@ -4185,7 +4185,7 @@ The schema for this ACDC is as follows:
             "type": "string"
         },
         "u": {
-            "description": "Message UUID",
+            "description": "Message Unique Entropy",
             "type": "string"
         },
         "i": {
@@ -4267,7 +4267,7 @@ The schema for this ACDC is as follows:
                                             "type": "string"
                                         },
                                         "u": {
-                                            "description": "Block UUID",
+                                            "description": "Block Unique Entropy",
                                             "type": "string"
                                         },
                                         "history": {
@@ -4314,7 +4314,7 @@ The schema for this ACDC is as follows:
                             "type": "string"
                         },
                         "u": {
-                            "description": "Edge Section UUID",
+                            "description": "Edge Section Unique Entropy",
                             "type": "string"
                         },
                         "o": {
@@ -4344,7 +4344,7 @@ The schema for this ACDC is as follows:
                                             "type": "string"
                                         },
                                         "u": {
-                                            "description": "Edge UUID",
+                                            "description": "Edge Unique Entropy",
                                             "type": "string"
                                         },
                                         "n": {
@@ -4388,7 +4388,7 @@ The schema for this ACDC is as follows:
                                             "type": "string"
                                         },
                                         "u": {
-                                            "description": "Block UUID",
+                                            "description": "Block Unique Entropy",
                                             "type": "string"
                                         },
                                         "s": {
@@ -4422,7 +4422,7 @@ The schema for this ACDC is as follows:
                                                             "type": "string"
                                                         },
                                                         "u": {
-                                                            "description": "Edge UUID",
+                                                            "description": "Edge Unique Entropy",
                                                             "type": "string"
                                                         },
                                                         "n": {
@@ -4465,7 +4465,7 @@ The schema for this ACDC is as follows:
                                                             "type": "string"
                                                         },
                                                         "u": {
-                                                            "description": "Edge UUID",
+                                                            "description": "Edge Unique Entropy",
                                                             "type": "string"
                                                         },
                                                         "n": {
@@ -4534,7 +4534,7 @@ The schema for this ACDC is as follows:
 
 ##### Transcript ACDC with Public Edges
 
-Suppose there is no advantage to hidding the edges in the transcript ACDC. As a consequence, the Edge section can be greatly simplified. Instead of each block holding a SAID, UUID, as well as other fields, a given edge can be simplified to just the SAID of the linked ACDC. This requires that the default operators are adequate.  In this case, it is assumed that there is no advantage to hiding the edges. Also the report edges do not actuall need the explicit unary, `NI2I` operators. This is the default for non-targeted ACDCs linked via an edge. All three edges are reexpressed in simple compact form.
+Suppose there is no advantage to hidding the edges in the transcript ACDC. As a consequence, the Edge section can be greatly simplified. Instead of each block holding a SAID, unique entropy, as well as other fields, a given edge can be simplified to just the SAID of the linked ACDC. This requires that the default operators are adequate.  In this case, it is assumed that there is no advantage to hiding the edges. Also the report edges do not actuall need the explicit unary, `NI2I` operators. This is the default for non-targeted ACDCs linked via an edge. All three edges are reexpressed in simple compact form.
 
 The resulting ACDC is as follows:
 
@@ -4630,7 +4630,7 @@ The ACDC's schema is as follows:
             "type": "string"
         },
         "u": {
-            "description": "Message UUID",
+            "description": "Message Unique Entropy",
             "type": "string"
         },
         "i": {
@@ -4712,7 +4712,7 @@ The ACDC's schema is as follows:
                                             "type": "string"
                                         },
                                         "u": {
-                                            "description": "Block UUID",
+                                            "description": "Block Unique Entropy",
                                             "type": "string"
                                         },
                                         "history": {
@@ -4759,7 +4759,7 @@ The ACDC's schema is as follows:
                             "type": "string"
                         },
                         "u": {
-                            "description": "Edge Section UUID",
+                            "description": "Edge Section Unique Entropy",
                             "type": "string"
                         },
                         "o": {
@@ -4787,7 +4787,7 @@ The ACDC's schema is as follows:
                                     "type": "string"
                                 },
                                 "u": {
-                                    "description": "Block UUID",
+                                    "description": "Block Unique Entropy",
                                     "type": "string"
                                 },
                                 "s": {
