@@ -1908,7 +1908,7 @@ Consider the following disclosure-specific ACDC. The Issuer is the Discloser, th
 }
 ```
 
-Informative examples of fully-featured variants of ACDCs can be found in Annex C.
+Informative examples of fully-featured variants of ACDCs can be found in Annex.
 
 
 ## Transaction event logs (TELs) as ACDC state registries
