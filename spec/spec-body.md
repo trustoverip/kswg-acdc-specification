@@ -2796,7 +2796,7 @@ In a non-interactive approach, the Issuer derives an X25519 asymmetric public en
 
 In addition to the secret salt, the Issuer also provides a template of the private ACDC but with empty UUID, `u`, and SAID, `d`, fields at the top-level of each nested block with such fields. Each UUID, `u`, field value is then derived from the shared salt with a deterministic path prefix that indexes both its membership in the bulk-issued set and its location in the ACDC. Given the UUID, `u`, field value, the associated SAID, `d`, field value may then be derived. Likewise, both full and compact versions of the ACDC may then be generated. This generation is analogous to that described for creating the Aggregate value of the set of elements in the selectively disclosable [Aggregate Section](#aggregate-section), but extended to a set of private ACDCs.
 
-The initial element in each deterministic derivation path is the string value of the bulk-issued member's copy index `k`, such as `0`, `1`, `2`, etc.  Specifically, if `k` denotes the index of an ordered set of bulk-issued private ACDCs of size `M`, the derivation path starts with the string `k`, where `k` is replaced with the decimal or hexadecimal textual representation of the numeric index `k`. Furthermore, a bulk-issued private ACDC with a private Attribute section uses `k` to derive its top-level UUID and `k/0` to derive its Attribute section UUID. This hierarchical path is extended to any nested private Attribute blocks.
+The initial element in each deterministic derivation path is the string value of the bulk-issued member's copy index `k`, such as `0`, `1`, `2`, etc.  Specifically, if `k` denotes the index of an ordered set of bulk-issued private ACDCs of size `M`, the derivation path starts with the string `k`, where `k` is replaced with the textual representation of the numeric index `k`. That representation MUST be lowercase hexadecimal with no leading zeros, so that the index `10` is rendered `a` and the index `255` is rendered `ff`. The same rendering MUST be used for every other numeric index that appears in a derivation path, including the nested block and aggregate element index `j` described below. A hexadecimal and a decimal rendering of the same index agree for indices 0 through 9 and diverge from index 10 onward, so leaving the choice open would mean that two otherwise conformant implementations derive different UUIDs, and hence different SAIDs, for every member of a bulk-issued set from the tenth onward, while agreeing on the first ten. This is precisely the failure mode that is expensive to detect, because worked examples and test vectors are usually small enough to fall entirely within the range where the two renderings coincide. Lowercase hexadecimal with no leading zeros is also what is already used for every other hierarchical deterministic derivation path in KERI and ACDC, including the sequence number used as the derivation path for the blind of a blindable state update event. Furthermore, a bulk-issued private ACDC with a private Attribute section uses `k` to derive its top-level UUID and `k/0` to derive its Attribute section UUID. This hierarchical path is extended to any nested private Attribute blocks.
 
 This approach can be further extended to enable bulk-issued Selective Disclosure ACDCs (i.e., those with an Aggregate Section instead of an Attribute Section) by using a similar hierarchical derivation path for the UUID field value in each of the selectively disclosable element blocks in its array of element attribute blocks. For example, the path `k/j` could be used to generate the UUID of aggregate element index `j` at bulk-issued ACDC index `k`.
 
@@ -2808,7 +2808,7 @@ The issuance proof digest is a blinded aggregate generated from the blinded SAID
 
 The basic approach is to compute the blinded aggregate commitment denoted `B` as the digest of the concatenation of a set of blinded digests of bulk-issued ACDC SAIDs. Each ACDC SAID is first blinded via concatenation to a UUID (salty nonce), and then the digest of that concatenation is concatenated with the other blinded SAID digests. Finally, a digest of that concatenation provides the blinded aggregate.
 
-Suppose there are `M` ACDCs in a bulk-issued set. Using zero-based indexing for each member of the bulk-issued set of ACDCs, such that index `k` satisfies `k in {0, ..., M-1}`, let d<sub>k</sub> denote the top-level SAID of an ACDC in an ordered set of bulk-issued ACDCs. Let v<sub>k</sub> denote the UUID (salty nonce) or blinding factor that is used to blind that said. The blinding factor, v<sub>k</sub>, is not the top-level UUID, `u`, field of the ACDC itself, but an entirely different UUID used to blind the ACDC's SAID for the purpose of aggregation. Because the top-level UUID, u<sub>k</sub>, is itself derived from the shared secret salt at path `k` (see above), the blinding factor v<sub>k</sub> MUST be derived at a distinct path so that v<sub>k</sub> is not equal to u<sub>k</sub>. The derivation path for v<sub>k</sub> from the shared secret salt is therefore `k.`, that is, the decimal or hexadecimal textual representation of the index `k` followed by a period (`.`). This path by construction never collides with the top-level path `k`, the Attribute section path `k/0`, or any nested block or aggregate element path `k/j`, guaranteeing v<sub>k</sub> is an entirely different UUID than u<sub>k</sub> and than every other derived UUID in the ACDC. Deriving both u<sub>k</sub> and v<sub>k</sub> at the same path `k` (which would make them identical, because the derivation is a deterministic function of the salt and path alone) is prohibited.
+Suppose there are `M` ACDCs in a bulk-issued set. Using zero-based indexing for each member of the bulk-issued set of ACDCs, such that index `k` satisfies `k in {0, ..., M-1}`, let d<sub>k</sub> denote the top-level SAID of an ACDC in an ordered set of bulk-issued ACDCs. Let v<sub>k</sub> denote the UUID (salty nonce) or blinding factor that is used to blind that said. The blinding factor, v<sub>k</sub>, is not the top-level UUID, `u`, field of the ACDC itself, but an entirely different UUID used to blind the ACDC's SAID for the purpose of aggregation. Because the top-level UUID, u<sub>k</sub>, is itself derived from the shared secret salt at path `k` (see above), the blinding factor v<sub>k</sub> MUST be derived at a distinct path so that v<sub>k</sub> is not equal to u<sub>k</sub>. The derivation path for v<sub>k</sub> from the shared secret salt is therefore `k.`, that is, the textual representation of the index `k`, rendered as required above, followed by a period (`.`). This path by construction never collides with the top-level path `k`, the Attribute section path `k/0`, or any nested block or aggregate element path `k/j`, guaranteeing v<sub>k</sub> is an entirely different UUID than u<sub>k</sub> and than every other derived UUID in the ACDC. Deriving both u<sub>k</sub> and v<sub>k</sub> at the same path `k` (which would make them identical, because the derivation is a deterministic function of the salt and path alone) is prohibited.
 
 Let c<sub>k</sub> = v<sub>k</sub> + d<sub>k</sub> denote the blinding concatenation where `+` is the infix concatenation operator.
 Then the blinded digest, b<sub>k</sub>, is given by,
@@ -4847,6 +4847,255 @@ The ACDC's schema is as follows:
     "additionalProperties": false
 }
 ```
+
+
+#### Registry-Dependent Issuance Lifecycle
+
+The examples above reference each issuer's registry by its identifier (for
+example `regAmy`) as though it already existed. This example instead walks the
+full lifecycle an issuer performs before and during issuance: it creates the
+registry, issues a credential bound to it, records the credential's issued state
+in the registry, lets a verifier confirm that state, and finally revokes the
+credential. Amy (a school) issues to Bob (a student) using Amy's registry.
+
+##### Step 1 — Create the registry (rip)
+
+The registry is created with a registry inception event of type `rip`. The
+registry identifier is the SAID of this event, so it is *derived* from the event
+rather than chosen. The inception commits to no credential state: it is a
+vacuous placeholder that reveals nothing about what will later be issued.
+
+```python
+{
+    "v": "ACDCCAACAAJSONAADa.",
+    "t": "rip",
+    "d": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "u": "0ABhY2Rjc3BlY3dvcmtyYXcw",
+    "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
+    "n": "0",
+    "dt": "2025-07-04T17:50:00.000000+00:00"
+}
+```
+
+The registry identifier is the SAID of this event:
+
+```python
+regAmy = "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX"
+```
+
+##### Step 2 — Issue the ACDC bound to the registry (acm)
+
+Amy issues the credential. Its `rd` field references `regAmy` from Step 1, and
+its top-level SAID `d` is computed over the credential's most compact form.
+Because the SAID is derived from the credential's content, it is not known in
+advance; it is produced by issuance, not assumed. Shown here in most compact
+form (the schema `s` and attribute `a` sections appear as their SAIDs):
+
+```python
+{
+    "v": "ACDCCAACAAJSONAAFE.",
+    "t": "acm",
+    "d": "EKqjwYRfEGl5rLu9TAN277K0fUUO87c0iIfMMRWdoTcp",
+    "u": "0ABhY2Rjc3BlY3dvcmtyYXdh",
+    "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
+    "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "s": "EPrsJF2BXyDUgDCVbGURsGNwCZjyrxD5M2qnBmhvoZYQ",
+    "a": "EENIFZQA-bmFP_RCJh4OEYNAIuc6y932fqNE1Bxg87r6"
+}
+```
+
+```python
+acdcSaid = "EKqjwYRfEGl5rLu9TAN277K0fUUO87c0iIfMMRWdoTcp"
+```
+
+##### Step 3 — Record the issued state in the registry (bup)
+
+To place the credential into its `issued` state, Amy appends a blindable update
+event of type `bup`. The event commits to a *blinded state block* whose SAID is
+the `b` field. The block itself binds this credential (`td`) to the state
+`issued` (`ts`), but is blinded by a nonce (`u`) that Amy derives from a salt
+shared with Bob and the update's sequence number. Only the blinded block's SAID
+travels in the `bup`; neither the credential SAID nor the word `issued` appears.
+
+The blinded state block, before blinding, holds:
+
+```python
+{
+    "d": "EElISYQ4JG1SyKkHrWL8URdR80tzJNnytCDjAkYbJiNY",
+    "u": "aG1lSjdJSNl7TiroPl67Uqzd5eFvzmr6bPlL7Lh4ukv8",
+    "td": "EKqjwYRfEGl5rLu9TAN277K0fUUO87c0iIfMMRWdoTcp",
+    "ts": "issued"
+}
+```
+
+The `bup` event that publishes it names the registry (`rd`), chains onto the
+prior event (`p`, here the `rip`), and carries only the blinded block's SAID
+(`b`):
+
+```python
+{
+    "v": "ACDCCAACAAJSONAAEi.",
+    "t": "bup",
+    "d": "EHtnkxegbSnTqAaSoo8jxtXi0yD-xbQji82NMJsiC8fl",
+    "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "n": "1",
+    "p": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "dt": "2025-08-01T18:06:10.988921+00:00",
+    "b": "EElISYQ4JG1SyKkHrWL8URdR80tzJNnytCDjAkYbJiNY"
+}
+```
+
+##### Step 4 — A verifier confirms the issued state
+
+A verifier that has been shown the credential and given the shared salt confirms
+the registry state without learning it from the wire. It recomputes the blinded
+block's SAID over the candidate states (`issued`, `revoked`) and the credential
+SAID it was shown, using the salt and the update's sequence number. When a
+candidate reproduces the `b` value in the `bup`, the state is confirmed —
+here, `issued`.
+
+##### Step 5 — Revoke the credential (bup)
+
+Revocation is another `bup` at the next sequence number, chained onto the
+issuance event. It commits to a new blinded block for the state `revoked`. The
+blinding nonce is independent of the one at sequence 1 (both derive from the
+salt and their own sequence numbers), so the two updates' blinded SAIDs are
+unrelated:
+
+```python
+{
+    "v": "ACDCCAACAAJSONAAEi.",
+    "t": "bup",
+    "d": "ENACMzpaiMMcdpQRBA4IbbqjUMcoJ_wBBsbhwpg_MYJM",
+    "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "n": "2",
+    "p": "EHtnkxegbSnTqAaSoo8jxtXi0yD-xbQji82NMJsiC8fl",
+    "dt": "2025-09-01T18:06:10.988921+00:00",
+    "b": "ECIgacw-6qPWs7Xwpok-D87IkQI6yyDLNiYSH9IyC7tx"
+}
+```
+
+Because each update's blinded state is keyed by an independent nonce that only
+the salt can regenerate, a verifier that once confirmed `issued` cannot later
+read the `revoked` state by watching the registry: it would need the salt to
+derive the sequence-2 nonce. The registry *events* remain public and chained
+(the `rd` and prior links are in the clear); it is the state *content* each
+event commits to that is protected. This is confidentiality of registry state,
+not anonymity of the credential — issuer, registry, and issuance chronology
+remain linkable, which is the intended, auditable trade-off.
+
+
+#### Graduated Disclosure
+
+The disclosure sections above describe partial and selective disclosure. This
+example shows both as worked flows: how an issuer *plans* for disclosure by the
+way it structures the credential, and how a holder *performs* disclosure at
+presentation while a verifier checks it.
+
+##### Selective disclosure via an aggregate section
+
+To make individual attributes independently disclosable, the issuer places each
+in its own element of an aggregate (`A`) section rather than in a single
+attribute block. Each element carries its own blinding UUID (`u`) and its own
+SAID (`d`); the section as a whole is committed to by a single aggregate digest
+(the AGID), which is element 0 of the list:
+
+```python
+[
+    "EN5d44fTNM0M4kmMMVrsH0HwMLRLyb6SoJEV0ogkLdXx",
+    {
+        "d": "EI2lwi1ZKrs-bDwgEreOhEh-W2O5xrOm5T-QCyMuX5V4",
+        "u": "0ABhY2Rjc3BlY3dvcmtyYXcw",
+        "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf"
+    },
+    {
+        "d": "EC-vU19URXX8ztfWdp_j2HHr1lJsqtGa1YHtZrg6-GMR",
+        "u": "0ABhY2Rjc3BlY3dvcmtyYXcx",
+        "score": 96
+    },
+    {
+        "d": "EKYLUIpDXNT0ujSdoNOT5pLp0okOKW3mAbg-M7K5OO_C",
+        "u": "0ABhY2Rjc3BlY3dvcmtyYXcy",
+        "name": "Zoe Doe"
+    }
+]
+```
+
+The top-level credential (an `acg` ACDC) references this section by its AGID in
+the `A` field:
+
+```python
+AGID = "EN5d44fTNM0M4kmMMVrsH0HwMLRLyb6SoJEV0ogkLdXx"
+```
+
+At presentation the holder discloses only the chosen elements as full blocks and
+leaves the rest as their bare SAIDs. Disclosing only the issuee element (index 1;
+index 0 is the AGID anchor and is always present) yields:
+
+```python
+[
+    "EN5d44fTNM0M4kmMMVrsH0HwMLRLyb6SoJEV0ogkLdXx",
+    {
+        "d": "EI2lwi1ZKrs-bDwgEreOhEh-W2O5xrOm5T-QCyMuX5V4",
+        "u": "0ABhY2Rjc3BlY3dvcmtyYXcw",
+        "i": "ECWJZFBtllh99fESUOrBvT3EtBujWtDKCmyzDAXWhYmf"
+    },
+    "EC-vU19URXX8ztfWdp_j2HHr1lJsqtGa1YHtZrg6-GMR",
+    "EKYLUIpDXNT0ujSdoNOT5pLp0okOKW3mAbg-M7K5OO_C"
+]
+```
+
+The verifier recomputes the AGID over the mix of disclosed blocks and undisclosed
+SAIDs and confirms it still equals the committed AGID. The disclosure is thus
+authentic and tamper evident, yet the withheld attribute values (`score`, `name`)
+never appear on the wire. The verifier does still learn how many elements the
+section has and which were withheld — the count and positions are structural, not
+blinded; only the withheld values themselves are protected.
+
+##### Partial disclosure via compaction
+
+A credential marked *private* by a top-level UUID (`u`) can circulate in most
+compact form — each section reduced to its SAID — while still committing to its
+full content. Because the top-level SAID is computed over the most compact form,
+it is identical whether the credential is held compact or expanded. Here Amy
+issues such a private ACDC to Bob; in compact form its schema, attribute, and
+rule sections each appear as a SAID:
+
+```python
+{
+    "v": "ACDCCAACAAJSONAAF3.",
+    "t": "acm",
+    "d": "EDlaFELjgpoRQ7zPh0DISKR1n5ku1UZWr_my6bLF8Bjg",
+    "u": "0ABhY2Rjc3BlY3dvcmtyYXdk",
+    "i": "ECmiMVHTfZIjhA_rovnfx73T3G_FJzIQtzDn1meBVLAz",
+    "rd": "EOMMCyztOvg970W0dZVJT2JIwlQ22DSeY7wtxNBBtpmX",
+    "s": "EPrsJF2BXyDUgDCVbGURsGNwCZjyrxD5M2qnBmhvoZYQ",
+    "a": "ED1pc3B7apjLEMgWnI08EZky8TU5SfqpARRQ5mr_z9vh",
+    "r": "ECIxF7cojMJIXm-SKGR1w8Bj8N1v0637trHKYT9TWqd9"
+}
+```
+
+A holder discloses sections one at a time. Under Chain-Link Confidentiality the
+rule (terms-of-use) section is disclosed first — so a potential Disclosee can
+agree to the terms — while the private attribute section is withheld (it remains
+the bare SAID `ED1pc3B7...` above). The disclosed rule section block carries its
+own SAID:
+
+```python
+{
+    "d": "ECIxF7cojMJIXm-SKGR1w8Bj8N1v0637trHKYT9TWqd9",
+    "l": "AS IS basis. MUST NOT be shared."
+}
+```
+
+The verifier recomputes the SAID of this block and confirms it equals the value
+of the rule section, `r`, field in the compact ACDC (`ECIxF7...`). The
+credential's top-level SAID is taken over the most-compact form, so it is
+unchanged by the disclosure, and the still-withheld attribute section remains
+hidden behind its SAID. Every disclosure level — including disclosure of a nested
+block within a section, or a mix of disclosed and withheld sibling blocks —
+verifies to the same top-level SAID, so what the credential commits to never
+changes as disclosure progresses.
 
 
 ## Bibliography
