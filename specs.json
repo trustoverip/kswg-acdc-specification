@@ -9,9 +9,9 @@
         "terms-and-definitions-intro.md",
         "spec-body.md"
       ],
-      "logo": "https://raw.githubusercontent.com/trustoverip/logo-assets/master/logos/ToIP-Logo-Color-SolidDimensional-Horizontal-LightOnDark.svg",
-      "logo_link": "https://github.com/trustoverip/kswg-acdc-specification",
-      "katex": true,
+      "logo": "https://raw.githubusercontent.com/trustoverip/spec-up-t/refs/heads/master/src/install-from-boilerplate/boilerplate/static/logo.svg",
+      "logo_link": "./",
+      "favicon": "https://raw.githubusercontent.com/trustoverip/spec-up-t/refs/heads/master/src/install-from-boilerplate/boilerplate/static/favicon.ico",
       "source": {
         "host": "github",
         "account": "trustoverip",
@@ -20,32 +20,33 @@
       "author": "Trust over IP Foundation",
       "description": "Create technical specifications in markdown. Based on the original Spec-Up, extended with Terminology tooling",
       "spec_terms_directory": "terms-definitions",
-"external_specs": [
-                {
-                    "external_spec": "kmg-1",
-                    "gh_page": "https://trustoverip.github.io/kerisuite-glossary/",
-                    "url": "https://github.com/trustoverip/kerisuite-glossary",
-                    "terms_dir": "spec/terms-definitions"
-                },
-                {
-                    "external_spec": "toip1",
-                    "gh_page": "https://trustoverip.github.io/ctwg-main-glossary/",
-                    "url": "https://github.com/trustoverip/ctwg-main-glossary",
-                    "terms_dir": "spec/terms-definitions"
-                },
-                {
-                    "external_spec": "vlei1",
-                    "gh_page": "https://henkvancann.github.io/vlei-glossary/",
-                    "url": "https://github.com/henkvancann/vlei-glossary",
-                    "terms_dir": "spec/terms-definitions"
-                },
-                {
-                    "external_spec": "toip2",
-                    "gh_page": "https://trustoverip.github.io/ctwg-general-glossary/",
-                    "url": "https://github.com/trustoverip/ctwg-general-glossary",
-                    "terms_dir": "spec/terms-definitions"
-                }            
-            ]
+      "external_specs": [
+        {
+          "external_spec": "kmg-1",
+          "gh_page": "https://trustoverip.github.io/kerisuite-glossary/",
+          "url": "https://github.com/trustoverip/kerisuite-glossary",
+          "terms_dir": "spec/terms-definitions"
+        },
+        {
+          "external_spec": "toip1",
+          "gh_page": "https://trustoverip.github.io/ctwg-main-glossary/",
+          "url": "https://github.com/trustoverip/ctwg-main-glossary",
+          "terms_dir": "spec/terms-definitions"
+        },
+        {
+          "external_spec": "vlei1",
+          "gh_page": "https://henkvancann.github.io/vlei-glossary/",
+          "url": "https://github.com/henkvancann/vlei-glossary",
+          "terms_dir": "spec/terms-definitions"
+        },
+        {
+          "external_spec": "toip2",
+          "gh_page": "https://trustoverip.github.io/ctwg-general-glossary/",
+          "url": "https://github.com/trustoverip/ctwg-general-glossary",
+          "terms_dir": "spec/terms-definitions"
+        }
+      ],
+      "katex": false
     }
   ]
 }
