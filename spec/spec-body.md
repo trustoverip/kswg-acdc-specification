@@ -1191,7 +1191,7 @@ The unary operators are defined in the table below:
 |:-:|:--|:--|:--|
 |`I2I`| Issuer-To-Issuee, The Issuer AID of this ACDC MUST be the Issuee AID of the node this Edge points to.  | Yes |
 |`NI2I`| Not-Issuer-To-Issuee, The Issuer AID of this ACDC MAY or MAY not be the Issuee AID of the node that this Edge points to. |  No |
-|`DI2I`| Delegated-Issuer-To-Issuee, The Issuer AID of this ACDC MUST be either the Issuee AID or a delegated AID of the Issuee AID of the node this Edge points to. | No |
+|`DI2I`| Delegated-Issuer-To-Issuee, The Issuer AID of this ACDC MUST be either the Issuee AID or a delegated AID, at any depth of delegation, of the Issuee AID of the node this Edge points to. | No |
 |`NOT`| Logical NOT. The validity of the node this Edge points to is inverted. If valid, then not valid. If invalid, then valid.  | No |
 
 When the Operator, `o`, field is missing or empty or is present but does not include any of the `I2I`, `NI2I` or `DI2I` Operators then:
@@ -1207,6 +1207,12 @@ The `I2I` unary operator, when present, means that the Issuer AID of the current
 The `NI2I` unary Operator, when present, removes or nullifies any requirement expressed by the `I2I` Operator described above. In other words, any REQUIREMENT that the Issuer AID of the current ACDC in which the Edge resides MUST be the Issuee AID, if any, of the node the Edge points to is relaxed (not applicable). To clarify, when operative (present), the `NI2I` Operator means that both an Untargeted ACDC or Targeted ACDC, as the node pointed to by the Edge, MAY be valid even when Untargeted or if Targeted even when the Issuer of the ACDC in which the Edge appears is not the Issuee AID, of that node to which the Edge points.
 
 The `DI2I` unary Operator, when present, expands the class of allowed Issuer AIDs of the node the Edge resides in to include not only the Issuee AID but also any delegated AIDs of the Issuee of the node to which the Edge points.  Therefore, to be valid, the ACDC node pointed to by this Edge MUST be a Targeted ACDC.
+
+A delegated AID of the Issuee AID is any AID reachable from that Issuee AID by one or more delegations and is not restricted to a direct delegate of it. A Validator therefore MUST admit an Issuer AID that is a delegate of a delegate of the Issuee AID, to any depth. A Validator MUST confirm every delegation in that chain as the KERI protocol confirms a delegation, by the delegator's anchored approval of the delegate's delegated inception event, and MUST NOT rest on the delegate's own assertion of who its delegator is.
+
+Unlike the other unary Operators, `DI2I` has a predicate that neither ACDC names: the AIDs of the intermediate delegators appear in no field of either ACDC. A Discloser SHOULD therefore make the key event logs of the whole delegation chain available to the Disclosee, and a Validator that cannot obtain them MUST treat the Edge as unverified rather than as invalid, since the two are not distinguishable from the absence of a log.
+
+The `DI2I` Operator does not itself bound the depth of delegation it admits, because that bound is the delegator's to set and it is set at the AID layer rather than per Edge. A delegator that wishes to authorize its own delegates but not theirs places the `DND` (do-not-delegate) configuration trait of the KERI protocol in the inception event of each delegate it approves, which forbids that delegate from delegating further. Because a delegation that `DND` forbids is not a valid delegation, an AID whose chain to the Issuee AID passes through a delegator whose own inception event carries `DND` is not a delegated AID of that Issuee AID for the purposes of this Operator. A Validator MUST apply this constraint independently of whether its own key event processing accepted the delegated inception event, because an implementation MAY accept a locally sourced delegated event without evaluating its delegator's configuration traits.
 
 The `NOT` unary Operator, when present, inverts the validation truthiness of the node pointed to by this Edge. If this Edge's far node ACDC is invalid, then the presence of the `NOT` operator makes this Edge valid. Conversely, if this Edge's far node ACDC is valid, then the presence of the `NOT` Operator makes this Edge invalid.
 
