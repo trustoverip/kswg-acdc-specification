@@ -1982,7 +1982,7 @@ The reserved field labels for the top level of a state registry (both blindable 
 
 #### Registry Inception event fields
 
-The fields for the Registry-Inception, `rip` event , given by their labels, MUST appear in the following order, `[v, t, d, u, i, n, dt]`. All are required. The value of the Message type, `t` field MUST be `rip`. The value of the sequence number field, `s` MUST be the hex encoded string for the integer 0.
+The fields for the Registry-Inception, `rip` event , given by their labels, MUST appear in the following order, `[v, t, d, u, i, n, dt]`. All are required. The value of the Message type, `t` field MUST be `rip`. The value of the sequence number field, `n` MUST be the hex encoded string for the integer 0.
 
 #### Blindable Update event fields
 
